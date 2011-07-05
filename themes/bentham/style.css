@@ -1,0 +1,626 @@
+/*
+Theme Name: Bentham
+Theme URI: http://languages.oberlin.edu/cilc/projects/class-blogs/
+Description: Bentham is a theme that is a core part of the class blogs suite.  It shows all student blogs on the main page in a series of columns, with a variable number of posts from each blog shown.  The columns containing student posts are ordered by the date of the most recent post on each blog.
+Author: Oberlin College's Cooper International Learning Center
+Author URI: http://languages.oberlin.edu/
+Version: 0.1
+License: GNU General Public License
+License URI: license.txt
+Tags: black, blue, white, gray, threaded-comments, two-columns, translation-ready, custom-header, custom-menu
+*/
+/* ===CSS RESET== */
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/* ===GLOBAL=== */
+body {
+  background: white url("images/side-shadow.png") repeat-y -2.5em 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #333333;
+  font-size: 100%; }
+
+html > body {
+  font-size: 12px; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: black; }
+
+a {
+  color: #008888;
+  text-decoration: none; }
+
+a:visited {
+  color: #005555; }
+
+a:hover {
+  color: #00bbbb; }
+
+/* ===HEADERS== */
+#branding {
+  margin-left: 26em;
+  padding-top: 1.5em; }
+
+#logo {
+  float: left;
+  margin: 1.5em 0 0 3em; }
+
+#blog-name,
+#blog-subtitle {
+  font-family: Optima, "Century Gothic", "Helvetica Neue", Arial, sans-serif;
+  text-transform: uppercase; }
+
+#blog-name {
+  font-size: 2em;
+  line-height: 1.5em; }
+  #blog-name a {
+    color: #115555; }
+
+#blog-subtitle {
+  line-height: 1.5em;
+  text-transform: none; }
+
+/* ===NAVIGATION=== */
+.page-navigation {
+  font-weight: bold;
+  font-size: 1.25em;
+  line-height: 1.8em;
+  margin: 1.8em 0 1.8em 20.8em; }
+  .page-navigation .page_item,
+  .page-navigation .menu-item {
+    float: left;
+    margin-right: 2.4em;
+    position: relative; }
+    .page-navigation .page_item a:visited,
+    .page-navigation .menu-item a:visited {
+      color: #008888; }
+    .page-navigation .page_item a:hover,
+    .page-navigation .menu-item a:hover {
+      color: #00bbbb; }
+    .page-navigation .page_item .children,
+    .page-navigation .menu-item .children {
+      background: #eeeeee;
+      border-top: 1px solid #aaaaaa;
+      display: none;
+      left: -0.6em;
+      position: absolute;
+      z-index: 9000; }
+      .page-navigation .page_item .children .page_item,
+      .page-navigation .page_item .children .menu-item,
+      .page-navigation .menu-item .children .page_item,
+      .page-navigation .menu-item .children .menu-item {
+        display: block;
+        font-weight: normal;
+        margin: 0.3em 0;
+        padding-left: 0.6em;
+        min-width: 7.2em; }
+    .page-navigation .page_item .children .children,
+    .page-navigation .menu-item .children .children {
+      border-top: none;
+      left: 0; }
+      .page-navigation .page_item .children .children a,
+      .page-navigation .menu-item .children .children a {
+        padding-left: 0.6em; }
+    .page-navigation .page_item:hover .children,
+    .page-navigation .menu-item:hover .children {
+      display: block; }
+  .page-navigation .current_page_item a,
+  .page-navigation .current_page_item a:visited {
+    color: #333333; }
+
+/* ===BODY CONTENT=== */
+#body {
+  clear: both;
+  padding-top: 2.25em;
+  position: relative; }
+
+#content {
+  margin: 0 3em 0 26em; }
+  #content #page-title {
+    font-size: 2em;
+    line-height: 1.5em;
+    margin-bottom: 0.75em; }
+    #content #page-title .filter {
+      font-weight: bold; }
+
+/* ===SIDEBAR=== */
+#sidebar {
+  left: 0;
+  line-height: 1.5em;
+  margin-top: 2.25em;
+  position: absolute;
+  text-align: right;
+  top: 0;
+  width: 20em; }
+  #sidebar .widgets {
+    margin-left: 3em; }
+  #sidebar .widget-container {
+    margin-bottom: 3em; }
+    #sidebar .widget-container .widget-title {
+      background: #779999;
+      color: #fff;
+      font-size: 1.25em;
+      font-family: Optima, "Century Gothic", "Helvetica Neue", Arial, sans-serif;
+      line-height: 2.4em;
+      margin: 0 -0.6em 0.6em 0;
+      padding-right: 0.6em;
+      box-shadow: 0 1px 0 0 #dddddd;
+      -moz-box-shadow: 0 1px 0 0 #dddddd;
+      -webkit-box-shadow: 0 1px 0 0 #dddddd;
+      text-transform: uppercase; }
+    #sidebar .widget-container ul {
+      line-height: 1.5em; }
+      #sidebar .widget-container ul li {
+        margin: 0.75em 0; }
+    #sidebar .widget-container a {
+      color: #995555; }
+    #sidebar .widget-container a:hover {
+      color: #990000; }
+    #sidebar .widget-container a:visited {
+      color: #773333; }
+  #sidebar .tagcloud a {
+    margin-left: 0.365em; }
+
+/* ===MAIN PAGE=== */
+#content.main-posts .post {
+  margin-bottom: 3em; }
+
+#content.student-posts {
+  margin-left: 23em; }
+
+.user-posts {
+  float: left;
+  margin: 0 0 3em 3em;
+  position: relative;
+  min-width: 18em;
+  max-width: 25em;
+  width: 25%; }
+  .user-posts .user-info {
+    background: #333333;
+    height: 54px;
+    padding-left: 0.75em; }
+  .user-posts .user-name {
+    color: white;
+    font-weight: bold;
+    line-height: 1.5em;
+    padding-top: 0.75em; }
+    .user-posts .user-name a {
+      color: white; }
+  .user-posts .avatar {
+    border-left: 3px solid white;
+    display: block;
+    float: right; }
+  .user-posts .user-meta {
+    background: #333333;
+    color: #cccccc;
+    line-height: 1.5em;
+    height: 1.5em;
+    margin-left: -0.75em;
+    padding-left: 0.75em; }
+    .user-posts .user-meta .meta {
+      float: left; }
+    .user-posts .user-meta .post-count {
+      margin-right: 1.5em; }
+  .user-posts .posts {
+    clear: both;
+    line-height: 1.5em;
+    height: 35em;
+    overflow: hidden; }
+    .user-posts .posts .post {
+      border-top: 3px double #e5e5e5;
+      padding: 1.5em 0 0.75em; }
+      .user-posts .posts .post.first {
+        border-top: none; }
+      .user-posts .posts .post .title {
+        line-height: 1.2em;
+        font-size: 1.25em; }
+      .user-posts .posts .post .meta {
+        font-size: 0.833em;
+        font-weight: bold;
+        line-height: 1.8em; }
+      .user-posts .posts .post .entry {
+        line-height: 1.5em;
+        margin: 0.75em 0; }
+  .user-posts .end-posts {
+    background: url("images/post-list-fadeout.png") repeat-x bottom left;
+    bottom: 0;
+    height: 72px;
+    position: absolute;
+    width: 100%; }
+
+/* ===POST LISTS=== */
+.archive .navigation a,
+.home .navigation a,
+.search .navigation a {
+  background: #779999;
+  border: 3px double white;
+  color: white;
+  display: inline-block;
+  margin: 1.5em 0;
+  padding: 0.365em 0.75em; }
+.archive .navigation .previous,
+.home .navigation .previous,
+.search .navigation .previous {
+  float: left; }
+.archive .navigation .next,
+.home .navigation .next,
+.search .navigation .next {
+  float: right; }
+.archive .navigation.above,
+.home .navigation.above,
+.search .navigation.above {
+  display: none; }
+.archive.paged .navigation.above,
+.home.paged .navigation.above,
+.search.paged .navigation.above {
+  display: block; }
+.archive .hentry,
+.home .hentry,
+.search .hentry {
+  clear: both;
+  margin-bottom: 3em; }
+  .archive .hentry .title,
+  .home .hentry .title,
+  .search .hentry .title {
+    font-size: 1.5em;
+    line-height: 2em; }
+    .archive .hentry .title .post-edit-link,
+    .home .hentry .title .post-edit-link,
+    .search .hentry .title .post-edit-link {
+      font-size: 0.67em;
+      line-height: 3.1em; }
+  .archive .hentry .meta,
+  .home .hentry .meta,
+  .search .hentry .meta {
+    margin-top: -2.25em;
+    margin-bottom: 2.25em; }
+  .archive .hentry .interaction,
+  .home .hentry .interaction,
+  .search .hentry .interaction {
+    font-weight: bold;
+    margin: 0 0.75em 0.75em 0;
+    text-align: right; }
+
+/* ===404 PAGE=== */
+.error404 #page-title {
+  color: #995555; }
+
+.content.no-posts p {
+  line-height: 1.5em;
+  margin-bottom: 1.5em; }
+
+/* ===SEARCH=== */
+#searchform {
+  margin-top: 0.75em; }
+  #searchform label {
+    font-weight: bold;
+    margin-right: 0.75em; }
+  #searchform input#s {
+    margin-right: 0.75em; }
+
+/* ===POST CONTENT=== */
+.hentry .title {
+  border: 1px solid #aaaaaa;
+  border-left: none;
+  border-right: none;
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 2.25em;
+  margin-left: -0.75em;
+  padding-left: 0.75em;
+  box-shadow: 0 1px 0 0 #dddddd;
+  -moz-box-shadow: 0 1px 0 0 #dddddd;
+  -webkit-box-shadow: 0 1px 0 0 #dddddd; }
+  .hentry .title .post-edit-link {
+    float: right;
+    font-size: 0.5em;
+    font-weight: bold;
+    margin-right: 0.75em;
+    padding-left: 1.5em; }
+.hentry .meta {
+  line-height: 1.5em;
+  margin: -3em 0 3em;
+  text-align: right; }
+  .hentry .meta .key,
+  .hentry .meta .value {
+    display: inline; }
+  .hentry .meta .key {
+    color: black;
+    font-weight: bold;
+    margin-left: 2.25em;
+    margin-right: 0.75em; }
+  .hentry .meta .value {
+    margin-right: 0.75em; }
+.hentry .content {
+  line-height: 1.5em;
+  margin: 1.5em 0;
+  max-width: 60em; }
+  .hentry .content p {
+    margin: 0.75em 0; }
+  .hentry .content blockquote {
+    margin: 0 1.5em;
+    font-style: italic; }
+  .hentry .content em {
+    font-style: italic; }
+  .hentry .content strong {
+    font-weight: bold; }
+  .hentry .content abbr,
+  .hentry .content acronym {
+    border-bottom: 1px dashed #aaaaaa; }
+  .hentry .content big {
+    font-weight: bold; }
+  .hentry .content code,
+  .hentry .content kbd,
+  .hentry .content pre,
+  .hentry .content tt,
+  .hentry .content var {
+    color: #990000;
+    font-family: monospace; }
+  .hentry .content pre {
+    background: #eeeeee;
+    padding: 0.75em; }
+  .hentry .content ins {
+    background: yellow; }
+  .hentry .content q:before {
+    content: '\201C'; }
+  .hentry .content q:after {
+    content: '\201D'; }
+  .hentry .content sub,
+  .hentry .content sup {
+    font-size: 0.833em;
+    line-height: 1.8em; }
+  .hentry .content sub {
+    vertical-align: sub; }
+  .hentry .content sup {
+    vertical-align: super; }
+  .hentry .content ol, .hentry .content ul {
+    list-style-position: inside; }
+  .hentry .content ol ol,
+  .hentry .content ul ul {
+    margin-left: 2.25em; }
+  .hentry .content ol {
+    list-style-type: decimal; }
+  .hentry .content ul {
+    list-style-type: circle; }
+  .hentry .content dl dt {
+    font-weight: bold; }
+  .hentry .content dl dd {
+    margin-bottom: 0.75em; }
+  .hentry .content h1, .hentry .content h2, .hentry .content h3, .hentry .content h4, .hentry .content h5, .hentry .content h6 {
+    font-size: 1.25em;
+    font-weight: bold;
+    line-height: 1.2em;
+    margin: 0.6em 0; }
+  .hentry .content h1 {
+    font-size: 1.75em;
+    line-height: 1.714em;
+    margin: 0.857em 0; }
+  .hentry .content h2 {
+    font-size: 1.5em;
+    line-height: 2em;
+    margin: 1em 0; }
+  .hentry .content table th {
+    border-bottom: 2px solid #333333;
+    font-weight: bold;
+    text-align: left; }
+  .hentry .content table th, .hentry .content table td {
+    padding-right: 0.75em; }
+  .hentry .content form p {
+    color: #aa0000; }
+  .hentry .content form label {
+    color: #333333;
+    display: block;
+    float: left;
+    font-weight: bold;
+    padding-right: 1em; }
+  .hentry .content .page-links {
+    clear: left;
+    margin-top: 1.5em; }
+    .hentry .content .page-links strong {
+      font-weight: bold;
+      margin-right: 0.75em; }
+  .hentry .content .wp-caption {
+    max-width: 50em; }
+    .hentry .content .wp-caption a {
+      display: block; }
+    .hentry .content .wp-caption .wp-caption-text {
+      font-size: 0.8em;
+      font-weight: bold;
+      margin-top: 0.75em; }
+  .hentry .content .alignleft,
+  .hentry .content img.alignleft {
+    float: left;
+    margin-right: 0.75em; }
+  .hentry .content .alignright,
+  .hentry .content img.alignright {
+    float: right;
+    margin-left: 0.75em; }
+  .hentry .content .aligncenter,
+  .hentry .content img.aligncenter {
+    clear: both;
+    display: block;
+    margin-left: auto;
+    margin-right: auto; }
+.hentry .taxonomy {
+  clear: left;
+  line-height: 1.5em;
+  margin-bottom: 1.5em; }
+  .hentry .taxonomy .type {
+    font-weight: bold;
+    float: left; }
+  .hentry .taxonomy .values {
+    margin-left: 7em; }
+  .hentry .taxonomy .post-categories li {
+    display: inline; }
+  .hentry .taxonomy a {
+    margin-right: 1.5em; }
+
+.sticky,
+.gallery-caption,
+.bypostauthor {
+  display: block; }
+
+/* ===COMMENTS=== */
+#comments {
+  clear: left;
+  margin-bottom: 1.5em; }
+  #comments .protected-warning {
+    color: #aa0000; }
+  #comments .comments-header {
+    border: 1px solid #aaaaaa;
+    border-left: none;
+    border-right: none;
+    color: #779999;
+    font-size: 1.5em;
+    line-height: 2em;
+    margin: 2em 0 1em -0.75em;
+    padding-left: 0.75em;
+    box-shadow: 0 1px 0 0 #dddddd;
+    -moz-box-shadow: 0 1px 0 0 #dddddd;
+    -webkit-box-shadow: 0 1px 0 0 #dddddd; }
+  #comments .comment-navigation {
+    margin: 1.5em 0;
+    text-align: right; }
+    #comments .comment-navigation .next,
+    #comments .comment-navigation .prev {
+      font-weight: bold; }
+    #comments .comment-navigation .page-numbers {
+      margin: 0 0.365em; }
+  #comments .comment-list .comment, #comments .comment-list .pingback {
+    max-width: 65em;
+    padding: 0.75em 0; }
+    #comments .comment-list .comment .comment-author .avatar, #comments .comment-list .pingback .comment-author .avatar {
+      float: left;
+      margin-right: 1.5em; }
+    #comments .comment-list .comment .comment-author .fn, #comments .comment-list .pingback .comment-author .fn {
+      display: inline-block;
+      font-size: 1.25em;
+      font-weight: bold;
+      line-height: 1.2em; }
+    #comments .comment-list .comment .comment-meta, #comments .comment-list .pingback .comment-meta {
+      line-height: 1.5em;
+      margin-bottom: 1.5em; }
+    #comments .comment-list .comment p, #comments .comment-list .pingback p {
+      line-height: 1.5em;
+      margin: 0 0 1.5em 6em; }
+    #comments .comment-list .comment .reply, #comments .comment-list .pingback .reply {
+      font-weight: bold;
+      margin: 0.75em 6em; }
+    #comments .comment-list .comment .children, #comments .comment-list .pingback .children {
+      margin-left: 6em; }
+      #comments .comment-list .comment .children .comment, #comments .comment-list .pingback .children .comment {
+        border-top: 1px solid #e5e5e5; }
+  #comments .comment-list .pingback p, #comments .comment-list .pingback .reply {
+    margin-left: 0; }
+  #comments #respond p {
+    line-height: 1.5em; }
+  #comments #respond #reply-title {
+    font-weight: bold; }
+  #comments #respond .logged-in-as,
+  #comments #respond .comment-notes {
+    margin: 0.75em 0 1.5em; }
+  #comments #respond label {
+    font-weight: bold; }
+  #comments #respond input,
+  #comments #respond textarea {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    display: block;
+    font-size: 1em;
+    line-height: 1.5em;
+    margin-bottom: 1.5em; }
+  #comments #respond .form-allowed-tags {
+    display: none; }
+  #comments .comment #respond {
+    border-top: 1px solid #aaaaaa;
+    margin-left: 6em;
+    padding-top: 0.75em; }
+    #comments .comment #respond p {
+      margin-left: 0; }
+
+/* ===FOOTER=== */
+#footer {
+  border-top: 1px solid #aaaaaa;
+  clear: both;
+  margin: 1.5em 3em 0 26em; }
+  #footer strong {
+    font-weight: bold; }
+  #footer #colophon {
+    line-height: 1.5em;
+    padding: 1.5em 0; }
+    #footer #colophon .info {
+      display: inline;
+      margin-right: 3em; }
+
+/* ===CLASS BLOGS=== */
+/* ===SITEWIDE COMMENTS=== */
+.cb-sitewide-comment .cb-sitewide-comment-author {
+  font-weight: bold; }
+.cb-sitewide-comment .cb-sitewide-comment-meta {
+  color: #777777;
+  font-size: 0.833em;
+  line-height: 1.8em; }
+.cb-sitewide-comment .cb-sitewide-comment-excerpt {
+  margin: 0.75em 0 1.5em; }
+
+/* ===SITEWIDE POSTS=== */
+.cb-sitewide-post .cb-sitewide-post-meta {
+  color: #777777;
+  font-size: 0.833em;
+  line-height: 1.8em; }
+.cb-sitewide-post .cb-sitewide-post-excerpt {
+  margin: 0.75em 0 1.5em; }
+
+/* ==YOUTUBE CLASS PLAYLIST=== */
+#sidebar .cb-youtube-class-playlist .cb-youtube-local-playlist-link,
+#sidebar .cb-youtube-class-playlist .cb-youtube-remote-playlist-link {
+  font-weight: bold; }
+#sidebar .cb-youtube-class-playlist .cb-youtube-local-playlist-link {
+  border-top: 1px solid #aaaaaa;
+  margin-bottom: 0;
+  padding-top: 0.75em; }
+#sidebar .cb-youtube-class-playlist .cb-youtube-remote-playlist-link {
+  margin-top: 0; }

@@ -1,0 +1,59 @@
+// Dimensions
+//
+// Base font = 12px
+// Rhythm    = 18px
+//
+// Px      Em       LH (px)    LH (Em)
+// -----------------------------------
+// 10      0.833    18         1.8
+// 12      1        18         1.5
+// 15      1.25     18         1.2
+// 18      1.5      18         1
+// 21      1.75     36         1.714
+// 24      2        36         1.5
+
+// Shared margin measurements
+$margin-body-horizontal: 3em;
+$margin-content-left: 26em;
+
+// Color information
+$color-bg-light: #eee;
+$color-blog-title: #155;
+$color-border-dark: #aaa;
+$color-border-light: #e5e5e5;
+$color-headers: #000;
+$color-header-bg: #799;
+$color-highlight-bg: #ff0;
+$color-links: #088;
+$color-links-hover: lighten($color-links, 10%);
+$color-links-visited: darken($color-links, 10%);
+$color-page-bg: #fff;
+$color-posts-column-header: #333;
+$color-posts-column-name: #fff;
+$color-posts-column-meta: #ccc;
+$color-sidebar-links: #955;
+$color-sidebar-links-hover: #900;
+$color-sidebar-links-visited: #733;
+$color-text: #333;
+$color-text-emphasis: #900;
+$color-text-muted: #777;
+$color-text-warning: #a00;
+$color-vibrant-border: #9aa;
+
+// Text mixins
+@mixin body-text {
+	font-family: "Helvetica Neue", Arial, sans-serif;
+}
+@mixin header-text {
+	font-family: Optima, "Century Gothic", "Helvetica Neue", Arial, sans-serif;
+}
+
+// Shadow mixins
+@mixin box-shadow($color, $offsetX: 0, $offsetY: 0, $blur: 5px, $spread: 0) {
+	box-shadow: $offsetX $offsetY $blur $spread $color;
+	-moz-box-shadow: $offsetX $offsetY $blur $spread $color;
+	-webkit-box-shadow: $offsetX $offsetY $blur $spread $color;
+}
+@mixin subtle-shadow() {
+	@include box-shadow(#ddd, 0, 1px, 0, 0);
+}

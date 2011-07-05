@@ -1,0 +1,894 @@
+/*
+Theme Name: Bentham
+Theme URI: http://languages.oberlin.edu/cilc/projects/class-blogs/
+Description: Bentham is a theme that is a core part of the class blogs suite.  It shows all student blogs on the main page in a series of columns, with a variable number of posts from each blog shown.  The columns containing student posts are ordered by the date of the most recent post on each blog.
+Author: Oberlin College's Cooper International Learning Center
+Author URI: http://languages.oberlin.edu/
+Version: 0.1
+License: GNU General Public License
+License URI: license.txt
+Tags: black, blue, white, gray, threaded-comments, two-columns, translation-ready, custom-header, custom-menu
+*/
+
+@import "settings";
+
+/* ===CSS RESET== */
+
+@import "reset";
+
+/* ===GLOBAL=== */
+
+body {
+	background: $color-page-bg url("images/side-shadow.png") repeat-y -2.5em 0;
+	@include body-text;
+	color: $color-text;
+	font-size: 100%;
+}
+
+html>body {
+	font-size: 12px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: $color-headers;
+}
+
+a {
+	color: $color-links;
+	text-decoration: none;
+}
+a:visited {
+	color: $color-links-visited;
+}
+a:hover {
+	color: $color-links-hover;
+}
+
+/* ===HEADERS== */
+
+// Wrapper for the title and description headers
+#branding {
+	margin-left: 26em;
+	padding-top: 1.5em;
+}
+
+// Wrapper for the user-selected logo
+#logo {
+	float: left;
+	margin: 1.5em 0 0 3em;
+}
+
+// The blog title and description
+#blog-name,
+#blog-subtitle {
+	@include header-text;
+	text-transform: uppercase;
+}
+
+// The name of the blog
+#blog-name {
+	font-size: 2em;
+	line-height: 1.5em;
+
+	a {
+		color: $color-blog-title;
+	}
+}
+
+// The description of the blog
+#blog-subtitle {
+	line-height: 1.5em;
+	text-transform: none;
+}
+
+/* ===NAVIGATION=== */
+
+// Wrapper for the list of pages
+.page-navigation {
+	font-weight: bold;
+	font-size: 1.25em;
+	line-height: 1.8em;
+	margin: 1.8em 0 1.8em 20.8em;
+
+	// A single page in the list
+	.page_item,
+	.menu-item {
+		float: left;
+		margin-right: 2.4em;
+		position: relative;
+
+		a:visited {
+			color: $color-links;
+		}
+		a:hover {
+			color: $color-links-hover;
+		}
+
+		// The padding for child page menu items
+		$padding-child-pages: 0.6em;
+
+		// Hide child pages by default
+		.children {
+			background: $color-bg-light;
+			border-top: 1px solid $color-border-dark;
+			display: none;
+			left: 0 - $padding-child-pages;
+			position: absolute;
+			z-index: 9000;
+
+			.page_item,
+			.menu-item {
+				display: block;
+				font-weight: normal;
+				margin: ($padding-child-pages / 2) 0;
+				padding-left: $padding-child-pages;
+				min-width: 7.2em;
+			}
+		}
+		.children .children {
+			border-top: none;
+			left: 0;
+
+			a {
+				padding-left: $padding-child-pages;
+			}
+		}
+
+		// Show child pages on hover
+		&:hover .children {
+			display: block;
+		}
+	}
+
+	// A page that is actively being viewed
+	.current_page_item a,
+	.current_page_item a:visited {
+		color: $color-text;
+	}
+}
+
+/* ===BODY CONTENT=== */
+
+// The vertical space between the header and body content
+$margin-post-header: 2.25em;
+
+// Wrapper for all non-header content
+#body {
+	clear: both;
+	padding-top: $margin-post-header;
+	position: relative;
+}
+
+// Wrapper for non-sidebar content
+#content {
+	margin: 0 $margin-body-horizontal 0 $margin-content-left;
+
+	// The title of a single, non-post and non-page page
+	#page-title {
+		font-size: 2em;
+		line-height: 1.5em;
+		margin-bottom: 0.75em;
+
+			// An optional term by which the page is being filtered
+			.filter {
+				font-weight: bold;
+			}
+	}
+}
+
+/* ===SIDEBAR=== */
+
+#sidebar {
+	left: 0;
+	line-height: 1.5em;
+	margin-top: $margin-post-header;
+	position: absolute;
+	text-align: right;
+	top: 0;
+	width: 20em;
+
+	// Wrapper for all widgets in the sidebar
+	.widgets {
+		margin-left: $margin-body-horizontal;
+	}
+
+	// Wrapper for a sidebar widget
+	.widget-container {
+		margin-bottom: 3em;
+
+		// The name of a widget
+		.widget-title {
+			background: $color-header-bg;
+			color: #fff;
+			font-size: 1.25em;
+			@include header-text;
+			line-height: 2.4em;
+			margin: 0 -0.6em 0.6em 0;
+			padding-right: 0.6em;
+			@include subtle-shadow;
+			text-transform: uppercase;
+		}
+
+		// Generally a wrapper for any widget
+		ul {
+			line-height: 1.5em;
+
+			li {
+				margin: 0.75em 0;
+			}
+		}
+
+		// A link in a widget
+		a {
+			color: $color-sidebar-links;
+		}
+		a:hover {
+			color: $color-sidebar-links-hover;
+		}
+		a:visited {
+			color: $color-sidebar-links-visited;
+		}
+	}
+
+	// Tag clouds
+	.tagcloud {
+		a {
+			margin-left: 0.365em;
+		}
+	}
+}
+
+/* ===MAIN PAGE=== */
+
+// Wrapper for a post list shown when the student post data is unavailable
+#content.main-posts {
+	.post {
+		margin-bottom: 3em;
+	}
+}
+
+// The main page when viewing all student posts
+#content.student-posts {
+	margin-left: $margin-content-left - 3em;
+}
+
+// Wrapper for a listing of posts by a single student
+.user-posts {
+	float: left;
+	margin: 0 0 3em 3em;
+	position: relative;
+	min-width: 18em;
+	max-width: 25em;
+	width: 25%;
+
+	// Horizontal padding applied to column header text
+	$padding-x-column-header: 0.75em;
+
+	// Wrapper for the user's name and post / comment counts
+	.user-info {
+		background: $color-posts-column-header;
+		height: 54px;
+		padding-left: $padding-x-column-header;
+	}
+
+	// The student's name
+	.user-name {
+		color: $color-posts-column-name;
+		font-weight: bold;
+		line-height: 1.5em;
+		padding-top: 0.75em;
+
+		a {
+			color: $color-posts-column-name;
+		}
+	}
+
+	// The student's gravatar
+	.avatar {
+		border-left: 3px solid $color-page-bg;
+		display: block;
+		float: right;
+	}
+
+	// The total post and comment counts
+	.user-meta {
+		background: $color-posts-column-header;
+		color: $color-posts-column-meta;
+		line-height: 1.5em;
+		height: 1.5em;
+		margin-left: 0 - $padding-x-column-header;
+		padding-left: $padding-x-column-header;
+
+		.meta {
+			float: left;
+		}
+		.post-count {
+			margin-right: 1.5em;
+		}
+	}
+
+	// Wrapper for the list of student posts
+	.posts {
+		clear: both;
+		line-height: 1.5em;
+		height: 35em;
+		overflow: hidden;
+
+		// Wrapper for a single post
+		.post {
+			border-top: 3px double $color-border-light;
+			padding: 1.5em 0 0.75em;
+
+			// The first post in the list
+			&.first {
+				border-top: none;
+			}
+
+			// The title of a post
+			.title {
+				line-height: 1.2em;
+				font-size: 1.25em;
+			}
+
+			// Post metadata containing the date
+			.meta {
+				font-size: 0.833em;
+				font-weight: bold;
+				line-height: 1.8em;
+			}
+
+			// The post excerpt
+			.entry {
+				line-height: 1.5em;
+				margin: 0.75em 0;
+			}
+		}
+	}
+
+	// The fadeout div at the end of each post list
+	.end-posts {
+		background: url("images/post-list-fadeout.png") repeat-x bottom left;
+		bottom: 0;
+		height: 72px;
+		position: absolute;
+		width: 100%;
+	}
+}
+
+/* ===POST LISTS=== */
+
+// The body class given to an archives page
+.archive,
+.home,
+.search {
+
+	// Post list navigation
+	.navigation {
+		a {
+			background: $color-header-bg;
+			border: 3px double $color-page-bg;
+			color: $color-page-bg;
+			display: inline-block;
+			margin: 1.5em 0;
+			padding: 0.365em 0.75em;
+		}
+		.previous {
+			float: left;
+		}
+		.next {
+			float: right;
+		}
+	}
+
+	// Hide top navigation on first page
+	.navigation.above {
+		display: none;
+	}
+	&.paged .navigation.above {
+		display: block;
+	}
+
+	// Wrapper for a single post
+	.hentry {
+		clear: both;
+		margin-bottom: 3em;
+
+		// Reduce the size of the title and meta information of a post when
+		// shown on an archive page
+		.title {
+			font-size: 1.5em;
+			line-height: 2em;
+			.post-edit-link {
+				font-size: 0.67em;
+				line-height: 3.1em;
+			}
+		}
+		.meta {
+			margin-top: -2.25em;
+			margin-bottom: 2.25em;
+		}
+
+		// The comment-count info
+		.interaction {
+			font-weight: bold;
+			margin: 0 0.75em 0.75em 0;
+			text-align: right;
+		}
+	}
+}
+
+/* ===404 PAGE=== */
+
+// Wrapper for a 404 page
+.error404 {
+
+	// The page title for a 404 page
+	#page-title {
+		color: $color-sidebar-links;
+	}
+}
+
+// The error description shown when no posts are found
+.content.no-posts {
+
+	// The description of the error
+	p {
+		line-height: 1.5em;
+		margin-bottom: 1.5em;
+	}
+}
+
+/* ===SEARCH=== */
+
+// Wrapper for the search form
+#searchform {
+	margin-top: 0.75em;
+
+	// The "search for" label
+	label {
+		font-weight: bold;
+		margin-right: 0.75em;
+	}
+
+	// The search text box
+	input#s {
+		margin-right: 0.75em;
+	}
+}
+
+/* ===POST CONTENT=== */
+
+.hentry {
+
+	// The title of a post or page
+	.title {
+		border: 1px solid $color-border-dark;
+		border-left: none;
+		border-right: none;
+		font-size: 2em;
+		font-weight: bold;
+		line-height: 2.25em;
+		margin-left: -0.75em;
+		padding-left: 0.75em;
+		@include subtle-shadow;
+
+		// The edit-post link
+		.post-edit-link {
+			float: right;
+			font-size: 0.5em;
+			font-weight: bold;
+			margin-right: 0.75em;
+			padding-left: 1.5em;
+		}
+	}
+
+	// Information on the author and date of a post
+	.meta {
+		line-height: 1.5em;
+		margin: -3em 0 3em;
+		text-align: right;
+
+		.key,
+		.value {
+			display: inline;
+		}
+		.key {
+			color: $color-headers;
+			font-weight: bold;
+			margin-left: 2.25em;
+			margin-right: 0.75em;
+		}
+		.value {
+			margin-right: 0.75em;
+		}
+	}
+
+	// The user-generated post content
+	.content {
+		line-height: 1.5em;
+		margin: 1.5em 0;
+		max-width: 60em;
+
+		// User text
+		p {
+			margin: 0.75em 0;
+		}
+		blockquote {
+			margin: 0 1.5em;
+			font-style: italic;
+		}
+		em {
+			font-style: italic;
+		}
+		strong {
+			font-weight: bold;
+		}
+		abbr,
+		acronym {
+			border-bottom: 1px dashed $color-border-dark;
+		}
+		big {
+			font-weight: bold;
+		}
+		code,
+		kbd,
+		pre,
+		tt,
+		var {
+			color: $color-text-emphasis;
+			font-family: monospace;
+		}
+		pre {
+			background: $color-bg-light;
+			padding: 0.75em;
+		}
+		ins {
+			background: $color-highlight-bg;
+		}
+		q:before {
+			content: '\201C';
+		}
+		q:after {
+			content: '\201D';
+		}
+		sub,
+		sup {
+			font-size: 0.833em;
+			line-height: 1.8em;
+		}
+		sub {
+			vertical-align: sub;
+		}
+		sup {
+			vertical-align: super;
+		}
+
+		// User lists
+		ol, ul {
+			list-style-position: inside;
+		}
+		ol ol,
+		ul ul {
+			margin-left: 2.25em;
+		}
+		ol {
+			list-style-type: decimal;
+		}
+		ul {
+			list-style-type: circle;
+		}
+		dl {
+			dt {
+				font-weight: bold;
+			}
+			dd {
+				margin-bottom: 0.75em;
+			}
+		}
+
+		// User headings
+		h1, h2, h3, h4, h5, h6 {
+			font-size: 1.25em;
+			font-weight: bold;
+			line-height: 1.2em;
+			margin: 0.6em 0;
+		}
+		h1 {
+			font-size: 1.75em;
+			line-height: 1.714em;
+			margin: (1.714em / 2) 0;
+		}
+		h2 {
+			font-size: 1.5em;
+			line-height: 2em;
+			margin: 1em 0;
+		}
+
+		// User tables
+		table {
+			th {
+				border-bottom: 2px solid $color-text;
+				font-weight: bold;
+				text-align: left;
+			}
+			th, td {
+				padding-right: 0.75em;
+			}
+		}
+
+		// Password-protected posts
+		form {
+
+			p {
+				color: $color-text-warning;
+			}
+
+			label {
+				color: $color-text;
+				display: block;
+				float: left;
+				font-weight: bold;
+				padding-right: 1em;
+			}
+		}
+
+		// Paginated posts links
+		.page-links {
+			clear: left;
+			margin-top: 1.5em;
+
+			strong {
+				font-weight: bold;
+				margin-right: 0.75em;
+			}
+		}
+
+		// Captioned attachments
+		.wp-caption {
+			max-width: 50em;
+
+			a {
+				display: block;
+			}
+
+			.wp-caption-text {
+				font-size: 0.8em;
+				font-weight: bold;
+				margin-top: 0.75em;
+			}
+		}
+
+		// Alignment utility classes
+		.alignleft,
+		img.alignleft {
+			float: left;
+			margin-right: 0.75em;
+		}
+		.alignright,
+		img.alignright {
+			float: right;
+			margin-left: 0.75em;
+		}
+		.aligncenter,
+		img.aligncenter {
+			clear: both;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+
+	// Information on the tags and categories used by a post
+	.taxonomy {
+		clear: left;
+		line-height: 1.5em;
+		margin-bottom: 1.5em;
+
+		// The title for the taxonomy group
+		.type {
+			font-weight: bold;
+			float: left;
+		}
+
+		// The list of categories or tags
+		.values {
+			margin-left: 7em;
+		}
+
+		// Category links
+		.post-categories li {
+			display: inline;
+		}
+
+		// Any tags or category links
+		a {
+			margin-right: 1.5em;
+		}
+	}
+}
+
+// Required WordPress styles
+.sticky,
+.gallery-caption,
+.bypostauthor {
+	display: block;
+}
+
+/* ===COMMENTS=== */
+
+#comments {
+	clear: left;
+	margin-bottom: 1.5em;
+
+	// Password-protected warning
+	.protected-warning {
+		color: $color-text-warning;
+	}
+
+	// The header for the comments section
+	.comments-header {
+		border: 1px solid $color-border-dark;
+		border-left: none;
+		border-right: none;
+		color: $color-header-bg;
+		font-size: 1.5em;
+		line-height: 2em;
+		margin: 2em 0 1em -0.75em;
+		padding-left: 0.75em;
+		@include subtle-shadow;
+	}
+
+	// Wrapper for comment pagination links
+	.comment-navigation {
+		margin: 1.5em 0;
+		text-align: right;
+
+		// Previous / next text
+		.next,
+		.prev {
+			font-weight: bold;
+		}
+
+		// A page number
+		.page-numbers {
+			margin: 0 0.365em;
+		}
+	}
+
+	// A wrapper for the list of comments left
+	.comment-list {
+
+		// A container for a comment or pingback in the list
+		.comment, .pingback {
+			max-width: 65em;
+			padding: 0.75em 0;
+
+			// A container for the author's name and gravatar
+			.comment-author {
+				.avatar {
+					float: left;
+					margin-right: 1.5em;
+				}
+				.fn {
+					display: inline-block;
+					font-size: 1.25em;
+					font-weight: bold;
+					line-height: 1.2em;
+				}
+			}
+
+			// Information on the date the comment was posted
+			.comment-meta {
+				line-height: 1.5em;
+				margin-bottom: 1.5em;
+			}
+
+			// The actual data of the comment
+			p {
+				line-height: 1.5em;
+				margin: 0 0 1.5em 6em;
+			}
+
+			// The reply link
+			.reply {
+				font-weight: bold;
+				margin: 0.75em 6em;
+			}
+
+			// Comments left about the current comment
+			.children {
+				margin-left: 6em;
+
+				.comment {
+					border-top: 1px solid $color-border-light;
+				}
+			}
+		}
+
+		// Don't indent pingbacks
+		.pingback {
+			p, .reply {
+				margin-left: 0;
+			}
+		}
+	}
+
+	// A wrapper for the comment form
+	#respond {
+
+		p {
+			line-height: 1.5em;
+		}
+
+		// The "leave a reply" header
+		#reply-title {
+			font-weight: bold;
+		}
+
+		// Any notes or text that appear after the reply header
+		.logged-in-as,
+		.comment-notes {
+			margin: 0.75em 0 1.5em;
+		}
+
+		// Form elements in the comment form
+		label {
+			font-weight: bold;
+		}
+		input,
+		textarea {
+			@include body-text;
+			display: block;
+			font-size: 1em;
+			line-height: 1.5em;
+			margin-bottom: 1.5em;
+		}
+
+		// The list of allowed tags in the comment
+		.form-allowed-tags {
+			display: none;
+		}
+	}
+
+	// The wrapper for the comment form when used with threaded comments
+	.comment #respond {
+		border-top: 1px solid $color-border-dark;
+		margin-left: 6em;
+		padding-top: 0.75em;
+
+		// Override the styling on the comment text to avoid having the <p> containing
+		// the comment textareas and inputs
+		p {
+			margin-left: 0;
+		}
+	}
+}
+
+/* ===FOOTER=== */
+
+// Wrapper for the page footer
+#footer {
+	border-top: 1px solid $color-border-dark;
+	clear: both;
+	margin: 1.5em $margin-body-horizontal 0 26em;
+
+	strong {
+		font-weight: bold;
+	}
+
+	// The list of footer information
+	#colophon {
+		line-height: 1.5em;
+		padding: 1.5em 0;
+
+		// A bit of information in the list
+		.info {
+			display: inline;
+			margin-right: 3em;
+		}
+	}
+}
+
+/* ===CLASS BLOGS=== */
+
+@import "classblogs";

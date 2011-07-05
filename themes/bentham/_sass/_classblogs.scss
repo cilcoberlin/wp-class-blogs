@@ -1,0 +1,65 @@
+
+@import "settings";
+
+/* ===SITEWIDE COMMENTS=== */
+
+// A sitewide comment in a widget
+.cb-sitewide-comment {
+
+	// The name of the comment author
+	.cb-sitewide-comment-author {
+		font-weight: bold;
+	}
+
+	// Metadata for the comment
+	.cb-sitewide-comment-meta {
+		color: $color-text-muted;
+		font-size: 0.833em;
+		line-height: 1.8em;
+	}
+
+	// The comment excerpt
+	.cb-sitewide-comment-excerpt {
+		margin: 0.75em 0 1.5em;
+	}
+}
+
+/* ===SITEWIDE POSTS=== */
+
+// A sitewide post in a widget
+.cb-sitewide-post {
+
+	// Post metadata
+	.cb-sitewide-post-meta {
+		color: $color-text-muted;
+		font-size: 0.833em;
+		line-height: 1.8em;
+	}
+
+	// The post excerpt
+	.cb-sitewide-post-excerpt {
+		margin: 0.75em 0 1.5em;
+	}
+}
+
+/* ==YOUTUBE CLASS PLAYLIST=== */
+
+// Wrapper for the playlist widget
+#sidebar .cb-youtube-class-playlist {
+
+	// Links for viewing the playlist at the end of the video list
+	.cb-youtube-local-playlist-link,
+	.cb-youtube-remote-playlist-link
+	{
+		font-weight: bold;
+	}
+	.cb-youtube-local-playlist-link {
+		border-top: 1px solid $color-border-dark;
+		margin-bottom: 0;
+		padding-top: 0.75em;
+	}
+	.cb-youtube-remote-playlist-link {
+		margin-top: 0;
+	}
+
+}
