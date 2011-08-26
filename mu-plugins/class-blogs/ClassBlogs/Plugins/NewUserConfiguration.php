@@ -178,6 +178,6 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 	}
 }
 
-$plugin = new ClassBlogs_Plugins_NewUserConfiguration();
+ClassBlogs::register_plugin( 'new_user_configuration', new ClassBlogs_Plugins_NewUserConfiguration() );
 
 ?>
