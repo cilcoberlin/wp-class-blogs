@@ -323,8 +323,14 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 		}
 
 		//  Get the max and min tag usage counts
-		$this->_min_tag_count = min( $tag_counts );
-		$this->_max_tag_count = max( $tag_counts );
+		if ( count( $tag_counts ) ) {
+			 $tag_min = min( $tag_counts );
+			 $tag_max = max( $tag_counts );
+		} else {
+			$tag_min = $tag_max = 0;
+		}
+		$this->_min_tag_count = $tag_min;
+		$this->_max_tag_count = $tag_max;
 
 		//  Cache and return the tag list sorted by tag name
 		ksort( $tags );
