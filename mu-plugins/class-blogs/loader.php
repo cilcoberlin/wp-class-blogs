@@ -16,6 +16,7 @@ $plugins = array(
 	'SidebarWidget',
 	'ClassmateComments',
 	'DisableComments',
+	'GravatarSignup',
 	'NewUserConfiguration',
 	'RandomImage',
 	'StudentBlogLinks',
