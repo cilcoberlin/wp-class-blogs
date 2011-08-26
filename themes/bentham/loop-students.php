@@ -5,6 +5,15 @@
 	$posts_by_user = bentham_get_posts_by_user();
 	$total_users = count( $posts_by_user ) - 1;
 
+	// Let the user know that they can post content to make things show up on the front page
+	if ( empty( $posts_by_user ) ):
+		?>
+			<p id="no-content">
+				<?php _e( 'You have no posts to display yet.  If you create a new post, it will be shown on this page.', 'bentham' ); ?>
+			</p>
+		<?php
+	endif;
+
 	foreach ( $posts_by_user as $current_user => $post_info ):
 ?>
 

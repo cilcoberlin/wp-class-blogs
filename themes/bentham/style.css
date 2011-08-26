@@ -211,6 +211,10 @@ a:hover {
 
 #content.student-posts {
   margin-left: 23em; }
+  #content.student-posts #no-content {
+    font-weight: bold;
+    margin-left: 3em;
+    margin-bottom: 3em; }
 
 .user-posts {
   float: left;
@@ -358,8 +362,10 @@ a:hover {
   .hentry .title .post-edit-link {
     float: right;
     font-size: 0.5em;
+    line-height: 4.5em;
     font-weight: bold;
     margin-right: 0.75em;
+    margin-top: 1px;
     padding-left: 1.5em; }
 .hentry .meta {
   line-height: 1.5em;
@@ -375,6 +381,8 @@ a:hover {
     margin-right: 0.75em; }
   .hentry .meta .value {
     margin-right: 0.75em; }
+  .logged-in .hentry .meta {
+    margin-right: 6em; }
 .hentry .content {
   line-height: 1.5em;
   margin: 1.5em 0;
@@ -580,6 +588,10 @@ a:hover {
     padding-top: 0.75em; }
     #comments .comment #respond p {
       margin-left: 0; }
+
+#page-push {
+  clear: both;
+  height: 1.5em; }
 
 /* ===FOOTER=== */
 #footer {

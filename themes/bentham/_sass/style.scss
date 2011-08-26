@@ -250,6 +250,13 @@ $margin-post-header: 2.25em;
 // The main page when viewing all student posts
 #content.student-posts {
 	margin-left: $margin-content-left - 3em;
+
+	// A message explaining how an admin can write a post to make it show on the front page
+	#no-content {
+		font-weight: bold;
+		margin-left: 3em;
+		margin-bottom: 3em;
+	}
 }
 
 // Wrapper for a listing of posts by a single student
@@ -476,8 +483,10 @@ $margin-post-header: 2.25em;
 		.post-edit-link {
 			float: right;
 			font-size: 0.5em;
+			line-height: 4.5em;
 			font-weight: bold;
 			margin-right: 0.75em;
+			margin-top: 1px;
 			padding-left: 1.5em;
 		}
 	}
@@ -500,6 +509,11 @@ $margin-post-header: 2.25em;
 		}
 		.value {
 			margin-right: 0.75em;
+		}
+
+		// Provide space for the "edit post" link when it appears
+		.logged-in & {
+			margin-right: 6em;
 		}
 	}
 
@@ -862,6 +876,12 @@ $margin-post-header: 2.25em;
 			margin-left: 0;
 		}
 	}
+}
+
+// A pusher class at the end of a single page's content
+#page-push {
+	clear: both;
+	height: 1.5em;
 }
 
 /* ===FOOTER=== */
