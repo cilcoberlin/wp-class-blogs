@@ -1655,7 +1655,6 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 
 		// Return early if we have a cached playlist or no valid playlist
 		$videos = $this->_get_cached_playlist();
-		$videos = array();
 		if ( ! $this->get_option( 'youtube_playlist' ) || ! empty( $videos ) ) {
 			return $videos;
 		}
