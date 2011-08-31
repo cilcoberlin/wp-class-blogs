@@ -51,10 +51,14 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	{
 		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'sitewide_posts' );
+
 		$sitewide_posts = $plugin->get_posts_for_sidebar(
 			$instance['max_posts'],
 			$instance['max_posts_per_blog'],
 			$instance['meta_format'] );
+		if ( empty( $sitewide_posts ) ) {
+			return;
+		}
 
 		$this->start_widget( $args, $instance );
 		echo '<ul>';

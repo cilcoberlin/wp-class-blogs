@@ -49,12 +49,16 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	 */
 	public function widget( $args, $instance )
 	{
-
+		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'sitewide_comments' );
+
 		$sitewide_comments = $plugin->get_comments_for_sidebar(
 			$instance['max_comments'],
 			$instance['max_comments_per_blog'],
 			$instance['meta_format'] );
+		if ( empty( $sitewide_comments ) ) {
+			return;
+		}
 
 		$this->start_widget( $args, $instance );
 		echo '<ul>';
