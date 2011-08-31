@@ -184,7 +184,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	{
 		global $wpdb;
 		foreach ( $this->tables as $name => $table ) {
-			$wpdb->query( 'TRUNCATE TABLE ' . $table );
+			$wpdb->query( "DELETE FROM $table" );
 		}
 	}
 
