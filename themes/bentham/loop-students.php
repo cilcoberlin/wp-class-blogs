@@ -25,10 +25,17 @@
 				<?php echo get_avatar( $post_info->user_id, 54 ); ?>
 				<h3 class="user-name">
 					<?php
-						$name_parts = array(
-							sprintf( '%s %s',
-								get_user_meta( $post_info->user_id, 'first_name', true ),
-								get_user_meta( $post_info->user_id, 'last_name', true ) ) );
+						$name_parts = array();
+
+						// Show the user's full name is they have one, otherwise
+						// show their username
+						$first_name = get_user_meta( $post_info->user_id, 'first_name', true );
+						$last_name = get_user_meta( $post_info->user_id, 'last_name', true );
+						if ( $first_name && $last_name ) {
+							$name_parts[] = "$first_name $last_name";
+						} else {
+							$name_parts[] = get_userdata( $post_info->user_id )->user_login;
+						}
 
 						$user_url = bentham_get_blog_url_for_student( $post_info->user_id );
 						if ( $user_url ) {
