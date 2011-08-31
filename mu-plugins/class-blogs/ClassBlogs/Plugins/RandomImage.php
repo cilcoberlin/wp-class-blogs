@@ -36,7 +36,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 	 */
 	public function widget( $args, $instance )
 	{
-
+		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'random_image' );
 		$image = $plugin->get_random_image();
 

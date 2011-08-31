@@ -37,7 +37,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 	 */
 	public function widget( $args, $instance )
 	{
-
+		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'student_blogs' );
 		$student_blogs = $plugin->get_student_blogs( $instance['display'] );
 		if ( empty( $student_blogs ) ) {

@@ -37,7 +37,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 	 */
 	public function widget( $args, $instance )
 	{
-
+		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'youtube_class_playlist' );
 		$recent_videos = $plugin->get_recent_videos_for_sidebar( $instance['limit'] );
 

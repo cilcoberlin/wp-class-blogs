@@ -39,7 +39,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 	 */
 	public function widget( $args, $instance )
 	{
-
+		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'sitewide_tags' );
 		$most_usage = $plugin->get_max_usage_count();
 		$least_usage = $plugin->get_min_usage_count();
