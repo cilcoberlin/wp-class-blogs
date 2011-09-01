@@ -220,8 +220,6 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			if ( $this->get_option( 'root_use_excerpt' ) ) {
 				add_filter( 'the_content', array( $this, '_use_post_excerpt' ) );
 			}
-
-			// TODO: keep the sitewide tag list functionality
 		}
 	}
 
