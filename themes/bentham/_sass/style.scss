@@ -62,13 +62,12 @@ a:hover {
 #blog-name,
 #blog-subtitle {
 	@include header-text;
-	text-transform: uppercase;
 }
 
 // The name of the blog
 #blog-name {
-	font-size: 2em;
-	line-height: 1.5em;
+	font-size: 1.75em;
+	line-height: 1.714em;
 
 	a {
 		color: $color-blog-title;
@@ -77,15 +76,16 @@ a:hover {
 
 // The description of the blog
 #blog-subtitle {
-	line-height: 1.5em;
-	text-transform: none;
+	color: $color-text-muted;
+	font-size: 0.833em;
+	line-height: 1.8em;
+	text-transform: uppercase;
 }
 
 /* ===NAVIGATION=== */
 
 // Wrapper for the list of pages
 .page-navigation {
-	font-weight: bold;
 	font-size: 1.25em;
 	line-height: 1.8em;
 	margin: 1.8em 0 1.8em 20.8em;
@@ -144,6 +144,7 @@ a:hover {
 	.current_page_item a,
 	.current_page_item a:visited {
 		color: $color-text;
+		font-weight: bold;
 	}
 }
 
@@ -200,11 +201,10 @@ $margin-post-header: 2.25em;
 		.widget-title {
 			background: $color-header-bg;
 			color: #fff;
-			font-size: 1.25em;
 			@include header-text;
-			line-height: 2.4em;
-			margin: 0 -0.6em 0.6em 0;
-			padding-right: 0.6em;
+			line-height: 3em;
+			margin: 0 -0.75em 0.75em 0;
+			padding-right: 0.75em;
 			@include subtle-shadow;
 			text-transform: uppercase;
 		}
@@ -253,9 +253,9 @@ $margin-post-header: 2.25em;
 
 	// A message explaining how an admin can write a post to make it show on the front page
 	#no-content {
+		color: $color-text-emphasis;
 		font-weight: bold;
-		margin-left: 3em;
-		margin-bottom: 3em;
+		margin: 0.75em 0 3em 3em;
 	}
 }
 
@@ -271,19 +271,24 @@ $margin-post-header: 2.25em;
 	// Horizontal padding applied to column header text
 	$padding-x-column-header: 0.75em;
 
+	// The size of a student's gravatar
+	$gravatar-size: 54px;
+
 	// Wrapper for the user's name and post / comment counts
 	.user-info {
 		background: $color-posts-column-header;
-		height: 54px;
+		height: $gravatar-size;
 		padding-left: $padding-x-column-header;
 	}
 
 	// The student's name
 	.user-name {
 		color: $color-posts-column-name;
-		font-weight: bold;
 		line-height: 1.5em;
 		padding-top: 0.75em;
+		height: 1.5em;
+		overflow: hidden;
+		text-transform: uppercase;
 
 		a {
 			color: $color-posts-column-name;
@@ -292,7 +297,7 @@ $margin-post-header: 2.25em;
 
 	// The student's gravatar
 	.avatar {
-		border-left: 3px solid $color-page-bg;
+		border-left: 6px solid $color-page-bg;
 		display: block;
 		float: right;
 	}
@@ -301,8 +306,8 @@ $margin-post-header: 2.25em;
 	.user-meta {
 		background: $color-posts-column-header;
 		color: $color-posts-column-meta;
-		line-height: 1.5em;
 		height: 1.5em;
+		line-height: 1.5em;
 		margin-left: 0 - $padding-x-column-header;
 		padding-left: $padding-x-column-header;
 
@@ -317,37 +322,58 @@ $margin-post-header: 2.25em;
 	// Wrapper for the list of student posts
 	.posts {
 		clear: both;
-		line-height: 1.5em;
 		height: 35em;
+		line-height: 1.5em;
 		overflow: hidden;
 
 		// Wrapper for a single post
 		.post {
-			border-top: 3px double $color-border-light;
+			border-top: 1px solid lighten($color-border-light, 7%);
+			border-bottom: 1px solid $color-border-light;
 			padding: 1.5em 0 0.75em;
+			position: relative;
 
-			// The first post in the list
+			// Remove borders from the first and last posts
 			&.first {
 				border-top: none;
+			}
+			&.last {
+				border-bottom: none;
 			}
 
 			// The title of a post
 			.title {
 				line-height: 1.2em;
 				font-size: 1.25em;
+				margin-right: 3.75em;
 			}
 
 			// Post metadata containing the date
 			.meta {
+				background: $color-bg-light;
+				border-left: none;
+				border-right: none;
+				color: $color-sidebar-links;
 				font-size: 0.833em;
 				font-weight: bold;
 				line-height: 1.8em;
+				margin-top: -1.8em;
+				position: absolute;
+				right: 0;
+				text-align: center;
+				top: 3.6em;
+				width: $gravatar-size;
 			}
 
 			// The post excerpt
 			.entry {
+				color: $color-text-strong;
 				line-height: 1.5em;
-				margin: 0.75em 0;
+				margin: 1.5em 0 0.75em;
+
+				.read-more {
+					font-weight: bold;
+				}
 			}
 		}
 	}
@@ -469,15 +495,15 @@ $margin-post-header: 2.25em;
 
 	// The title of a post or page
 	.title {
+		background: $color-bg-sidebar;
 		border: 1px solid $color-border-dark;
 		border-left: none;
 		border-right: none;
 		font-size: 2em;
 		font-weight: bold;
 		line-height: 2.25em;
-		margin-left: -0.75em;
-		padding-left: 0.75em;
-		@include subtle-shadow;
+		margin: -0.375em -1.5em 0 -1.8em;
+		padding: 0 1.5em 0 1.8em;
 
 		// The edit-post link
 		.post-edit-link {
@@ -519,17 +545,23 @@ $margin-post-header: 2.25em;
 
 	// The user-generated post content
 	.content {
+		font-size: 1.25em;
 		line-height: 1.5em;
-		margin: 1.5em 0;
-		max-width: 60em;
+		margin: 1.2em 0;
+		//max-width: 60em;
+
+		// Typographically important content
+		p, ol, ul, dl dd, blockquote {
+			@include readable-text;
+		}
 
 		// User text
 		p {
-			margin: 0.75em 0;
+			margin: 1.2em 0;
 		}
 		blockquote {
-			margin: 0 1.5em;
 			font-style: italic;
+			margin: 1.2em 1.8em;
 		}
 		em {
 			font-style: italic;
@@ -554,7 +586,7 @@ $margin-post-header: 2.25em;
 		}
 		pre {
 			background: $color-bg-light;
-			padding: 0.75em;
+			padding: 1.2em;
 		}
 		ins {
 			background: $color-highlight-bg;
@@ -567,7 +599,7 @@ $margin-post-header: 2.25em;
 		}
 		sub,
 		sup {
-			font-size: 0.833em;
+			font-size: 0.8em;
 			line-height: 1.8em;
 		}
 		sub {
@@ -583,50 +615,49 @@ $margin-post-header: 2.25em;
 		}
 		ol ol,
 		ul ul {
-			margin-left: 2.25em;
+			margin-left: 2.4em;
 		}
 		ol {
 			list-style-type: decimal;
 		}
 		ul {
-			list-style-type: circle;
+			list-style-type: disc;
 		}
 		dl {
 			dt {
 				font-weight: bold;
 			}
 			dd {
-				margin-bottom: 0.75em;
+				margin-bottom: 1.2em;
 			}
 		}
 
 		// User headings
 		h1, h2, h3, h4, h5, h6 {
-			font-size: 1.25em;
+			font-size: 1.2em;
 			font-weight: bold;
-			line-height: 1.2em;
-			margin: 0.6em 0;
+			line-height: 1em;
+			margin: 2em 0 1em;
 		}
-		h1 {
-			font-size: 1.75em;
+		h1, h2 {
+			font-size: 1.4em;
 			line-height: 1.714em;
-			margin: (1.714em / 2) 0;
-		}
-		h2 {
-			font-size: 1.5em;
-			line-height: 2em;
 			margin: 1em 0;
 		}
 
 		// User tables
 		table {
+			width: 100%;
 			th {
 				border-bottom: 2px solid $color-text;
 				font-weight: bold;
 				text-align: left;
 			}
 			th, td {
-				padding-right: 0.75em;
+				padding: 0.6em 1.2em 0.6em 0;
+			}
+			td {
+				border-bottom: 1px solid $color-border-dark;
 			}
 		}
 
@@ -642,14 +673,18 @@ $margin-post-header: 2.25em;
 				display: block;
 				float: left;
 				font-weight: bold;
-				padding-right: 1em;
+				padding-right: 1.2em;
 			}
 		}
 
 		// Paginated posts links
 		.page-links {
+			border: 1px solid $color-border-light;
+			border-left: none;
+			border-right: none;
 			clear: left;
 			margin-top: 1.5em;
+			padding: 0.75em 0;
 
 			strong {
 				font-weight: bold;
@@ -676,12 +711,12 @@ $margin-post-header: 2.25em;
 		.alignleft,
 		img.alignleft {
 			float: left;
-			margin-right: 0.75em;
+			margin-right: 1.2em;
 		}
 		.alignright,
 		img.alignright {
 			float: right;
-			margin-left: 0.75em;
+			margin-left: 1.2em;
 		}
 		.aligncenter,
 		img.aligncenter {
@@ -731,8 +766,10 @@ $margin-post-header: 2.25em;
 /* ===COMMENTS=== */
 
 #comments {
+	border-top: 1px solid $color-border-light;
 	clear: left;
 	margin-bottom: 1.5em;
+	padding-top: 1.5em;
 
 	// Password-protected warning
 	.protected-warning {

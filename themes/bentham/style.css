@@ -71,14 +71,14 @@ h1, h2, h3, h4, h5, h6 {
   color: black; }
 
 a {
-  color: #008888;
+  color: #227777;
   text-decoration: none; }
 
 a:visited {
-  color: #005555; }
+  color: #174f4f; }
 
 a:hover {
-  color: #00bbbb; }
+  color: #2d9f9f; }
 
 /* ===HEADERS== */
 #branding {
@@ -91,22 +91,22 @@ a:hover {
 
 #blog-name,
 #blog-subtitle {
-  font-family: Optima, "Century Gothic", "Helvetica Neue", Arial, sans-serif;
-  text-transform: uppercase; }
+  font-family: "Helvetica Neue", Arial, sans-serif; }
 
 #blog-name {
-  font-size: 2em;
-  line-height: 1.5em; }
+  font-size: 1.75em;
+  line-height: 1.714em; }
   #blog-name a {
-    color: #115555; }
+    color: #333333; }
 
 #blog-subtitle {
-  line-height: 1.5em;
-  text-transform: none; }
+  color: #777777;
+  font-size: 0.833em;
+  line-height: 1.8em;
+  text-transform: uppercase; }
 
 /* ===NAVIGATION=== */
 .page-navigation {
-  font-weight: bold;
   font-size: 1.25em;
   line-height: 1.8em;
   margin: 1.8em 0 1.8em 20.8em; }
@@ -117,10 +117,10 @@ a:hover {
     position: relative; }
     .page-navigation .page_item a:visited,
     .page-navigation .menu-item a:visited {
-      color: #008888; }
+      color: #227777; }
     .page-navigation .page_item a:hover,
     .page-navigation .menu-item a:hover {
-      color: #00bbbb; }
+      color: #2d9f9f; }
     .page-navigation .page_item .children,
     .page-navigation .menu-item .children {
       background: #eeeeee;
@@ -150,7 +150,8 @@ a:hover {
       display: block; }
   .page-navigation .current_page_item a,
   .page-navigation .current_page_item a:visited {
-    color: #333333; }
+    color: #333333;
+    font-weight: bold; }
 
 /* ===BODY CONTENT=== */
 #body {
@@ -183,11 +184,10 @@ a:hover {
     #sidebar .widget-container .widget-title {
       background: #779999;
       color: #fff;
-      font-size: 1.25em;
-      font-family: Optima, "Century Gothic", "Helvetica Neue", Arial, sans-serif;
-      line-height: 2.4em;
-      margin: 0 -0.6em 0.6em 0;
-      padding-right: 0.6em;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      line-height: 3em;
+      margin: 0 -0.75em 0.75em 0;
+      padding-right: 0.75em;
       box-shadow: 0 1px 0 0 #dddddd;
       -moz-box-shadow: 0 1px 0 0 #dddddd;
       -webkit-box-shadow: 0 1px 0 0 #dddddd;
@@ -212,9 +212,9 @@ a:hover {
 #content.student-posts {
   margin-left: 23em; }
   #content.student-posts #no-content {
+    color: #990000;
     font-weight: bold;
-    margin-left: 3em;
-    margin-bottom: 3em; }
+    margin: 0.75em 0 3em 3em; }
 
 .user-posts {
   float: left;
@@ -229,20 +229,22 @@ a:hover {
     padding-left: 0.75em; }
   .user-posts .user-name {
     color: white;
-    font-weight: bold;
     line-height: 1.5em;
-    padding-top: 0.75em; }
+    padding-top: 0.75em;
+    height: 1.5em;
+    overflow: hidden;
+    text-transform: uppercase; }
     .user-posts .user-name a {
       color: white; }
   .user-posts .avatar {
-    border-left: 3px solid white;
+    border-left: 6px solid white;
     display: block;
     float: right; }
   .user-posts .user-meta {
     background: #333333;
-    color: #cccccc;
-    line-height: 1.5em;
+    color: #bbbbbb;
     height: 1.5em;
+    line-height: 1.5em;
     margin-left: -0.75em;
     padding-left: 0.75em; }
     .user-posts .user-meta .meta {
@@ -251,24 +253,42 @@ a:hover {
       margin-right: 1.5em; }
   .user-posts .posts {
     clear: both;
-    line-height: 1.5em;
     height: 35em;
+    line-height: 1.5em;
     overflow: hidden; }
     .user-posts .posts .post {
-      border-top: 3px double #e5e5e5;
-      padding: 1.5em 0 0.75em; }
+      border-top: 1px solid #f7f7f7;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 1.5em 0 0.75em;
+      position: relative; }
       .user-posts .posts .post.first {
         border-top: none; }
+      .user-posts .posts .post.last {
+        border-bottom: none; }
       .user-posts .posts .post .title {
         line-height: 1.2em;
-        font-size: 1.25em; }
+        font-size: 1.25em;
+        margin-right: 3.75em; }
       .user-posts .posts .post .meta {
+        background: #eeeeee;
+        border-left: none;
+        border-right: none;
+        color: #995555;
         font-size: 0.833em;
         font-weight: bold;
-        line-height: 1.8em; }
+        line-height: 1.8em;
+        margin-top: -1.8em;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 3.6em;
+        width: 54px; }
       .user-posts .posts .post .entry {
+        color: black;
         line-height: 1.5em;
-        margin: 0.75em 0; }
+        margin: 1.5em 0 0.75em; }
+        .user-posts .posts .post .entry .read-more {
+          font-weight: bold; }
   .user-posts .end-posts {
     background: url("images/post-list-fadeout.png") repeat-x bottom left;
     bottom: 0;
@@ -348,17 +368,15 @@ a:hover {
 
 /* ===POST CONTENT=== */
 .hentry .title {
+  background: #f5f5f5;
   border: 1px solid #aaaaaa;
   border-left: none;
   border-right: none;
   font-size: 2em;
   font-weight: bold;
   line-height: 2.25em;
-  margin-left: -0.75em;
-  padding-left: 0.75em;
-  box-shadow: 0 1px 0 0 #dddddd;
-  -moz-box-shadow: 0 1px 0 0 #dddddd;
-  -webkit-box-shadow: 0 1px 0 0 #dddddd; }
+  margin: -0.375em -1.5em 0 -1.8em;
+  padding: 0 1.5em 0 1.8em; }
   .hentry .title .post-edit-link {
     float: right;
     font-size: 0.5em;
@@ -384,14 +402,16 @@ a:hover {
   .logged-in .hentry .meta {
     margin-right: 6em; }
 .hentry .content {
+  font-size: 1.25em;
   line-height: 1.5em;
-  margin: 1.5em 0;
-  max-width: 60em; }
+  margin: 1.2em 0; }
+  .hentry .content p, .hentry .content ol, .hentry .content ul, .hentry .content dl dd, .hentry .content blockquote {
+    font-family: Palatino, "Palatino Linotype", "Georgia", serif; }
   .hentry .content p {
-    margin: 0.75em 0; }
+    margin: 1.2em 0; }
   .hentry .content blockquote {
-    margin: 0 1.5em;
-    font-style: italic; }
+    font-style: italic;
+    margin: 1.2em 1.8em; }
   .hentry .content em {
     font-style: italic; }
   .hentry .content strong {
@@ -410,7 +430,7 @@ a:hover {
     font-family: monospace; }
   .hentry .content pre {
     background: #eeeeee;
-    padding: 0.75em; }
+    padding: 1.2em; }
   .hentry .content ins {
     background: yellow; }
   .hentry .content q:before {
@@ -419,7 +439,7 @@ a:hover {
     content: '\201D'; }
   .hentry .content sub,
   .hentry .content sup {
-    font-size: 0.833em;
+    font-size: 0.8em;
     line-height: 1.8em; }
   .hentry .content sub {
     vertical-align: sub; }
@@ -429,34 +449,34 @@ a:hover {
     list-style-position: inside; }
   .hentry .content ol ol,
   .hentry .content ul ul {
-    margin-left: 2.25em; }
+    margin-left: 2.4em; }
   .hentry .content ol {
     list-style-type: decimal; }
   .hentry .content ul {
-    list-style-type: circle; }
+    list-style-type: disc; }
   .hentry .content dl dt {
     font-weight: bold; }
   .hentry .content dl dd {
-    margin-bottom: 0.75em; }
+    margin-bottom: 1.2em; }
   .hentry .content h1, .hentry .content h2, .hentry .content h3, .hentry .content h4, .hentry .content h5, .hentry .content h6 {
-    font-size: 1.25em;
+    font-size: 1.2em;
     font-weight: bold;
-    line-height: 1.2em;
-    margin: 0.6em 0; }
-  .hentry .content h1 {
-    font-size: 1.75em;
+    line-height: 1em;
+    margin: 2em 0 1em; }
+  .hentry .content h1, .hentry .content h2 {
+    font-size: 1.4em;
     line-height: 1.714em;
-    margin: 0.857em 0; }
-  .hentry .content h2 {
-    font-size: 1.5em;
-    line-height: 2em;
     margin: 1em 0; }
-  .hentry .content table th {
-    border-bottom: 2px solid #333333;
-    font-weight: bold;
-    text-align: left; }
-  .hentry .content table th, .hentry .content table td {
-    padding-right: 0.75em; }
+  .hentry .content table {
+    width: 100%; }
+    .hentry .content table th {
+      border-bottom: 2px solid #333333;
+      font-weight: bold;
+      text-align: left; }
+    .hentry .content table th, .hentry .content table td {
+      padding: 0.6em 1.2em 0.6em 0; }
+    .hentry .content table td {
+      border-bottom: 1px solid #aaaaaa; }
   .hentry .content form p {
     color: #aa0000; }
   .hentry .content form label {
@@ -464,10 +484,14 @@ a:hover {
     display: block;
     float: left;
     font-weight: bold;
-    padding-right: 1em; }
+    padding-right: 1.2em; }
   .hentry .content .page-links {
+    border: 1px solid #e5e5e5;
+    border-left: none;
+    border-right: none;
     clear: left;
-    margin-top: 1.5em; }
+    margin-top: 1.5em;
+    padding: 0.75em 0; }
     .hentry .content .page-links strong {
       font-weight: bold;
       margin-right: 0.75em; }
@@ -482,11 +506,11 @@ a:hover {
   .hentry .content .alignleft,
   .hentry .content img.alignleft {
     float: left;
-    margin-right: 0.75em; }
+    margin-right: 1.2em; }
   .hentry .content .alignright,
   .hentry .content img.alignright {
     float: right;
-    margin-left: 0.75em; }
+    margin-left: 1.2em; }
   .hentry .content .aligncenter,
   .hentry .content img.aligncenter {
     clear: both;
@@ -514,8 +538,10 @@ a:hover {
 
 /* ===COMMENTS=== */
 #comments {
+  border-top: 1px solid #e5e5e5;
   clear: left;
-  margin-bottom: 1.5em; }
+  margin-bottom: 1.5em;
+  padding-top: 1.5em; }
   #comments .protected-warning {
     color: #aa0000; }
   #comments .comments-header {
@@ -609,29 +635,35 @@ a:hover {
 
 /* ===CLASS BLOGS=== */
 /* ===SITEWIDE COMMENTS=== */
+.cb-sitewide-comment .format {
+  color: black; }
 .cb-sitewide-comment .cb-sitewide-comment-author {
   font-weight: bold; }
-.cb-sitewide-comment .cb-sitewide-comment-meta {
-  color: #777777;
-  font-size: 0.833em;
-  line-height: 1.8em; }
 .cb-sitewide-comment .cb-sitewide-comment-excerpt {
-  margin: 0.75em 0 1.5em; }
+  border-top: 1px solid #e5e5e5;
+  margin: 0.75em 0 1.5em;
+  padding-top: 0.75em; }
 
 /* ===SITEWIDE POSTS=== */
-.cb-sitewide-post .cb-sitewide-post-meta {
-  color: #777777;
-  font-size: 0.833em;
-  line-height: 1.8em; }
+.cb-sitewide-post .format {
+  color: black; }
+.cb-sitewide-post .cb-sitewide-post-title {
+  font-weight: bold; }
 .cb-sitewide-post .cb-sitewide-post-excerpt {
-  margin: 0.75em 0 1.5em; }
+  border-top: 1px solid #e5e5e5;
+  margin: 0.75em 0 1.5em;
+  padding-top: 0.75em; }
 
 /* ==YOUTUBE CLASS PLAYLIST=== */
+#sidebar .cb-youtube-class-playlist .cb-youtube-video-image-link {
+  margin-top: 0.75em; }
+  #sidebar .cb-youtube-class-playlist .cb-youtube-video-image-link .cb-youtube-video-thumbnail {
+    width: 90% !important; }
 #sidebar .cb-youtube-class-playlist .cb-youtube-local-playlist-link,
 #sidebar .cb-youtube-class-playlist .cb-youtube-remote-playlist-link {
   font-weight: bold; }
 #sidebar .cb-youtube-class-playlist .cb-youtube-local-playlist-link {
-  border-top: 1px solid #aaaaaa;
+  border-top: 1px solid #e5e5e5;
   margin-bottom: 0;
   padding-top: 0.75em; }
 #sidebar .cb-youtube-class-playlist .cb-youtube-remote-playlist-link {

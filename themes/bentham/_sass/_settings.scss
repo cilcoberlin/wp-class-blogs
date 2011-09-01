@@ -18,25 +18,27 @@ $margin-content-left: 26em;
 
 // Color information
 $color-bg-light: #eee;
-$color-blog-title: #155;
+$color-bg-sidebar: #f5f5f5;
+$color-blog-title: #333;
 $color-border-dark: #aaa;
 $color-border-light: #e5e5e5;
 $color-headers: #000;
 $color-header-bg: #799;
 $color-highlight-bg: #ff0;
-$color-links: #088;
+$color-links: #277;
 $color-links-hover: lighten($color-links, 10%);
 $color-links-visited: darken($color-links, 10%);
 $color-page-bg: #fff;
 $color-posts-column-header: #333;
 $color-posts-column-name: #fff;
-$color-posts-column-meta: #ccc;
+$color-posts-column-meta: #bbb;
 $color-sidebar-links: #955;
 $color-sidebar-links-hover: #900;
 $color-sidebar-links-visited: #733;
 $color-text: #333;
 $color-text-emphasis: #900;
 $color-text-muted: #777;
+$color-text-strong: #000;
 $color-text-warning: #a00;
 $color-vibrant-border: #9aa;
 
@@ -45,7 +47,10 @@ $color-vibrant-border: #9aa;
 	font-family: "Helvetica Neue", Arial, sans-serif;
 }
 @mixin header-text {
-	font-family: Optima, "Century Gothic", "Helvetica Neue", Arial, sans-serif;
+	font-family: "Helvetica Neue", Arial, sans-serif;
+}
+@mixin readable-text {
+	font-family: Palatino, "Palatino Linotype", "Georgia", serif;
 }
 
 // Shadow mixins
