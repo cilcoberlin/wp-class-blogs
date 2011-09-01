@@ -86,9 +86,10 @@
 						<h3 class="title">
 							<a href="<?php echo $post->cb_sw_permalink; ?>"><?php the_title(); ?></a>
 						</h3>
-						<h4 class="meta"><?php the_time( 'F jS, Y' ); ?></h4>
+						<h4 class="meta"><?php the_time( 'M j' ); ?></h4>
 						<div class="entry">
 							<?php echo $post->cb_sw_excerpt; ?>
+							<a href="<?php echo $post->cb_sw_permalink; ?>" class="read-more"><?php _e( 'Read more', 'bentham' ); ?></a>
 						</div>
 					</li>
 				<?php
