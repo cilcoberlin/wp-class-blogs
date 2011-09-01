@@ -1,4 +1,6 @@
 
+<?php if ( comments_open() || have_comments() ): ?>
+
 <div id="comments">
 
 	<?php /* Prevent unauthorized access to the comments on a protected post */ ?>
@@ -42,3 +44,5 @@
 	?>
 
 </div>
+
+<?php endif; ?>
