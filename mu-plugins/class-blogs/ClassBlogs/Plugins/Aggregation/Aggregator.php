@@ -117,8 +117,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		$wpdb->query( "CREATE TABLE IF NOT EXISTS $destination LIKE $source" );
 		$wpdb->query( "ALTER TABLE $destination CHANGE $key $key BIGINT(20) UNSIGNED NOT NULL, DROP PRIMARY KEY" );
 		$wpdb->query( "ALTER TABLE $destination ADD from_blog BIGINT(20) NOT NULL" );
-		// TODO: add a non-primary key
-		//$wpdb->query( "ALTER TABLE $destination ADD KEY 'from_blog' ('from_blog')" );
+		$wpdb->query( "ALTER TABLE $destination ADD INDEX from_blog (from_blog)" );
 	}
 
 	/**
