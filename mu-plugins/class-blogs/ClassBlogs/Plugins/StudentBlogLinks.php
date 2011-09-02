@@ -39,6 +39,17 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 			add_action( 'admin_footer', array( $this, 'add_admin_scripts' ) );
 		}
 
+		// Update the default links options to be a single link pointing back
+		// to the main class blog
+		switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+		self::$default_options['links'] = array(
+			array(
+				'url'   => site_url(),
+				'title' => __( 'Return to Course Blog', 'classblogs' )
+			)
+		);
+		restore_current_blog();
+
 		// If there are any links defined and we're not in the admin side,
 		// inject the professor's links into a widget in the sidebar of all
 		// student blogs in the network
