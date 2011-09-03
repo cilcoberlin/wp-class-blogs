@@ -204,11 +204,24 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	/**
 	 * Initializes the hooks required to make the root blog show sitewide posts
 	 *
+	 * This functionality, if required, can be overridden by other code by
+	 * defining the constant CLASS_BLOGS_SHOW_SITEWIDE_POSTS_ON_FRONT_PAGE.  If
+	 * it is given a value of false, the root blog will never be populated with
+	 * the sitewide post data.
+	 *
 	 * @since 0.1
 	 */
 	public function initialize_root_blog_hooks()
 	{
-		if ( ClassBlogs_Utils::is_root_blog() && ( is_home() || is_front_page() ) ) {
+
+		// Allow external code to prevent the main page of the root blog from
+		// being populated with the sitewide posts
+		$allow_posts = true;
+		if ( defined( 'CLASS_BLOGS_SHOW_SITEWIDE_POSTS_ON_FRONT_PAGE' ) ) {
+			$allow_posts = CLASS_BLOGS_SHOW_SITEWIDE_POSTS_ON_FRONT_PAGE;
+		}
+
+		if ( $allow_posts && ClassBlogs_Utils::is_root_blog() && ( is_home() || is_front_page() ) ) {
 
 			add_filter( 'the_posts',   array( $this, '_use_sitewide_posts' ) );
 			add_filter( 'page_link',   array( $this, '_use_correct_page_url' ), 10, 2);
