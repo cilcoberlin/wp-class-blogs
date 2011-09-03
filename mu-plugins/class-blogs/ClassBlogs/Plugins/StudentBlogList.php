@@ -149,6 +149,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 			$student_blogs[$blog['user_id']] = (object) array(
 				'blog_id' => $blog['blog_id'],
 				'name'    => $this->format_blog_display_name( $title_format, $blog['user_id'], $blog['blog_id'] ),
+				'user_id' => $blog['user_id'],
 				'url'     => get_blogaddress_by_id( $blog['blog_id'] ) );
 		}
 
@@ -189,12 +190,12 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function get_blog_url_for_student( $user_id )
 	{
-		$student_blogs = $this->get_student_blogs();
-		if ( array_key_exists( $user_id, $student_blogs ) ) {
-			return $student_blogs[$user_id]->url;
-		} else {
-			return "";
+		foreach ( $this->get_student_blogs() as $blog ) {
+			if ( $blog->user_id === $user_id ) {
+				return $blog->url;
+			}
 		}
+		return "";
 	}
 
 	/**
@@ -231,18 +232,16 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 		$admins = array_unique( $admins );
 
 		// Cycle through every blog on the current site, adding any blogs that
-		// have only admin user that is not a site admin or an admin on the
+		// have only one admin user that is not a site admin or an admin on the
 		// root blog to the list of student blogs
 		foreach ( $this->get_all_blog_ids() as $blog_id ) {
 			$blog_admins = get_users( 'blog_id=' . $blog_id . '&role=administrator' );
 			if ( count( $blog_admins ) == 1 ) {
-				foreach ( $blog_admins as $blog_admin ) {
-					if ( array_search( $blog_admin->ID, $admins ) === false ) {
-						$student_blogs[] = array(
-							'user_id' => $blog_admin->ID,
-							'blog_id' => $blog_id );
-					}
-					break;
+				$blog_admin = $blog_admins[0];
+				if ( array_search( $blog_admin->ID, $admins ) === false ) {
+					$student_blogs[] = array(
+						'user_id' => $blog_admin->ID,
+						'blog_id' => $blog_id );
 				}
 			}
 		}
