@@ -60,7 +60,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 			printf( '<a class="tag-link" href="%s" rel="tag" title="%s" style="font-size: %spt;">%s</a> ',
 				$tag->url,
 				sprintf( _n( '%d topic', '%d topics', $tag->count ), $tag->count ),
-				$min_font + floor( ( ( $tag->count - $least_usage ) / ( $most_usage - $least_usage ) ) * ( $max_font - $min_font ) ),
+				$min_font + floor( ( ( $tag->count - $least_usage ) / max( $most_usage - $least_usage, 1 ) ) * ( $max_font - $min_font ) ),
 				$tag->name );
 		}
 		echo "</div>";
