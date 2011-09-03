@@ -50,7 +50,6 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 		<ul>
 			<?php foreach ( $recent_videos as $video ): ?>
 				<li class="cb-youtube-video">
-					<a class="cb-youtube-video-title" href="<?php echo htmlspecialchars( $video->link ); ?>" rel="external"><?php echo $video->title; ?></a>
 					<?php if ( ! empty( $video->thumbnail ) ): ?>
 						<p class="cb-youtube-video-image-link">
 							<a rel="external" href="<?php echo htmlspecialchars( $video->link ); ?>">
@@ -58,6 +57,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 							</a>
 						</p>
 					<?php endif; ?>
+					<a class="cb-youtube-video-title" href="<?php echo htmlspecialchars( $video->link ); ?>" rel="external"><?php echo $video->title; ?></a>
 				</li>
 			<?php endforeach; ?>
 
@@ -142,6 +142,14 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 * @var string
 	 */
 	const _YOUTUBE_PLAYLIST_PAGE_TEMPLATE = 'http://www.youtube.com/playlist?p=%s';
+
+	/**
+	* The URL for viewing a full-size thumbnail of a YouTube video
+	*
+	* @access private
+	* @var string
+	*/
+	const _YOUTUBE_FULL_SIZE_THUMBNAIL_URL_TEMPLATE = 'http://img.youtube.com/vi/%s/0.jpg';
 
 	/**
 	 * The base URL for any playlist API requests
@@ -497,8 +505,25 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	public function _maybe_enable_playlist_page()
 	{
 		if ( is_page( $this->get_option( 'playlist_page_id' ) ) ) {
+			add_action( 'wp_enqueue_scripts', array( $this, '_add_playlist_page_scripts' ) );
 			add_filter( 'the_content', array( $this, '_render_playlist_page' ) );
 		}
+	}
+
+	/**
+	* Enqueues the JavaScript needed for displaying the playlist page.
+	*
+	* @access private
+	* @since 0.1
+	*/
+	public function _add_playlist_page_scripts()
+	{
+		wp_register_script( $this->get_uid(),
+			ClassBlogs_Utils::get_plugin_js_url() . 'youtube-class-playlist.js',
+			array( 'jquery' ),
+			'1.0'
+		);
+		wp_enqueue_script( $this->get_uid() );
 	}
 
 	/**
@@ -518,31 +543,45 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 
 			// Add the video with a title
 			$markup .= '<div class="%1$s-video post hentry">';
-			$markup .= '<h2 class="%1$s-title">' . $video->title . '</h2>';
-			$markup .= '<div class="%1$s-video">';
-			$markup .= sprintf(
-				'<iframe width="560" height="349" src="http://www.youtube.com/embed/%s" frameborder="0" allowfullscreen></iframe>',
-				$video->video_id );
+			$markup .= '<h2 class="%1$s-title"><a href="' . $video->link . '" title="' . __( 'View on YouTube', 'classblogs' ) . '">' . $video->title . '</a></h2>';
+			$markup .= '<div class="%1$s-video-thumbnail" id="' . $video->video_id . '">';
+			$markup .= sprintf( '<a href="%s"><img src="%s" title="%s" /></a>',
+				$video->link,
+				$this->_get_large_thumbnail_url( $video->video_id ),
+				esc_attr( $video->title ) );
 			$markup .= '</div>';
 
 			// Add metadata for the video
 			$markup .= '<p class="%1$s-meta">' . sprintf( __( 'Added to the playlist on %s', 'classblogs' ), '<span class="%1$s-date">' . $video->published . '</span>' ) . '</p>';
-			$markup .= '<p class="%1$s-usage">' . __( 'Embedded in', 'classblogs' ) . ' ';
-			$links = array();
-			foreach ( $video->used_by as $usage ) {
-				$link = '<a class="%1$s-usage-post" ';
-				switch_to_blog( $usage->blog_id );
-				$link .= sprintf( ' href="%s">%s</a>',
-					get_permalink( $usage->post_id ),
-					get_post( $usage->post_id )->post_title );
-				restore_current_blog();
-				$links[] = $link;
+			if ( ! empty( $video->used_by ) ) {
+				$markup .= '<p class="%1$s-usage">' . __( 'Embedded in', 'classblogs' ) . ' ';
+				$links = array();
+				foreach ( $video->used_by as $usage ) {
+					$link = '<a class="%1$s-usage-post" ';
+					switch_to_blog( $usage->blog_id );
+					$link .= sprintf( ' href="%s">%s</a>',
+						get_permalink( $usage->post_id ),
+						get_post( $usage->post_id )->post_title );
+					restore_current_blog();
+					$links[] = $link;
+				}
+				$markup .= implode( ', ', $links ) . '</p>';
 			}
-			$markup .= implode( ', ', $links ) . '</p>';
 			$markup .= '</div>';
 		}
 
 		return $content . sprintf( $markup, 'cb-youtube-local-playlist-page' );
+	}
+
+	/**
+	 * Gets the URL to view the full-size video thumbnail
+	 *
+	 * @param  string $video_id the YouTube video ID
+	 * @return string           the URL of the video's full-size thumbnail
+	 */
+	private function _get_large_thumbnail_url( $video_id )
+	{
+		return sprintf( self::_YOUTUBE_FULL_SIZE_THUMBNAIL_URL_TEMPLATE, $video_id );
 	}
 
 	/**
