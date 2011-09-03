@@ -641,8 +641,8 @@ a:hover {
   font-weight: bold; }
 .cb-sitewide-comment .cb-sitewide-comment-excerpt {
   border-top: 1px solid #e5e5e5;
-  margin: 0.75em 0 1.5em;
-  padding-top: 0.75em; }
+  margin: 0.1875em 0 1.5em;
+  padding-top: 0.1875em; }
 
 /* ===SITEWIDE POSTS=== */
 .cb-sitewide-post .format {
@@ -651,12 +651,12 @@ a:hover {
   font-weight: bold; }
 .cb-sitewide-post .cb-sitewide-post-excerpt {
   border-top: 1px solid #e5e5e5;
-  margin: 0.75em 0 1.5em;
-  padding-top: 0.75em; }
+  margin: 0.1875em 0 1.5em;
+  padding-top: 0.1875em; }
 
 /* ==YOUTUBE CLASS PLAYLIST=== */
 #sidebar .cb-youtube-class-playlist .cb-youtube-video-image-link {
-  margin-top: 0.75em; }
+  margin-top: 1.5em; }
   #sidebar .cb-youtube-class-playlist .cb-youtube-video-image-link .cb-youtube-video-thumbnail {
     width: 90% !important; }
 #sidebar .cb-youtube-class-playlist .cb-youtube-local-playlist-link,
@@ -668,3 +668,19 @@ a:hover {
   padding-top: 0.75em; }
 #sidebar .cb-youtube-class-playlist .cb-youtube-remote-playlist-link {
   margin-top: 0; }
+
+.hentry .content .cb-youtube-local-playlist-page-video {
+  margin-top: 1.5em; }
+  .hentry .content .cb-youtube-local-playlist-page-video .cb-youtube-local-playlist-page-title {
+    margin-bottom: 0; }
+    .hentry .content .cb-youtube-local-playlist-page-video .cb-youtube-local-playlist-page-title a {
+      color: #333333; }
+  .hentry .content .cb-youtube-local-playlist-page-video .cb-youtube-local-playlist-page-meta {
+    margin-top: 0.75em;
+    margin-bottom: 0; }
+    .hentry .content .cb-youtube-local-playlist-page-video .cb-youtube-local-playlist-page-meta .cb-youtube-local-playlist-page-date {
+      font-weight: bold; }
+  .hentry .content .cb-youtube-local-playlist-page-video .cb-youtube-local-playlist-page-usage {
+    border-top: 1px solid #e5e5e5;
+    margin-top: 0.375em;
+    padding-top: 0.375em; }

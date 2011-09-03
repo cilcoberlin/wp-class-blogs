@@ -19,8 +19,8 @@
 	// The comment excerpt
 	.cb-sitewide-comment-excerpt {
 		border-top: 1px solid $color-border-light;
-		margin: 0.75em 0 1.5em;
-		padding-top: 0.75em;
+		margin: 0.1875em 0 1.5em;
+		padding-top: 0.1875em;
 	}
 }
 
@@ -42,8 +42,8 @@
 	// The post excerpt
 	.cb-sitewide-post-excerpt {
 		border-top: 1px solid $color-border-light;
-		margin: 0.75em 0 1.5em;
-		padding-top: 0.75em;
+		margin: 0.1875em 0 1.5em;
+		padding-top: 0.1875em;
 	}
 }
 
@@ -54,7 +54,7 @@
 
 	// Wrapper for the video thumbnail link
 	.cb-youtube-video-image-link {
-		margin-top: 0.75em;
+		margin-top: 1.5em;
 
 		// Scale the video thumbnail
 		.cb-youtube-video-thumbnail {
@@ -77,5 +77,35 @@
 	.cb-youtube-remote-playlist-link {
 		margin-top: 0;
 	}
+}
 
+// A single YouTube video on the class playlist page
+.hentry .content .cb-youtube-local-playlist-page-video {
+	margin-top: 1.5em;
+
+	// The video's title
+	.cb-youtube-local-playlist-page-title {
+		margin-bottom: 0;
+
+		a {
+			color: $color-text;
+		}
+	}
+
+	// Video metadata
+	.cb-youtube-local-playlist-page-meta {
+		margin-top: 0.75em;
+		margin-bottom: 0;
+
+		.cb-youtube-local-playlist-page-date {
+			font-weight: bold;
+		}
+	}
+
+	// Usage information about the video
+	.cb-youtube-local-playlist-page-usage {
+		border-top: 1px solid $color-border-light;
+		margin-top: 0.375em;
+		padding-top: 0.375em;
+	}
 }
