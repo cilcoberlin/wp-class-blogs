@@ -1,5 +1,11 @@
 <?php
 
+// Since Bentham manually gets a list of sitewide posts if any are available,
+// we want to prevent the sitewide posts code from executing, as, if sitewide
+// data isn't available, we won't be missing out on its normal overriding of
+// the standard front-page post list
+define( 'CLASS_BLOGS_SHOW_SITEWIDE_POSTS_ON_FRONT_PAGE', false);
+
 /**
  * Performs setup functions for the theme
  *
