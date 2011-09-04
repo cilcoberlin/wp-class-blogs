@@ -331,7 +331,9 @@ a:hover {
   .home .hentry .title,
   .search .hentry .title {
     font-size: 1.5em;
-    line-height: 2em; }
+    line-height: 2em;
+    margin-left: -2.4em;
+    margin-right: -2em; }
     .archive .hentry .title .post-edit-link,
     .home .hentry .title .post-edit-link,
     .search .hentry .title .post-edit-link {
