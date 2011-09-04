@@ -88,11 +88,22 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 */
 	public function use_correct_blog_for_sitewide_post()
 	{
-		global $post;
+		global $post, $wp_rewrite;
 
 		if ( property_exists( $post, 'from_blog' ) ) {
+
+			// Store the original rewrite rules for later
+			if ( ! isset( $this->_rewrite ) ) {
+				$this->_rewrite = $wp_rewrite;
+			}
+
+			// Switch to the post's blog
 			restore_current_blog();
 			switch_to_blog( $post->from_blog );
+
+			// Generate new rewrite rules for the blog, which will allow things
+			// like categories and tags to display properly
+			$wp_rewrite = new WP_Rewrite();
 		}
 	}
 
@@ -107,13 +118,65 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 */
 	public function reset_blog_on_loop_end()
 	{
-		global $wp_query;
+		global $wp_query, $wp_rewrite;
 		restore_current_blog();
 		if ( isset( $this->root_blog_posts ) ) {
 			$wp_query->posts = $this->root_blog_posts;
 		}
+		if ( isset( $this->_rewrite ) ) {
+			$wp_rewrite = $this->_rewrite;
+		}
 	}
 
+	/**
+	 * Prevents sitewide post IDs from conflicting with pages or posts on the
+	 * blog that is displaying them.
+	 *
+	 * This function should be called whenever a sitewide plugin overrides the
+	 * posts for a given page using the `the_posts` filter.  Since one or more
+	 * of the sitewide posts might have an ID that is the same as a post or page
+	 * on the blog that is displaying them, this function gives every sitewide
+	 * post an invalid ID.  It also keeps a record of the actual post IDs, which
+	 * can be used to restore the sitewide posts' IDs when needed, such as when
+	 * a theme enters the loop.
+	 *
+	 * @param  array $posts the posts used to replace the normal page's posts
+	 * @return array        the posts with invalid IDs
+	 *
+	 * @since 0.1
+	 */
+	public function prevent_sitewide_post_id_conflicts( $posts )
+	{
+		$this->_sitewide_post_ids = array();
+		for ( $i=0; $i < count( $posts ); $i++ ) {
+			$this->_sitewide_post_ids[$i] = $posts[$i]->ID;
+			$posts[$i]->ID = -1;
+		}
+		return $posts;
+	}
+
+	/**
+	 * Restores the correct ID of each sitewide post.
+	 *
+	 * This is used in conjunction with the `prevent_sitewide_post_id_conflicts`
+	 * function to give a post back its proper ID when needed, such as when
+	 * a theme is in the loop.
+	 *
+	 * @since 0.1
+	 */
+	public function restore_sitewide_post_ids()
+	{
+		// If the conflict-preventing function has yet to be run, abort early
+		if ( empty( $this->_sitewide_post_ids ) ) {
+			return;
+		}
+
+		// Give each sitewide post back its proper ID
+		global $wp_query;
+		for ( $i=0; $i < count( $wp_query->posts ); $i++ ) {
+			$wp_query->posts[$i]->ID = $this->_sitewide_post_ids[$i];
+		}
+	}
 }
 
 ?>

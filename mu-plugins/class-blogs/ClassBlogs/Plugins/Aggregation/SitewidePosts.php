@@ -223,11 +223,11 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 
 		if ( $allow_posts && ClassBlogs_Utils::is_root_blog() && ( is_home() || is_front_page() ) ) {
 
-			add_filter( 'the_posts',   array( $this, '_use_sitewide_posts' ) );
-			add_filter( 'page_link',   array( $this, '_use_correct_page_url' ), 10, 2);
-
-			add_action( 'loop_end',    array( $this, 'reset_blog_on_loop_end' ) );
-			add_action( 'the_post',    array( $this, 'use_correct_blog_for_sitewide_post' ) );
+			add_action( 'loop_end',   array( $this, 'reset_blog_on_loop_end' ) );
+			add_action( 'loop_start', array( $this, 'restore_sitewide_post_ids' ) );
+			add_action( 'the_post',   array( $this, 'use_correct_blog_for_sitewide_post' ) );
+			add_filter( 'the_posts',  array( $this, '_use_sitewide_posts' ) );
+			add_filter( 'page_link',  array( $this, '_use_correct_page_url' ), 10, 2 );
 
 			// Use the post's excerpt if that option has been set
 			if ( $this->get_option( 'root_use_excerpt' ) ) {
@@ -259,13 +259,16 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		// Keep a record of the actual root posts for later use
 		$this->root_blog_posts = $actual_posts;
 
-		// Return the sitewide posts, respecting pagination and fixing the page
-		// number count to reflect the actual number of pages
+		// Set correct pagination and page count information
 		global $wp_query;
 		$current_page = max( 1, (int) $wp_query->query_vars['paged'] );
 		$per_page = (int) get_option( 'posts_per_page' );
 		$wp_query->max_num_pages = ceil( count( $this->get_sitewide_posts() ) / $per_page );
-		return array_slice( $this->get_sitewide_posts(), ($current_page - 1) * $per_page, $per_page );
+
+		// Return the sitewide posts, prevent ID conflicts before doing so
+		$sw_posts = array_slice( $this->get_sitewide_posts(), ($current_page - 1) * $per_page, $per_page );
+		$this->prevent_sitewide_post_id_conflicts( $sw_posts );
+		return $sw_posts;
 	}
 
 	/**

@@ -221,6 +221,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 			);
 
 			add_action( 'loop_end',         array( $this, 'reset_blog_on_loop_end' ) );
+			add_action( 'loop_start',       array( $this, 'restore_sitewide_post_ids' ) );
 			add_action( 'the_post',         array( $this, 'use_correct_blog_for_sitewide_post' ) );
 			add_filter( 'the_posts',        array( $this, '_fake_tag_archive_page' ) );
 			add_filter( 'single_tag_title', array( $this, '_set_tag_title' ) );
@@ -433,7 +434,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 			'term_id' => 0
 		);
 
-		return $this->get_tagged_posts( $this->_current_tag['slug'] );
+		// Use the tagged posts and prevent ID conflicts
+		$tagged_posts = $this->get_tagged_posts( $this->_current_tag['slug'] );
+		$this->prevent_sitewide_post_id_conflicts( $tagged_posts );
+		return $tagged_posts;
 	}
 
 	/**
