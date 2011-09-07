@@ -93,7 +93,7 @@ function bentham_student_posts_available()
 	$available = false;
 	if ( class_exists( 'ClassBlogs' ) ) {
 		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
-		$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_posts' );
+		$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
 		$available = ! empty( $sitewide_posts ) && ! empty( $sitewide_comments );
 	}
 	return $available;
