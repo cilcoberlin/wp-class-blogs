@@ -23,6 +23,11 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	);
 
 	/**
+	 * The numerical representation of Monday when using PHP's `date` function.
+	 */
+	const MONDAY = 1;
+
+	/**
 	 * Registers WordPress hooks to enable the word counter
 	 */
 	function __construct() {
@@ -214,15 +219,21 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		global $wpdb;
 		$by_week = array();
 
-		// Get the date bounds to search between
+		// Get the dates of the oldest and newest posts, which will be used to
+		// influence our date bounds
 		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
 		$newest_post = $sitewide_posts->get_newest_post();
 		$oldest_post = $sitewide_posts->get_oldest_post();
 		if ( empty( $newest_post ) || empty( $oldest_post ) ) {
 			return $by_week;
 		}
-		$end_date = new DateTime($newest_post->post_date);
+
+		// Move the start date back until we hit a Monday, and move the end date
+		// forward until we hit another Monday
 		$start_date = new DateTime($oldest_post->post_date);
+		$end_date = new DateTime($newest_post->post_date);
+		$start_date = $this->_find_weekday_near_date( self::MONDAY, $start_date, '-1 day' );
+		$end_date = $this->_find_weekday_near_date( self::MONDAY, $end_date, '+1 day' );
 		if ( $start_date > $end_date ) {
 			return $by_week;
 		}
@@ -249,6 +260,29 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 			$current_date->modify( '+1 week' );
 		}
 		return $by_week;
+	}
+
+	/**
+	 * Applies the given interval to the given date until the date happens
+	 * to fall on the given weekday.
+	 *
+	 * The interval passed can be any string that would be a valid argument
+	 * to the `modify` method of a DateTime instance.  The weekday passed should
+	 * use 0 to represent Sunday and 6 for Saturday.
+	 *
+	 * @param  int    $weekday the weekday to search for
+	 * @param  object $date    a DateTime instance
+	 * @param  string $step    an interval by which to modify the date object
+	 * @return object          a DateTime instance that falls on a Monday
+	 */
+	private function _find_weekday_near_date( $weekday, $date, $step )
+	{
+		$weekday = (string) $weekday;
+		$new_date = clone $date;
+		while ( date( 'w', $new_date->getTimestamp() ) !== $weekday ) {
+			$new_date->modify( $step );
+		}
+		return $new_date;
 	}
 
 	/**
