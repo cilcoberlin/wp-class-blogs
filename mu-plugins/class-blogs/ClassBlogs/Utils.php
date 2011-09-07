@@ -30,6 +30,31 @@ class ClassBlogs_Utils
 	}
 
 	/**
+	 * Gets the user IDs of any student users, which are defined in this sense
+	 * as any user that is not an admin on the root blog.
+	 *
+	 * @return array a list of student user IDs
+	 *
+	 * @since 0.1
+	 */
+	public static function get_student_user_ids()
+	{
+		global $wpdb;
+		$ids = array();
+
+		// Add any users who are not admins on the root blog to the list
+		switch_to_blog( self::ROOT_BLOG_ID );
+		foreach ( $wpdb->get_results( "SELECT ID FROM $wpdb->users" ) as $user ) {
+			if ( ! user_can( $user->ID, 'administrator' ) ) {
+				$ids[] = $user->ID;
+			}
+		}
+		restore_current_blog();
+
+		return $ids;
+	}
+
+	/**
 	 * Sanitizes any input coming from a user
 	 *
 	 * @param  string $input text of the user's input in a form field
