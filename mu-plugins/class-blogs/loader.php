@@ -14,6 +14,12 @@ if ( is_admin() ) {
 $plugins = array(
 	'BasePlugin',
 	'SidebarWidget',
+	'Aggregation/Settings',
+	'Aggregation/Aggregator',
+	'Aggregation/SitewidePlugin',
+	'Aggregation/SitewideComments',
+	'Aggregation/SitewidePosts',
+	'Aggregation/SitewideTags',
 	'ClassmateComments',
 	'DisableComments',
 	'GravatarSignup',
@@ -21,13 +27,8 @@ $plugins = array(
 	'RandomImage',
 	'StudentBlogLinks',
 	'StudentBlogList',
-	'YouTubeClassPlaylist',
-	'Aggregation/Settings',
-	'Aggregation/Aggregator',
-	'Aggregation/SitewidePlugin',
-	'Aggregation/SitewideComments',
-	'Aggregation/SitewidePosts',
-	'Aggregation/SitewideTags'
+	'WordCounter',
+	'YouTubeClassPlaylist'
 );
 foreach ( $plugins as $plugin ) {
 	require_once( 'ClassBlogs/Plugins/' . $plugin . '.php' );
