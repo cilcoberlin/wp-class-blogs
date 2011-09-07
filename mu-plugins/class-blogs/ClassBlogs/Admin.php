@@ -62,7 +62,7 @@ class ClassBlogs_Admin
 	}
 
 	/**
-	 * Return an instance of the admin class, instantiating one if it doesnt' exist
+	 * Return an instance of the admin class, instantiating one if it doesn't exist
 	 *
 	 * @return object an instance of a ClassBlogs_Admin class
 	 *
