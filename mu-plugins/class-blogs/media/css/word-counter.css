@@ -1,0 +1,77 @@
+
+#student-word-counts-instructions {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 1.5em;
+	padding-bottom: 1.5em;
+}
+
+/* Wrap the student word counts table in a div to allow internal scrolling. */
+#student-word-counts-wrap {
+	overflow: auto;
+	width: 100%;
+}
+
+#student-word-counts {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#student-word-counts th,
+#student-word-counts td {
+	padding: 0.375em 0.375em;
+	text-align: left;
+}
+
+#student-word-counts thead th {
+	border-bottom: 2px solid #ccc;
+}
+
+#student-word-counts tbody td,
+#student-word-counts tbody th,
+#student-word-counts tfoot th,
+#student-word-counts tfoot td {
+	border: 1px solid #ccc;
+	min-width: 6em;
+}
+
+#student-word-counts tbody th,
+#student-word-counts tfoot th {
+	border-left: none;
+	min-width: 8em;
+}
+#student-word-counts tbody tr td:last-child,
+#student-word-counts tfoot tr td:last-child {
+	border-right: none;
+}
+
+#student-word-counts tfoot td,
+#student-word-counts tfoot th {
+	background: #ffc;
+	border-top: 2px solid #ccc;
+	font-weight: bold;
+}
+
+/* Make each type of cell (null, under- or over-performing) distinctive. */
+#student-word-counts td.null {
+	color: #999;
+}
+#student-word-counts td.under {
+	color: #900;
+}
+#student-word-counts td.over {
+	color: #090;
+}
+
+/* Highlight a row on hover. */
+#student-word-counts tbody tr:hover td,
+#student-word-counts tbody tr:hover th {
+	background-color: #ffe;
+}
+
+/* Zebra stripe the columns */
+#student-word-counts tbody td.odd {
+	background: #eee;
+}
+#student-word-counts tbody td.even {
+
+}
