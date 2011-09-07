@@ -391,6 +391,52 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
+	* Gets the sitewide post with the newest creation date.
+	*
+	* @return object a single row from the posts table
+	*
+	* @since 0.1
+	*/
+	public function get_newest_post()
+	{
+		global $wpdb;
+		return $wpdb->get_row( $wpdb->prepare( "SELECT post_date FROM {$this->sw_tables->posts} ORDER BY post_date DESC LIMIT 1" ) );
+	}
+
+	/**
+	 * Gets the sitewide post with the oldest creation date.
+	 *
+	 * @return object a single row from the posts table
+	 *
+	 * @since 0.1
+	 */
+	public function get_oldest_post()
+	{
+		global $wpdb;
+		return $wpdb->get_row( $wpdb->prepare( "SELECT post_date FROM {$this->sw_tables->posts} ORDER BY post_date LIMIT 1" ) );
+	}
+
+	/**
+	 * Returns a subset of the sitewide posts, filtered by user and date.
+	 *
+	 * @param  int    $user_id    the ID of the desired post author
+	 * @param  object $start_date the start date of the date filter window
+	 * @param  object $end_date   the end date of the date filter window
+	 * @return array              a list of the posts matching the given filters
+	 *
+	 * @since 0.1
+	 */
+	public function filter_posts( $user_id, $start_date, $end_date )
+	{
+		global $wpdb;
+		return $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM {$this->sw_tables->posts} WHERE post_author=%s AND post_date >= %s AND post_date <= %s",
+			$user_id,
+			$start_date->format( 'Ymd' ),
+			$end_date->format( 'Ymd' ) ) );
+	}
+
+	/**
 	 * Gets a list of recent posts formatted for display in a sidebar widget
 	 *
 	 * The array of returned posts contains custom object instances with the
