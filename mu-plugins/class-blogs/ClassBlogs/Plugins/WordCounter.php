@@ -28,13 +28,102 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	const MONDAY = 1;
 
 	/**
+	 * The numerical representation of Sunday when using PHP's `date` function.
+	 */
+	const SUNDAY = 0;
+
+	/**
 	 * Registers WordPress hooks to enable the word counter
 	 */
 	function __construct() {
 		parent::__construct();
 
-		add_action( 'admin_head', array( $this, '_add_admin_styles' ) );
-		add_action( 'admin_menu', array( $this, '_add_admin_page' ) );
+		add_action( 'admin_head',         array( $this, '_add_admin_styles' ) );
+		add_action( 'admin_menu',         array( $this, '_add_admin_page' ) );
+		add_action( 'wp_dashboard_setup', array( $this, '_add_student_dashboard_widget' ) );
+	}
+
+	/**
+	 * Adds an admin dashboard widget to any student-blog admin pages that shows
+	 * the student's word count for the current and previous weeks.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _add_student_dashboard_widget()
+	{
+		if ( ! ClassBlogs_Utils::is_root_blog() ) {
+			wp_add_dashboard_widget(
+				'dashboard_' . $this->get_uid(),
+				__( 'Word Count', 'classblogs' ),
+				array( $this, '_handle_student_dashboard_widget' ) );
+		}
+	}
+
+	/**
+	 * Handles the logic to display the student-facing admin dashboard widget
+	 * that shows their word count for the current and previous weeks.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _handle_student_dashboard_widget()
+	{
+		$date = new DateTime();
+		$student_id = wp_get_current_user()->ID;
+		$required_words = $this->get_option( 'required_weekly_words' );
+
+		// Get the word count for the current and previous weeks
+		$current_count = $this->_get_student_word_count_for_week( $student_id, $date );
+		$date->modify( '-1 week' );
+		$previous_count = $this->_get_student_word_count_for_week( $student_id, $date );
+
+		// Display the word counts in the dashboard widget
+		?>
+			<div class="count current <?php if ( $required_words && $current_count < $required_words ) { echo 'under'; } ?>">
+				<h5><?php _e( 'This Week', 'classblogs' ); ?></h5>
+				<p><?php echo number_format( $current_count ); ?></p>
+			</div>
+
+			<div class="count previous <?php if ( $required_words && $previous_count < $required_words ) { echo 'under'; } ?>">
+				<h5><?php _e( 'Previous Week', 'classblogs' ); ?></h5>
+				<p><?php echo number_format( $previous_count ); ?></p>
+			</div>
+
+			<div class="clearfix"></div>
+
+			<?php if ( $required_words ): ?>
+				<p class="required">
+					<?php _e( 'Words required per week', 'classblogs' ); ?>
+					<span class="quantity"><?php echo number_format( $required_words ); ?></span>
+				</p>
+			<?php endif; ?>
+
+		<?php
+	}
+
+	/**
+	 * Gets the number of words used in a student's posts for the week, starting
+	 * on Monday, that contains the given date.
+	 *
+	 * @param  int    $student_id the ID of the student user
+	 * @param  object $date       a DateTime instance of a date during a desired week
+	 * @return int                the number of words used in posts during the week
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _get_student_word_count_for_week( $student_id, $date )
+	{
+		// Figure out the date bounds for the week containing the given date,
+		// with the week starting on Monday and ending on Sunday
+		$start_date = $this->_find_weekday_near_date( self::MONDAY, $date, '-1 day' );
+		$end_date = $this->_find_weekday_near_date( self::SUNDAY, $date, '+1 day' );
+
+		// Get the word count for the posts made during the week
+		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
+		$posts = $sitewide_posts->filter_posts( $student_id, $start_date, $end_date );
+		return $this->_get_word_count_for_posts( $posts );
 	}
 
 	/**

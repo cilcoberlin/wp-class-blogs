@@ -1,4 +1,62 @@
 
+/*
+ * Styles used on the student-blog dashboard widget
+ */
+
+/* Have the current and previous week counts be next to each other. */
+#dashboard_cb_wordcounter .count.previous {
+	float: right;
+	text-align: right;
+}
+#dashboard_cb_wordcounter .count.current {
+	float: left;
+}
+
+/* Show information for the current and previous week. */
+#dashboard_cb_wordcounter .count h5,
+#dashboard_cb_wordcounter .count p {
+	font-size: 1.25em;
+	line-height: 1.5em;
+}
+#dashboard_cb_wordcounter .count h5 {
+	display: inline;
+	font-weight: normal;
+	margin: 0;
+	margin-right: 0.375em;
+}
+#dashboard_cb_wordcounter .count p {
+	color: #090;
+	display: inline;
+	font-weight: bold;
+}
+#dashboard_cb_wordcounter .count.under p {
+	color: #a00;
+}
+#dashboard_cb_wordcounter .clearfix {
+	clear: both;
+}
+
+/* Display information on the required number of words per week. */
+#dashboard_cb_wordcounter .required {
+	border-top: 1px solid #ccc;
+	color: #777;
+	font-weight: bold;
+	margin-top: 0.75em;
+	padding-top: 0.75em;
+	text-align: right;
+}
+#dashboard_cb_wordcounter .required .quantity {
+	margin-left: 0.75em;
+	background: #aaa;
+	color: #fff;
+	display: inline-block;
+	padding: 0.375em 0.75em;
+}
+
+/*
+ * Styles used on the professor's word-count viewing page
+ */
+
 #student-word-counts-instructions {
 	border-bottom: 1px solid #ccc;
 	margin-bottom: 1.5em;
