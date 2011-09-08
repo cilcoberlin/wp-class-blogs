@@ -233,7 +233,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 						$required_words = $this->get_option( 'required_weekly_words' );
 						foreach ( $word_counts as $week_counts ) {
 							echo "<tr>";
-							$verbose_date = date_i18n( 'M j, Y', $week_counts['week_start']->getTimestamp() );
+							$verbose_date = date_i18n( 'M j, Y', (int) $week_counts['week_start']->format( 'U' ) );
 							printf( '<th class="week">%s</th>', $verbose_date );
 							$counter = 0;
 							foreach ( $student_ids as $student_id ) {
@@ -365,7 +365,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	{
 		$weekday = (string) $weekday;
 		$new_date = clone $date;
-		while ( date( 'w', $new_date->getTimestamp() ) !== $weekday ) {
+		while ( date( 'w', (int) $new_date->format( 'U' ) ) !== $weekday ) {
 			$new_date->modify( $step );
 		}
 		return $new_date;
