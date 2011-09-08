@@ -288,7 +288,8 @@ a:hover {
         line-height: 1.5em;
         margin: 1.5em 0 0.75em; }
         .user-posts .posts .post .entry .read-more {
-          font-weight: bold; }
+          font-weight: bold;
+          margin-left: 0.375em; }
   .user-posts .end-posts {
     background: url("images/post-list-fadeout.png") repeat-x bottom left;
     bottom: 0;
@@ -479,24 +480,6 @@ a:hover {
       padding: 0.6em 1.2em 0.6em 0; }
     .hentry .content table td {
       border-bottom: 1px solid #aaaaaa; }
-  .hentry .content form p {
-    color: #aa0000; }
-  .hentry .content form label {
-    color: #333333;
-    display: block;
-    float: left;
-    font-weight: bold;
-    padding-right: 1.2em; }
-  .hentry .content .page-links {
-    border: 1px solid #e5e5e5;
-    border-left: none;
-    border-right: none;
-    clear: left;
-    margin-top: 1.5em;
-    padding: 0.75em 0; }
-    .hentry .content .page-links strong {
-      font-weight: bold;
-      margin-right: 0.75em; }
   .hentry .content .wp-caption {
     max-width: 50em; }
     .hentry .content .wp-caption a {
@@ -519,6 +502,24 @@ a:hover {
     display: block;
     margin-left: auto;
     margin-right: auto; }
+  .hentry .content form p {
+    color: #aa0000; }
+  .hentry .content form label {
+    color: #333333;
+    display: block;
+    float: left;
+    font-weight: bold;
+    padding-right: 1.2em; }
+  .hentry .content .page-links {
+    border: 1px solid #e5e5e5;
+    border-left: none;
+    border-right: none;
+    clear: left;
+    margin-top: 1.5em;
+    padding: 0.75em 0; }
+    .hentry .content .page-links strong {
+      font-weight: bold;
+      margin-right: 0.75em; }
 .hentry .taxonomy {
   clear: left;
   line-height: 1.5em;

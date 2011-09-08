@@ -11,6 +11,7 @@ Tags: black, blue, white, gray, threaded-comments, two-columns, translation-read
 */
 
 @import "settings";
+@import "usercontent";
 
 /* ===CSS RESET== */
 
@@ -373,6 +374,7 @@ $margin-post-header: 2.25em;
 
 				.read-more {
 					font-weight: bold;
+					margin-left: 0.375em;
 				}
 			}
 		}
@@ -550,118 +552,7 @@ $margin-post-header: 2.25em;
 		font-size: 1.25em;
 		line-height: 1.5em;
 		margin: 1.2em 0;
-		//max-width: 60em;
-
-		// Typographically important content
-		p, ol, ul, dl dd, blockquote {
-			@include readable-text;
-		}
-
-		// User text
-		p {
-			margin: 1.2em 0;
-		}
-		blockquote {
-			font-style: italic;
-			margin: 1.2em 1.8em;
-		}
-		em {
-			font-style: italic;
-		}
-		strong {
-			font-weight: bold;
-		}
-		abbr,
-		acronym {
-			border-bottom: 1px dashed $color-border-dark;
-		}
-		big {
-			font-weight: bold;
-		}
-		code,
-		kbd,
-		pre,
-		tt,
-		var {
-			color: $color-text-emphasis;
-			font-family: monospace;
-		}
-		pre {
-			background: $color-bg-light;
-			padding: 1.2em;
-		}
-		ins {
-			background: $color-highlight-bg;
-		}
-		q:before {
-			content: '\201C';
-		}
-		q:after {
-			content: '\201D';
-		}
-		sub,
-		sup {
-			font-size: 0.8em;
-			line-height: 1.8em;
-		}
-		sub {
-			vertical-align: sub;
-		}
-		sup {
-			vertical-align: super;
-		}
-
-		// User lists
-		ol, ul {
-			list-style-position: inside;
-		}
-		ol ol,
-		ul ul {
-			margin-left: 2.4em;
-		}
-		ol {
-			list-style-type: decimal;
-		}
-		ul {
-			list-style-type: disc;
-		}
-		dl {
-			dt {
-				font-weight: bold;
-			}
-			dd {
-				margin-bottom: 1.2em;
-			}
-		}
-
-		// User headings
-		h1, h2, h3, h4, h5, h6 {
-			font-size: 1.2em;
-			font-weight: bold;
-			line-height: 1em;
-			margin: 2em 0 1em;
-		}
-		h1, h2 {
-			font-size: 1.4em;
-			line-height: 1.714em;
-			margin: 1em 0;
-		}
-
-		// User tables
-		table {
-			width: 100%;
-			th {
-				border-bottom: 2px solid $color-text;
-				font-weight: bold;
-				text-align: left;
-			}
-			th, td {
-				padding: 0.6em 1.2em 0.6em 0;
-			}
-			td {
-				border-bottom: 1px solid $color-border-dark;
-			}
-		}
+		@include user-content;
 
 		// Password-protected posts
 		form {
@@ -692,40 +583,6 @@ $margin-post-header: 2.25em;
 				font-weight: bold;
 				margin-right: 0.75em;
 			}
-		}
-
-		// Captioned attachments
-		.wp-caption {
-			max-width: 50em;
-
-			a {
-				display: block;
-			}
-
-			.wp-caption-text {
-				font-size: 0.8em;
-				font-weight: bold;
-				margin-top: 0.75em;
-			}
-		}
-
-		// Alignment utility classes
-		.alignleft,
-		img.alignleft {
-			float: left;
-			margin-right: 1.2em;
-		}
-		.alignright,
-		img.alignright {
-			float: right;
-			margin-left: 1.2em;
-		}
-		.aligncenter,
-		img.aligncenter {
-			clear: both;
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
 		}
 	}
 

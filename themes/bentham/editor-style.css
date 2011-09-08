@@ -1,0 +1,99 @@
+html .mceContentBody {
+  color: #333333;
+  font-size: 1em;
+  line-height: 1.5em;
+  width: 95%; }
+  html .mceContentBody p, html .mceContentBody ol, html .mceContentBody ul, html .mceContentBody dl dd, html .mceContentBody blockquote {
+    font-family: Palatino, "Palatino Linotype", "Georgia", serif; }
+  html .mceContentBody p {
+    margin: 1.2em 0; }
+  html .mceContentBody blockquote {
+    font-style: italic;
+    margin: 1.2em 1.8em; }
+  html .mceContentBody em {
+    font-style: italic; }
+  html .mceContentBody strong {
+    font-weight: bold; }
+  html .mceContentBody abbr,
+  html .mceContentBody acronym {
+    border-bottom: 1px dashed #aaaaaa; }
+  html .mceContentBody big {
+    font-weight: bold; }
+  html .mceContentBody code,
+  html .mceContentBody kbd,
+  html .mceContentBody pre,
+  html .mceContentBody tt,
+  html .mceContentBody var {
+    color: #990000;
+    font-family: monospace; }
+  html .mceContentBody pre {
+    background: #eeeeee;
+    padding: 1.2em; }
+  html .mceContentBody ins {
+    background: yellow; }
+  html .mceContentBody q:before {
+    content: '\201C'; }
+  html .mceContentBody q:after {
+    content: '\201D'; }
+  html .mceContentBody sub,
+  html .mceContentBody sup {
+    font-size: 0.8em;
+    line-height: 1.8em; }
+  html .mceContentBody sub {
+    vertical-align: sub; }
+  html .mceContentBody sup {
+    vertical-align: super; }
+  html .mceContentBody ol, html .mceContentBody ul {
+    list-style-position: inside; }
+  html .mceContentBody ol ol,
+  html .mceContentBody ul ul {
+    margin-left: 2.4em; }
+  html .mceContentBody ol {
+    list-style-type: decimal; }
+  html .mceContentBody ul {
+    list-style-type: disc; }
+  html .mceContentBody dl dt {
+    font-weight: bold; }
+  html .mceContentBody dl dd {
+    margin-bottom: 1.2em; }
+  html .mceContentBody h1, html .mceContentBody h2, html .mceContentBody h3, html .mceContentBody h4, html .mceContentBody h5, html .mceContentBody h6 {
+    font-size: 1.2em;
+    font-weight: bold;
+    line-height: 1em;
+    margin: 2em 0 1em; }
+  html .mceContentBody h1, html .mceContentBody h2 {
+    font-size: 1.4em;
+    line-height: 1.714em;
+    margin: 1em 0; }
+  html .mceContentBody table {
+    width: 100%; }
+    html .mceContentBody table th {
+      border-bottom: 2px solid #333333;
+      font-weight: bold;
+      text-align: left; }
+    html .mceContentBody table th, html .mceContentBody table td {
+      padding: 0.6em 1.2em 0.6em 0; }
+    html .mceContentBody table td {
+      border-bottom: 1px solid #aaaaaa; }
+  html .mceContentBody .wp-caption {
+    max-width: 50em; }
+    html .mceContentBody .wp-caption a {
+      display: block; }
+    html .mceContentBody .wp-caption .wp-caption-text {
+      font-size: 0.8em;
+      font-weight: bold;
+      margin-top: 0.75em; }
+  html .mceContentBody .alignleft,
+  html .mceContentBody img.alignleft {
+    float: left;
+    margin-right: 1.2em; }
+  html .mceContentBody .alignright,
+  html .mceContentBody img.alignright {
+    float: right;
+    margin-left: 1.2em; }
+  html .mceContentBody .aligncenter,
+  html .mceContentBody img.aligncenter {
+    clear: both;
+    display: block;
+    margin-left: auto;
+    margin-right: auto; }

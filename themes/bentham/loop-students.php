@@ -88,7 +88,7 @@
 						</h3>
 						<h4 class="meta"><?php the_time( 'M j' ); ?></h4>
 						<div class="entry">
-							<?php echo $post->cb_sw_excerpt; ?>
+							<?php echo bentham_get_post_excerpt( $post->post_content, 25 ); ?>
 							<a href="<?php echo $post->cb_sw_permalink; ?>" class="read-more"><?php _e( 'Read more', 'bentham' ); ?></a>
 						</div>
 					</li>

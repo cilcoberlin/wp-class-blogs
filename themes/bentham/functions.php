@@ -13,6 +13,7 @@ define( 'CLASS_BLOGS_SHOW_SITEWIDE_POSTS_ON_FRONT_PAGE', false);
  */
 function bentham_setup()
 {
+	add_editor_style();
 	add_theme_support( 'automatic-feed-links' );
 
 	// Configure the customizable image header
@@ -265,6 +266,30 @@ function bentham_get_blog_url_for_student( $user_id )
 {
 	$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
 	return $student_blogs->get_blog_url_for_student( $user_id );
+}
+
+/**
+ * Returns at most the requested number of words from the given text
+ *
+ * @param  string $content    text for which to make an excerpt
+ * @param  int    $word_count the maximum number of words to use
+ * @return string             the requested number of words of the text
+ *
+ * @since 0.1
+ */
+function bentham_get_post_excerpt( $content, $word_count )
+{
+	$content = strip_shortcodes( strip_tags( $content ) );
+	$words = preg_split( '/\s+/', $content );
+	if ( count( $words ) <= $word_count ) {
+		return $content;
+	} else {
+		$excerpt = join( ' ', array_slice( $words, 0, $word_count ) );
+		if ( '.' == substr( $excerpt, -1) ) {
+			$excerpt = substr( $excerpt, 0, -1 );
+		}
+		return $excerpt . '&hellip;';
+	}
 }
 
 // Register setup functions with WordPress hooks
