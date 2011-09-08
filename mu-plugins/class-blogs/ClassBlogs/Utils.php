@@ -17,7 +17,7 @@ class ClassBlogs_Utils
 	const ROOT_BLOG_ID = 1;
 
 	/**
-	 * Returns true if the current page is on the non-admin side of the root blog
+	 * Returns true if the current page is on the root blog
 	 *
 	 * @return bool whether or not the page is on the root blog
 	 *
@@ -27,6 +27,20 @@ class ClassBlogs_Utils
 	{
 		global $blog_id;
 		return self::ROOT_BLOG_ID == $blog_id;
+	}
+
+	/**
+	 * Returns true if the current page is the admin side of the root blog and
+	 * the logged-in user has administrator privileges on the blog.
+	 *
+	 * @return bool whether or not the current user is a root-blog admin logged
+	 *              in to the admin page for the root blog
+	 *
+	 * @since 0.1
+	 */
+	public static function on_root_blog_admin()
+	{
+		return is_admin() && self::is_root_blog() && current_user_can( 'administrator' );
 	}
 
 	/**
