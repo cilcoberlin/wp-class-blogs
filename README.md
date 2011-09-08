@@ -33,6 +33,10 @@ Disable Comments
 ----------------
 Provides a network-admin option to disable commenting on all blogs used by this class.
 
+Gravatar Signup
+---------------
+Adds a link for the user to sign up for a gravatar to each account activation email sent out.
+
 New User Configuration
 ----------------------
 Creates a first and last name for a newly added user based on their email address.
@@ -61,6 +65,10 @@ Student Blog List
 -----------------
 Provides a main-blog-only widget that shows a list of all student blogs that are part of this class.
 
+Word Counter
+------------
+Adds a page the professor on the admin side to view student word counts by week, and adds a dashboard widget to each student blog that shows the word counts for the current and previous weeks.
+
 YouTube Class Playlist
 ----------------------
 Allows you to link a YouTube playlist with this blog that is automatically updated whenever students embed YouTube videos in a post.
@@ -68,7 +76,7 @@ Allows you to link a YouTube playlist with this blog that is automatically updat
 Themes
 ======
 
-The class blogs suite currently provides a theme that takes advantage of the
+The class blogs suite currently provides the **Bentham** theme that takes advantage of the
 plugins to display data about all students posts on the front page of the blog.
 As long as the plugins are installed and sitewide aggregator is functioning,
 the front page will show a selection of recent student posts grouped by student,

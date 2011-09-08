@@ -123,6 +123,9 @@ class ClassBlogs_Admin
 			<h4><?php _e( 'Disable Comments', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Provides a network-admin option to disable commenting on all blogs used by this class.', 'classblogs' ); ?></p>
 
+			<h4><?php _e( 'Gravatar Signup', 'classblogs' ); ?></h4>
+			<p><?php _e( 'Adds a link for the user to sign up for a gravatar to each account activation email sent out.', 'classblogs' ); ?></p>
+
 			<h4><?php _e( 'New User Configuration', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Creates a first and last name for a newly added user based on their email address.', 'classblogs' ); ?></p>
 
@@ -143,6 +146,9 @@ class ClassBlogs_Admin
 
 			<h4><?php _e( 'Student Blog List', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Provides a main-blog-only widget that shows a list of all student blogs that are part of this class.', 'classblogs' ); ?></p>
+
+			<h4><?php _e( 'Word Counter', 'classblogs' ); ?></h4>
+			<p><?php _e( 'Adds a page the professor on the admin side to view student word counts by week, and adds a dashboard widget to each student blog that shows the word counts for the current and previous weeks.', 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'YouTube Class Playlist', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Allows you to link a YouTube playlist with this blog that is automatically updated whenever students embed YouTube videos in a post.', 'classblogs' ); ?></p>
