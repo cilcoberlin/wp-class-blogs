@@ -20,7 +20,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	 * @access protected
 	 * @var array
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'links' => array(),
 		'title' => 'Class Links'
 	);
@@ -42,7 +42,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 		// Update the default links options to be a single link pointing back
 		// to the main class blog
 		switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
-		self::$default_options['links'] = array(
+		$this->default_options['links'] = array(
 			array(
 				'url'   => site_url(),
 				'title' => __( 'Return to Course Blog', 'classblogs' )

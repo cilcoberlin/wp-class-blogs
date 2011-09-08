@@ -16,7 +16,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'title' => 'Our YouTube Playlist',
 		'limit' => 3
 	);
@@ -346,7 +346,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 * @access protected
 	 * @var array
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'access_token'         => "",
 		'access_token_secret'  => "",
 		'account_linked'       => false,

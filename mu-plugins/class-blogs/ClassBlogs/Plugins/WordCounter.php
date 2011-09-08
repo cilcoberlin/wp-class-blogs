@@ -18,7 +18,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * @access protected
 	 * @var array
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'required_weekly_words' => 0
 	);
 

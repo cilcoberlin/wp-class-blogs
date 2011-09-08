@@ -15,7 +15,7 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected static $default_options = array();
+	protected $default_options = array();
 
 	/**
 	 * Initializes the widget
@@ -96,7 +96,7 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 	 */
 	protected function maybe_apply_instance_defaults( $instance )
 	{
-		return wp_parse_args( $instance, $this::$default_options );
+		return wp_parse_args( $instance, $this->default_options );
 	}
 
 }

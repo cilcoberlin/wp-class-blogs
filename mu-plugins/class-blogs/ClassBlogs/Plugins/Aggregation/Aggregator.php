@@ -19,7 +19,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	 * @access protected
 	 * @var array
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'aggregation_enabled' => true,
 		'excluded_blogs'      => array(),
 		'tables_created'      => false

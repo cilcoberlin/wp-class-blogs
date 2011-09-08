@@ -15,7 +15,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 * @var array
 	 * @since 0.1
 	 */
-	protected static $default_options = array();
+	protected $default_options = array();
 
 	/**
 	 * The internally stored options for the plugin
@@ -74,7 +74,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 * Gets the options for the current plugin
 	 *
 	 * If no options are found for the plugin, options are set using the values
-	 * contained in the $default_options static variable.  If this variable is
+	 * contained in the $default_options  variable.  If this variable is
 	 * empty, it is assumed that no options are used for the plugin.
 	 *
 	 * @access private
@@ -85,7 +85,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 		$options_id = $this->get_uid();
 		$options = get_site_option( $options_id );
 		if ( empty( $options ) ) {
-			$options = $this::$default_options;
+			$options = $this->default_options;
 			$this->update_options( $options );
 		}
 		$this->_options = $options;
@@ -102,7 +102,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 */
 	protected function get_option( $name )
 	{
-		if ( ! isset( $this->options ) && ! empty( $this::$default_options ) ) {
+		if ( ! isset( $this->options ) && ! empty( $this->default_options ) ) {
 			$this->_get_options();
 		}
 		if ( $this->_options && array_key_exists( $name, $this->_options ) ) {

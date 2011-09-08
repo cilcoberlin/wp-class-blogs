@@ -16,7 +16,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'title' => 'Random Image'
 	);
 

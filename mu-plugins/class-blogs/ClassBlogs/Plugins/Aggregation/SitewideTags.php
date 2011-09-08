@@ -16,7 +16,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'max_font_size' => 22,
 		'min_font_size' => 8,
 		'min_usage'     => 1,
@@ -146,7 +146,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 * @access protected
 	 * @var array
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'tag_page_id' => null
 	);
 

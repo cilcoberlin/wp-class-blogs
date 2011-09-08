@@ -16,7 +16,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'display' => '%blog%',
 		'title'   => 'Student Blogs'
 	);

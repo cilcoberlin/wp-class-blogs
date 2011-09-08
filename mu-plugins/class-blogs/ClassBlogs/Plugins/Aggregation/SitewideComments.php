@@ -25,7 +25,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'max_comments'		    => 5,
 		'max_comments_per_blog' => 2,
 		'meta_format'           => 'On %date% %time%',

@@ -25,7 +25,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected static $default_options = array(
+	protected $default_options = array(
 		'max_posts'          => 5,
 		'max_posts_per_blog' => 2,
 		'meta_format'        => 'By %author% on %date%',
@@ -158,7 +158,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 * @access protected
 	 * @var array
 	 */
-	protected static $default_options = array (
+	protected $default_options = array (
 		'root_excerpt_words'          => 50,
 		'root_show_posts'             => true,
 		'root_strip_formatting'       => true,
