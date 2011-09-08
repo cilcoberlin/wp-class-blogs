@@ -3,7 +3,7 @@
 /**
  * The student-blog links plugin
  *
- * This plugin provides a network-admin menu that allows a professor to
+ * This plugin provides an admin menu that allows a professor to
  * add unlimited links of their choosing to student blogs.  These links will
  * appear on every student blog as the first widget in the first widgetized
  * area of the theme in use.
@@ -33,9 +33,8 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 
 		parent::__construct();
 
-		// Add an admin menu for the plugin to the network admin pages
+		// Add scripts used on the admin page
 		if ( is_admin() ) {
-			add_action( 'network_admin_menu', array( $this, 'configure_admin_interface' ) );
 			add_action( 'admin_footer', array( $this, 'add_admin_scripts' ) );
 		}
 
@@ -169,34 +168,29 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Adds an admin page for the plugin to the class blogs network admin menu
+	 * Adds an admin page for the plugin to the class blogs admin menu
 	 *
 	 * @since 0.1
 	 */
-	public function configure_admin_interface()
+	public function enable_admin_page( $admin )
 	{
-		if ( is_super_admin() ) {
-			$this->_admin = ClassBlogs_Admin::get_admin();
-			$this->_admin->add_admin_page( $this->get_uid(), __( 'Student Blog Links', 'classblogs' ), array( $this, 'admin_page' ) );
-		}
+		$admin->add_admin_page( $this->get_uid(), __( 'Student Blog Links', 'classblogs' ), array( $this, 'admin_page' ) );
 	}
 
 	/**
-	 * Adds JavaScript files for the network admin interface
+	 * Adds JavaScript files for the admin interface
 	 *
 	 * @since 0.1
 	 */
 	public function add_admin_scripts()
 	{
-		if ( is_super_admin() ) {
-			wp_register_script(
-				$this->get_uid(),
-				ClassBlogs_Utils::get_plugin_js_url() . 'student-blog-links.js',
-				array( 'jquery' ),
-				ClassBlogs_Settings::VERSION,
-				true );
-			wp_print_scripts( $this->get_uid() );
-		}
+		wp_register_script(
+			$this->get_uid(),
+			ClassBlogs_Utils::get_plugin_js_url() . 'student-blog-links.js',
+			array( 'jquery' ),
+			ClassBlogs_Settings::VERSION,
+			true );
+		wp_print_scripts( $this->get_uid() );
 	}
 
 	/**

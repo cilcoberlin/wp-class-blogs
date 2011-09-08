@@ -395,8 +395,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 			$this->_create_tables();
 		}
 
-		add_action( 'init',               array( $this, '_ensure_playlist_page_is_created' ) );
-		add_action( 'network_admin_menu', array( $this, '_configure_admin_interface' ) );
+		add_action( 'init', array( $this, '_ensure_playlist_page_is_created' ) );
 
 		// If we have an active account and playlist, register hooks for finding
 		// videos in post content and for showing the playlist archive page
@@ -1453,14 +1452,13 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Configures the network admin interface for the plugin
+	 * Configures the admin interface for the plugin
 	 *
 	 * @access private
 	 * @since 0.1
 	 */
-	public function _configure_admin_interface()
+	public function enable_admin_page( $admin )
 	{
-		$admin = ClassBlogs_Admin::get_admin();
 		$admin->add_admin_page( $this->get_uid(), __( 'YouTube Class Playlist', 'classblogs' ), array( $this, '_admin_page' ) );
 	}
 
@@ -1478,7 +1476,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Handles the network admin page for the plugin
+	 * Handles the admin page for the plugin
 	 *
 	 * @access private
 	 * @since 0.1

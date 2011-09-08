@@ -4,7 +4,7 @@
  * A class to handle shared administrative class blogs functions
  *
  * This mainly provides an interface that lets plugins that are part of
- * the class blogs suite add a network-admin submenu, using the add_admin_page()
+ * the class blogs suite add an admin submenu, using the add_admin_page()
  * method.
  *
  * To access the admin interface, you will need to get a reference to an
@@ -56,9 +56,7 @@ class ClassBlogs_Admin
 	 */
 	private function __construct()
 	{
-		if ( is_admin() ) {
-			add_action( 'network_admin_menu', array( $this, 'configure_admin_interface' ) );
-		}
+		add_action( 'admin_menu', array( $this, 'configure_admin_interface' ) );
 	}
 
 	/**
@@ -77,13 +75,14 @@ class ClassBlogs_Admin
 	}
 
 	/**
-	 * Creates the base class blogs admin menu on the network admin page
+	 * Creates the base class blogs admin menu that is available to any admin
+	 * user with administrative rights on the root blog who is on the admin side
 	 *
 	 * @since 0.1
 	 */
 	public function configure_admin_interface()
 	{
-		if ( is_super_admin() ) {
+		if ( ClassBlogs_Utils::on_root_blog_admin() ) {
 			$page = add_menu_page(
 				__( 'Class Blogs', 'classblogs' ),
 				__( 'Class Blogs', 'classblogs' ),
@@ -121,7 +120,7 @@ class ClassBlogs_Admin
 			<p><?php _e( "Automatically approves any comment left by a logged-in student on another student's blog.", 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'Disable Comments', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides a network-admin option to disable commenting on all blogs used by this class.', 'classblogs' ); ?></p>
+			<p><?php _e( 'Provides an admin option to disable commenting on all blogs used by this class.', 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'Gravatar Signup', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Adds a link for the user to sign up for a gravatar to each account activation email sent out.', 'classblogs' ); ?></p>
@@ -142,7 +141,7 @@ class ClassBlogs_Admin
 			<p><?php _e( 'Provides a main-blog-only widget sitewide tag cloud widget, and allows all usages of a single tag on all student blogs to be viewed.', 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'Student Blog Links', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides a network-admin option that allows you to add links of your choosing as the first sidebar widget on all student blogs.', 'classblogs' ); ?></p>
+			<p><?php _e( 'Provides an admin option that allows you to add links of your choosing as the first sidebar widget on all student blogs.', 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'Student Blog List', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Provides a main-blog-only widget that shows a list of all student blogs that are part of this class.', 'classblogs' ); ?></p>
@@ -190,7 +189,7 @@ class ClassBlogs_Admin
 	public function get_page_url( $uid )
 	{
 		$site = get_current_site();
-		return sprintf( 'http://%s%swp-admin/network/admin.php?page=%s',
+		return sprintf( 'http://%s%swp-admin/admin.php?page=%s',
 			$site->domain,
 			$site->path,
 			$this->_page_ids[ $uid ]

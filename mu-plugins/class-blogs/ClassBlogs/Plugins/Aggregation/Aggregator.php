@@ -43,11 +43,6 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		// Get the names of the sitewide tables
 		$this->tables = ClassBlogs_Plugins_Aggregation_Settings::get_table_names();
 
-		// Enable the admin interface
-		if ( is_admin() ) {
-			add_action( 'network_admin_menu', array( $this, 'configure_admin_interface' ) );
-		}
-
 		// If aggregation is enabled, initialize the aggregator hooks
 		if ( $this->get_option( 'aggregation_enabled' ) ) {
 			$this->_initialize_aggregation_hooks();
@@ -306,12 +301,9 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	 *
 	 * @since 0.1
 	 */
-	public function configure_admin_interface()
+	public function enable_admin_page( $admin )
 	{
-		if ( is_super_admin() ) {
-			$admin = ClassBlogs_Admin::get_admin();
-			$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Data Options', 'classblogs' ), array( $this, 'admin_page' ) );
-		}
+		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Data Options', 'classblogs' ), array( $this, 'admin_page' ) );
 	}
 
 	/**
@@ -336,7 +328,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Handles the network admin page logic for the plugin
+	 * Handles the admin page logic for the plugin
 	 *
 	 * @since 0.1
 	 */

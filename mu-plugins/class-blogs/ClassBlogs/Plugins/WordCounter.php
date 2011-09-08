@@ -3,9 +3,8 @@
 /**
  * The word-counter plugin
  *
- * This provides an admin page available to any network admins or admins on
- * the root blog that displays the number of words written by each student
- * over a given period of time.
+ * This provides an admin page available to any admins on the root blog that
+ * displays the number of words written by each student over a period of time.
  *
  * @package Class Blogs
  * @since 0.1
@@ -39,7 +38,6 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		parent::__construct();
 
 		add_action( 'admin_head',         array( $this, '_add_admin_styles' ) );
-		add_action( 'admin_menu',         array( $this, '_add_admin_page' ) );
 		add_action( 'wp_dashboard_setup', array( $this, '_add_student_dashboard_widget' ) );
 	}
 
@@ -52,7 +50,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function _add_student_dashboard_widget()
 	{
-		if ( ! ClassBlogs_Utils::is_root_blog() ) {
+		if ( is_admin() && ! ClassBlogs_Utils::is_root_blog() ) {
 			wp_add_dashboard_widget(
 				'dashboard_' . $this->get_uid(),
 				__( 'Word Count', 'classblogs' ),
@@ -143,14 +141,13 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * to view the page and we have access to the sitewide functionality of
 	 * the class blogs suite.
 	 *
-	 * @access private
 	 * @since 0.1
 	 */
-	public function _add_admin_page()
+	public function enable_admin_page( $admin )
 	{
 		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
-		if ( ! empty( $sitewide_posts ) && is_admin() && ClassBlogs_Utils::is_root_blog() && current_user_can( 'administrator' ) ) {
-			add_menu_page( __( 'Word Counts', 'classblogs' ), __( 'Word Counts', 'classblogs' ), 'manage_options', 'student-word-counts', array( $this, '_admin_menu' ) );
+		if ( ! empty( $sitewide_posts ) ) {
+			$admin->add_admin_page( $this->get_uid(), __( 'Word Counts', 'classblogs' ), array( $this, 'admin_page' ) );
 		}
 	}
 
@@ -160,7 +157,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * @access private
 	 * @since 0.1
 	 */
-	public function _admin_menu()
+	public function admin_page()
 	{
 
 		// Update the plugin options

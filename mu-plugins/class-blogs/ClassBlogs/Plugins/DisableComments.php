@@ -3,7 +3,7 @@
 /**
  * The comment-disabling plugin
  *
- * This provides a network-admin menu option that allows a user to disable
+ * This provides an admin menu option that allows a user to disable
  * commenting on all blogs that are part of the class blog.
  *
  * @package Class Blogs
@@ -39,17 +39,11 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
     private $_comments_table;
 
     /**
-     * Registers hooks to add a sitewide commenting page to the network admin
+     * Determine values for the comment storage table
      */
     function __construct() {
-
     	parent::__construct();
-
 		$this->_comments_table = ClassBlogs_Utils::make_table_name( self::_COMMENTS_TABLE_BASE );
-
-    	if ( is_admin() ) {
-    		add_action( 'network_admin_menu', array( $this, '_configure_admin_interface' ) );
-    	}
     }
 
     /**
@@ -136,16 +130,13 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
     }
 
 	/**
-	 * Configures the network admin page
+	 * Configures the plugin's admin page
 	 *
 	 * @since 0.1
 	 */
-	public function _configure_admin_interface()
+	public function enable_admin_page( $admin )
 	{
-		if ( is_super_admin() ) {
-			$admin = ClassBlogs_Admin::get_admin();
-			$admin->add_admin_page( $this->get_uid(), __( 'Disable Commenting', 'classblogs' ), array( $this, 'admin_page' ) );
-		}
+		$admin->add_admin_page( $this->get_uid(), __( 'Disable Commenting', 'classblogs' ), array( $this, 'admin_page' ) );
 	}
 
 	/**

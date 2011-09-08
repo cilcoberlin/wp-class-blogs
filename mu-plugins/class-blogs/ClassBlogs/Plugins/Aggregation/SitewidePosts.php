@@ -191,12 +191,8 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 
 		// Enable the admin menu and the sidebar widget if on the admin side,
 		// and enable the root blog hooks if posts are to be shown on the root blog
-		if ( is_admin() ) {
-			add_action( 'network_admin_menu', array( $this, 'configure_admin_interface' ) );
-		} else {
-			if ( $this->get_option( 'root_show_posts' ) ) {
-				add_action( 'pre_get_posts', array( $this, 'initialize_root_blog_hooks' ) );
-			}
+		if ( ! is_admin() && $this->get_option( 'root_show_posts' ) ) {
+			add_action( 'pre_get_posts', array( $this, 'initialize_root_blog_hooks' ) );
 		}
 		add_action( 'widgets_init', array( $this, 'enable_widget' ) );
 	}
@@ -503,16 +499,13 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Configures the network admin page
+	 * Configures the plugin's admin page
 	 *
 	 * @since 0.1
 	 */
-	public function configure_admin_interface()
+	public function enable_admin_page( $admin )
 	{
-		if ( is_super_admin() ) {
-			$admin = ClassBlogs_Admin::get_admin();
-			$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Posts', 'classblogs' ), array( $this, 'admin_page' ) );
-		}
+		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Posts', 'classblogs' ), array( $this, 'admin_page' ) );
 	}
 
 	/**

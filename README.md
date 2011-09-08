@@ -31,7 +31,7 @@ Automatically approves any comment left by a logged-in student on another studen
 
 Disable Comments
 ----------------
-Provides a network-admin option to disable commenting on all blogs used by this class.
+Provides an admin option to disable commenting on all blogs used by this class.
 
 Gravatar Signup
 ---------------
@@ -59,7 +59,7 @@ Provides a main-blog-only widget sitewide tag cloud widget, and allows all usage
 
 Student Blog Links
 ------------------
-Provides a network-admin option that allows you to add links of your choosing as the first sidebar widget on all student blogs.
+Provides an admin option that allows you to add links of your choosing as the first sidebar widget on all student blogs.
 
 Student Blog List
 -----------------

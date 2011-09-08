@@ -31,6 +31,11 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	public function __construct()
 	{
 		$this->_maybe_open_plugin_pages();
+
+		// Provide plugins with the option of enabling an admin page
+		if ( is_admin() ) {
+    		add_action( 'admin_menu', array( $this, '_maybe_enable_admin_page' ) );
+    	}
 	}
 
 	/**
@@ -397,6 +402,33 @@ abstract class ClassBlogs_Plugins_BasePlugin
 		}
 		return $results;
 	}
+
+	/**
+	 * Enables a possible admin page associated with a child plugin
+	 *
+	 * This simply provides a shortcut for any child plugins to register an admin
+	 * page that is part of the class blogs menu group.  A child plugin can override
+	 * the `enable_admin_page` method called by this to register an admin page.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _maybe_enable_admin_page()
+	{
+		if ( ClassBlogs_Utils::on_root_blog_admin() ) {
+			$admin = ClassBlogs_Admin::get_admin();
+			$this->enable_admin_page( $admin );
+		}
+	}
+
+	/**
+	 * Allows a child plugin to register an admin page
+	 *
+	 * @param object $admin a ClassBlogs_Admin instance
+	 *
+	 * @since 0.1
+	 */
+	public function enable_admin_page( $admin ) {}
 }
 
 ?>
