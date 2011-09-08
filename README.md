@@ -7,6 +7,12 @@ multisite functionality, to create a blog for a class in WordPress.  The main
 blog is intended to be controlled by the professor, and each student is then
 given full administrative privileges over a child blog in the network.
 
+Requirements
+============
+
+* PHP >= 5.2.0
+* WordPress >= 3.0
+
 Installation
 ============
 
