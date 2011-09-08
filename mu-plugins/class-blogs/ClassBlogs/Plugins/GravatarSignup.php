@@ -95,7 +95,7 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 		// Add the messge and link to the Gravatar signup page to the email
 		$parts = array(
 			"\n",
-			_( 'To keep track of your posts on the class blog, you should configure a Gravatar, which is an image of your choosing that will appear next to any posts or comments that you create.  You can sign up for a Gravatar for free by visiting the following URL:', 'classblogs' ),
+			__( 'To keep track of your posts on the class blog, you should configure a Gravatar, which is an image of your choosing that will appear next to any posts or comments that you create.  You can sign up for a Gravatar for free by visiting the following URL:', 'classblogs' ),
 			$this->_get_gravatar_signup_url( $user_data )
 		);
 		return $message . implode( "\n", $parts );
