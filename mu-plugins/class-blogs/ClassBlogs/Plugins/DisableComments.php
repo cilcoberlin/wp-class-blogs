@@ -11,123 +11,62 @@
  */
 class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 {
+	/**
+	 * Default options for the plugin
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $default_options = array(
+		'comments_disabled' => false
+	);
 
 	/**
-	 * The base name of the table used to store pre-closing comment statuses
+	 * Register hooks to preventing commenting
+	 */
+	function __construct() {
+		parent::__construct();
+
+		// Apply filters to disable comments on any pages or posts on the site
+		if ( $this->get_option( 'comments_disabled' ) ) {
+			add_filter( 'comments_open', array( $this, '_always_show_comments_as_closed' ), 10, 2 );
+			if ( ! is_admin() ) {
+				add_filter( 'the_posts', array( $this, '_close_comment_status_on_posts' ) );
+			}
+		}
+	}
+
+	/**
+	 * Makes comments always appear to be off for any item on the blog
+	 *
+	 * @param  bool $is_open whether the comment is open
+	 * @param  int  $post_id the ID of the post or page
+	 * @return bool          false, to flag comments as closed
 	 *
 	 * @access private
-	 * @var string
+	 * @since 0.1
 	 */
-	const _COMMENTS_TABLE_BASE = "old_comments";
+	public function _always_show_comments_as_closed( $is_open, $post_id )
+	{
+		return false;
+	}
 
-    /**
-     * Default options for the plugin
-     *
-     * @access protected
-     * @var array
-     */
-    protected $default_options = array(
-		'comments_disabled' => false
-    );
-
-    /**
-     * The full name of the database table used to store comment statuses
-     *
-     * @access private
-     * @var string
-     */
-    private $_comments_table;
-
-    /**
-     * Determine values for the comment storage table
-     */
-    function __construct() {
-    	parent::__construct();
-		$this->_comments_table = ClassBlogs_Utils::make_table_name( self::_COMMENTS_TABLE_BASE );
-    }
-
-    /**
-     * Creates a table for storing post comment statuses
-     *
-     * This table holds a record of the comment status of every post on the
-     * site before sitewide comment disablign occurs.  This table is used to
-     * restore posts to their original comment status if commenting is reenabled.
-     *
-     * @access private
-     * @since 0.1
-     */
-    private function _maybe_create_comments_table()
-    {
-        global $wpdb;
-
-        //  Create the comments table and clear all comment status records
-        $wpdb->query( "
-        	CREATE TABLE IF NOT EXISTS $this->_comments_table (
-        	blog_id BIGINT(20) UNSIGNED NOT NULL,
-        	post_id BIGINT(20) UNSIGNED NOT NULL,
-        	comment_status VARCHAR(20) NOT NULL)" );
-        $wpdb->query( "DELETE FROM $this->_comments_table" );
-    }
-
-    /**
-     * Reenables comments if they have been disabled across the site
-     *
-     * @since 0.1
-     */
-    function reenable_comments()
-    {
-
-		global $wpdb, $current_blog;
-
-		$statuses = $wpdb->get_results( $wpdb->prepare( "
-			SELECT blog_id, post_id, comment_status
-			FROM $this->_comments_table
-			ORDER BY blog_id" ) );
-
-		// Restore the comment status of any posts to what they were before
-		// comments were disabled across the site
-		$on_blog = $current_blog->blog_id;
-		foreach ( $statuses as $status ) {
-			if ( $on_blog != $status->blog_id ) {
-				switch_to_blog( $status->blog_id );
-			}
-			$wpdb->query( $wpdb->prepare( "
-				UPDATE $wpdb->posts SET comment_status = %s WHERE ID = %d",
-				$status->comment_status, $status->post_id ) );
+	/**
+	 * Makes the comment status of any post always be closed
+	 *
+	 * @param  array $posts the current list of posts
+	 * @return array        the posts with their comment status set to closed
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _close_comment_status_on_posts( $posts )
+	{
+		foreach ( $posts as $post ) {
+			$post->comment_status = 'closed';
 		}
-
-		restore_current_blog();
-    }
-
-    /**
-     * Disables commenting on all current and future posts for all site blogs
-     *
-     * @since 0.1
-     */
-    public function disable_comments()
-    {
-    	global $wpdb;
-		$this->_maybe_create_comments_table();
-
-		foreach ( $this->get_all_blog_ids() as $blog_id ) {
-
-			switch_to_blog( $blog_id );
-
-			//  Take note of the pre-closing comment status of all posts on the blog
-			foreach ( $wpdb->get_results( "SELECT ID, comment_status FROM $wpdb->posts WHERE post_status = 'publish'" ) as $post ) {
-				$wpdb->query( $wpdb->prepare( "
-					INSERT INTO $this->_comments_table
-					(blog_id, post_id, comment_status)
-					VALUES (%d, %d, %s)",
-					$blog_id, $post->ID, $post->comment_status ) );
-			}
-
-			//  Set comments on all posts on the blog to closed
-			$wpdb->query( "UPDATE $wpdb->posts SET comment_status = 'closed' WHERE post_status = 'publish'" );
-
-			restore_current_blog();
-		}
-    }
+		return $posts;
+	}
 
 	/**
 	 * Configures the plugin's admin page
@@ -149,21 +88,8 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 
 		// Change the state of sitewide commenting if switching
 		if ( $_POST ) {
-
 			check_admin_referer( $this->get_uid() );
-
-			$old_closed = $this->get_option( 'comments_disabled' );
-			$new_closed = $_POST['comment_status'] === 'disabled';
-			$this->update_option( 'comments_disabled', $new_closed );
-
-			if ( $old_closed != $new_closed ) {
-				if ( $new_closed ) {
-					$this->disable_comments();
-				} else {
-					$this->reenable_comments();
-				}
-			}
-
+			$this->update_option( 'comments_disabled', $_POST['comment_status'] === 'disabled' );
 			echo '<div id="message" class="updated fade"><p>' . __( 'Your sitewide commenting options have been updated', 'classblogs' ) . '</p></div>';
 		}
 ?>
