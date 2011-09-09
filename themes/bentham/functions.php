@@ -172,9 +172,9 @@ function bentham_show_author_and_date()
 ?>
 	<dl class="meta">
 		<dt class="key"><?php echo _x( 'Posted', 'post creation date', 'bentham' ); ?></dt>
-		<dd class="value"><?php the_date(); ?></dd>
+		<dd class="value"><?php echo get_the_date(); ?></dd>
 		<dt class="key"><?php echo _x( 'Author', 'post author name', 'bentham' ); ?></dt>
-		<dd class="value"><?php the_author(); ?></dd>
+		<dd class="value"><?php echo get_the_author(); ?></dd>
 	</dl>
 <?php
 }
