@@ -337,7 +337,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 * @var array
 	 */
 	private static $_video_searchers = array(
-		'_find_videos_by_embed_html'
+		'_find_videos_by_link'
 	);
 
 	/**
@@ -904,18 +904,12 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 			return array();
 		}
 
-		// Build a structured document from the plaintext markup
-		libxml_use_internal_errors( true );
-		$dom = new DOMDocument();
-		$dom->loadHTML( $content );
-		libxml_use_internal_errors( false );
-
 		// Find any embedded video IDs, removing duplicates or blanks
 		$videos = array();
 		foreach ( self::$_video_searchers as $search_function ) {
 			$videos = array_merge(
 				$videos,
-				call_user_func( array( $this, $search_function ), $content, $dom ) );
+				call_user_func( array( $this, $search_function ), $content ) );
 		}
 		$ids = array();
 		foreach ( array_unique( array_filter( $videos ) ) as $video ) {
@@ -925,33 +919,24 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Searches for YouTube videos embedded using raw markup
+	 * Searches for YouTube videos by looking for any links to YouTube videos
 	 *
 	 * @param  string $text the plaintext content of a post
-	 * @param  object $dom  a DOMDocument representation of the post's content
 	 * @return array        a list of YouTube video IDs used in the post
 	 *
 	 * @access private
 	 * @since 0.1
 	 */
-	public function _find_videos_by_embed_html( $text, $dom )
+	public function _find_videos_by_link( $text )
 	{
 
+		// Assemble a list of all YouTube URLs in the post content
 		$urls = array();
-
-		// Look for a video ID using the new-style source of an iframe tag
-		foreach ( $dom->getElementsByTagName( 'iframe' ) as $iframe ) {
-			$urls[] = $iframe->getAttribute( 'src' );
-		}
-
-		// Look for a video ID using the old-style embed-param code
-		foreach ( $dom->getElementsByTagName( 'param' ) as $param ) {
-			if ( $param->getAttribute( 'name' ) == 'src' ) {
-				$urls[] = $param->getAttribute( 'value' );
+		preg_match_all( '!https?://www\.youtube\.com/[^\s\'"]+!', $text, $url_matches );
+		if ( ! empty( $url_matches ) ) {
+			foreach ( $url_matches[0] as $match ) {
+				$urls[] = $match;
 			}
-		}
-		foreach ( $dom->getElementsByTagName( 'embed' ) as $embed ) {
-			$urls[] = $embed->getAttribute( 'src' );
 		}
 
 		// Return any YouTube embed URLs
@@ -973,12 +958,27 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 */
 	private function _get_video_id_from_url( $url )
 	{
+		// Since a URL with a querystring might have escaped ampersands, we
+		// want to undo that before proceeding
+		$url = htmlspecialchars_decode( $url );
+
+		// Search for a URL using the direct link to the video page
+		preg_match( '!https?://www\.youtube\.com/watch\?(.*)!', $url, $matches );
+		if ( ! empty( $matches ) ) {
+			parse_str( $matches[1], $query );
+			if ( array_key_exists( 'v', $query ) ) {
+				return $query['v'];
+			}
+		}
+
+		// Search for a URL using the old and new embed URL formats
 		preg_match( '!https?://www\.youtube\.com/(v|embed)/([^\&\?]+)!', $url, $matches );
 		if ( count( $matches ) == 3 ) {
 			return $matches[2];
-		} else {
-			return "";
 		}
+
+		// Return a null video ID if no ID could be found in the given URL
+		return "";
 	}
 
 	/**
