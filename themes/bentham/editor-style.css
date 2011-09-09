@@ -3,6 +3,14 @@ html .mceContentBody {
   font-size: 1em;
   line-height: 1.5em;
   width: 95%; }
+  html .mceContentBody p:first-child,
+  html .mceContentBody h1:first-child,
+  html .mceContentBody h2:first-child,
+  html .mceContentBody h3:first-child,
+  html .mceContentBody h4:first-child,
+  html .mceContentBody h5:first-child,
+  html .mceContentBody h6:first-child {
+    margin-top: 0; }
   html .mceContentBody p, html .mceContentBody ol, html .mceContentBody ul, html .mceContentBody dl dd, html .mceContentBody blockquote {
     font-family: Palatino, "Palatino Linotype", "Georgia", serif; }
   html .mceContentBody p {
