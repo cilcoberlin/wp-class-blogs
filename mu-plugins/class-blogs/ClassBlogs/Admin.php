@@ -31,7 +31,7 @@ class ClassBlogs_Admin
 	 * @access private
 	 * @var string
 	 */
-	const _MENU_CAPABILITY = "manage_sites";
+	const _MENU_CAPABILITY = "manage_options";
 
 	/**
 	 * An instance of the class, used to keep it a singleton
