@@ -11,7 +11,7 @@ Requirements
 ============
 
 * PHP >= 5.2.0
-* WordPress >= 3.0
+* WordPress >= 3.0 running in multisite mode
 
 Installation
 ============
