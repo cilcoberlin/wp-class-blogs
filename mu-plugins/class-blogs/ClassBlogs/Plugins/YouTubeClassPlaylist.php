@@ -477,10 +477,12 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 */
 	public function _ensure_playlist_page_is_created()
 	{
-		$current_page = $this->get_option( 'playlist_page_id' );
-		$page_id = $this->create_plugin_page( self::_PLAYLIST_PAGE_DEFAULT_NAME, $current_page );
-		if ( $page_id != $current_page ) {
-			$this->update_option( 'playlist_page_id', $page_id );
+		if ( ClassBlogs_Utils::is_root_blog() ) {
+			$current_page = $this->get_option( 'playlist_page_id' );
+			$page_id = $this->create_plugin_page( self::_PLAYLIST_PAGE_DEFAULT_NAME, $current_page );
+			if ( $page_id != $current_page ) {
+				$this->update_option( 'playlist_page_id', $page_id );
+			}
 		}
 	}
 

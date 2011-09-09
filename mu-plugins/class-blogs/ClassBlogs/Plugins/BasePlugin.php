@@ -326,8 +326,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 			return $page_id;
 		}
 
-		// Create a new page for the tag lists, making sure to avoid any
-		// conflicts with an existing page name
+		// Find a name for the new page that doesn't conflict with others
 		while ( $conflicts ) {
 			$page = get_page_by_title( $page_name );
 			if ( isset( $page ) ) {
