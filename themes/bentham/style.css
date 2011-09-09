@@ -334,7 +334,9 @@ a:hover {
     font-size: 1.5em;
     line-height: 2em;
     margin-left: -2.4em;
-    margin-right: -2em; }
+    margin-right: -2em;
+    padding-left: 2.4em;
+    padding-right: 2em; }
     .archive .hentry .title .post-edit-link,
     .home .hentry .title .post-edit-link,
     .search .hentry .title .post-edit-link {
@@ -349,7 +351,7 @@ a:hover {
   .home .hentry .interaction,
   .search .hentry .interaction {
     font-weight: bold;
-    margin: 0 0.75em 0.75em 0;
+    margin-bottom: 0.75em;
     text-align: right; }
 
 /* ===404 PAGE=== */
@@ -385,9 +387,8 @@ a:hover {
     font-size: 0.5em;
     line-height: 4.5em;
     font-weight: bold;
-    margin-right: 0.75em;
     margin-top: 1px;
-    padding-left: 1.5em; }
+    margin-left: 2.5em; }
 .hentry .meta {
   line-height: 1.5em;
   margin: -3em 0 3em;
@@ -400,10 +401,6 @@ a:hover {
     font-weight: bold;
     margin-left: 2.25em;
     margin-right: 0.75em; }
-  .hentry .meta .value {
-    margin-right: 0.75em; }
-  .logged-in .hentry .meta {
-    margin-right: 6em; }
 .hentry .content {
   font-size: 1.25em;
   line-height: 1.5em;

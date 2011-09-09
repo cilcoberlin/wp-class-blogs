@@ -435,6 +435,9 @@ $margin-post-header: 2.25em;
 			line-height: 2em;
 			margin-left: -2.4em;
 			margin-right: -2em;
+			padding-left: 2.4em;
+			padding-right: 2em;
+
 			.post-edit-link {
 				font-size: 0.67em;
 				line-height: 3.1em;
@@ -448,7 +451,7 @@ $margin-post-header: 2.25em;
 		// The comment-count info
 		.interaction {
 			font-weight: bold;
-			margin: 0 0.75em 0.75em 0;
+			margin-bottom: 0.75em;
 			text-align: right;
 		}
 	}
@@ -515,9 +518,8 @@ $margin-post-header: 2.25em;
 			font-size: 0.5em;
 			line-height: 4.5em;
 			font-weight: bold;
-			margin-right: 0.75em;
 			margin-top: 1px;
-			padding-left: 1.5em;
+			margin-left: 2.5em;
 		}
 	}
 
@@ -536,14 +538,6 @@ $margin-post-header: 2.25em;
 			font-weight: bold;
 			margin-left: 2.25em;
 			margin-right: 0.75em;
-		}
-		.value {
-			margin-right: 0.75em;
-		}
-
-		// Provide space for the "edit post" link when it appears
-		.logged-in & {
-			margin-right: 6em;
 		}
 	}
 
