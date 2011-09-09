@@ -43,18 +43,34 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 		if ( $image ) {
 			$this->start_widget( $args, $instance );
 			switch_to_blog( $image->blog_id );
+
+			// If the image is associated with a specific post, provide a link
+			// to the post.  If it has no post linkages, show a link to the blog.
+			if ( $image->post_id ) {
+				$caption = sprintf( __( 'From the post %1$s on %2$s', 'classblogs' ),
+					sprintf( '<a href="%s">%s</a>',
+						get_permalink( $image->post_id ),
+						get_post( $image->post_id )->post_title ),
+					sprintf( '<a href="%s">%s</a>',
+						get_blogaddress_by_id( $image->blog_id ),
+						get_blog_option( $image->blog_id, 'blogname' )) );
+			} else {
+				$caption = _( 'From the blog', 'classblogs' ) . sprintf(' <a href="%s">%s</a>',
+					get_blogaddress_by_id( $image->blog_id ),
+					get_blog_option( $image->blog_id, 'blogname' ) );
+			}
+
 			printf(
 				'<ul>
 					<li>
 						<a href="%1$s"><img src="%1$s" alt="%2$s" title="%2$s" width="80%%" /></a>
 						<br />
-						' . __( 'From the blog', 'classblogs' ) . ' <a href="%3$s">%4$s</a>
+						%3$s
 					</li>
 				</ul>',
 				$image->url,
 				esc_attr( $image->title ),
-				get_blogaddress_by_id( $image->blog_id ),
-				get_blog_option( $image->blog_id, 'blogname' ) );
+				$caption );
 			restore_current_blog();
 			$this->end_widget( $args );
 		}
@@ -175,16 +191,54 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 				self::_MEDIA_ID );
 			$upload = $wpdb->get_row( $image_search );
 			if ( $upload ) {
-				$image = (object) array(
+				$image = array(
 					'blog_id' => $blog_id,
 					'title'   => $upload->post_title,
 					'url'     => $upload->guid );
+				restore_current_blog();
 				break;
 			}
 			restore_current_blog();
 		}
 
-		return $image;
+		// If we have a valid image, try to find the first post on which it was
+		// used and add its ID to the image data
+		if ( $image ) {
+			$image['post_id'] = $this->_find_first_post_to_use_image(
+				$image['blog_id'], $image['url']);
+		}
+
+		return (object) $image;
+	}
+
+	/**
+	 * Find the ID of the first post that uses the given image
+	 *
+	 * @param  int    $blog_id the ID of the blog on which the image was uploaded
+	 * @param  string $url     the absolute URL of the image
+	 * @return int             the ID of the first post that uses the image
+	 */
+	private function _find_first_post_to_use_image( $blog_id, $url )
+	{
+
+		global $wpdb;
+		$post_id = null;
+
+		// Search for the first post that references the image
+		switch_to_blog( $blog_id );
+		$post_search = $wpdb->prepare( "
+			SELECT ID FROM $wpdb->posts
+			WHERE post_status='publish'
+			AND post_content LIKE '%%$url%%'
+			ORDER BY post_date
+			LIMIT 1" );
+		$post = $wpdb->get_row( $post_search );
+		if ( ! empty( $post ) ) {
+			$post_id = $post->ID;
+		}
+		restore_current_blog( $blog_id );
+
+		return $post_id;
 	}
 }
 
