@@ -206,9 +206,10 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 		if ( $image ) {
 			$image['post_id'] = $this->_find_first_post_to_use_image(
 				$image['blog_id'], $image['url']);
+			$image = (object) $image;
 		}
 
-		return (object) $image;
+		return $image;
 	}
 
 	/**
