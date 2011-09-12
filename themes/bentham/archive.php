@@ -12,16 +12,19 @@
 
 		// Display a title based on the archive type
 		if ( is_day() ) {
-			$title = __( 'Daily Archives', 'bentham' );
+			$title = __( 'Day', 'bentham' );
 			$filter = get_the_date();
 		} elseif ( is_month() ) {
-			$title = __( 'Monthly Archives', 'bentham' );
+			$title = __( 'Month', 'bentham' );
 			$filter = get_the_date( 'F Y' );
 		} elseif ( is_year() ) {
-			$title = __( 'Yearly Archives', 'bentham' );
+			$title = __( 'Year', 'bentham' );
 			$filter = get_the_date( 'Y' );
+		} elseif ( is_author() ) {
+			$title = __( 'Author', 'bentham' );
+			$filter = get_the_author();
 		} else {
-			$title = __( 'Blog Archives', 'bentham' );
+			$title = __( 'Archives', 'bentham' );
 			$filter = "";
 		}
 		bentham_show_archive_page_title( $title, $filter );
