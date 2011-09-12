@@ -292,8 +292,27 @@ function bentham_get_post_excerpt( $content, $word_count )
 	}
 }
 
+/**
+ * Makes any page created on Bentham be closed for commenting by default
+ *
+ * @param  string $new  the new status of a post or page
+ * @param  string $old  the old status of a post or page
+ * @param  object $post a post or page instance
+ *
+ * @since 0.1
+ */
+function bentham_close_new_page_comments( $new, $old, $post )
+{
+	global $wpdb;
+	if ( $post->post_type == 'page' && $new == 'publish' && $old != $new ) {
+		wp_update_post(
+			array( 'ID' => $post->ID, 'comment_status' => 'closed' ) );
+	}
+}
+
 // Register setup functions with WordPress hooks
-add_action( 'after_setup_theme', 'bentham_setup' );
-add_action( 'widgets_init',      'bentham_widgets_init' );
+add_action( 'after_setup_theme',      'bentham_setup' );
+add_action( 'transition_post_status', 'bentham_close_new_page_comments', 100, 3 );
+add_action( 'widgets_init',           'bentham_widgets_init' );
 
 ?>
