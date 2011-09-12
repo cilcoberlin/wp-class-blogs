@@ -344,6 +344,9 @@ $margin-post-header: 2.25em;
 
 			// The title of a post
 			.title {
+				border: 1px solid $color-page-bg;
+				border-left: none;
+				border-right: none;
 				line-height: 1.2em;
 				font-size: 1.25em;
 				margin-right: 3.75em;
@@ -352,8 +355,7 @@ $margin-post-header: 2.25em;
 			// Post metadata containing the date
 			.meta {
 				background: $color-bg-light;
-				border-left: none;
-				border-right: none;
+				border: 1px solid $color-border-light;
 				color: $color-sidebar-links;
 				font-size: 0.833em;
 				font-weight: bold;
@@ -363,7 +365,7 @@ $margin-post-header: 2.25em;
 				right: 0;
 				text-align: center;
 				top: 3.6em;
-				width: $gravatar-size;
+				width: $gravatar-size - 2px;
 			}
 
 			// The post excerpt

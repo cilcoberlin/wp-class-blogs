@@ -266,13 +266,15 @@ a:hover {
       .user-posts .posts .post.last {
         border-bottom: none; }
       .user-posts .posts .post .title {
+        border: 1px solid white;
+        border-left: none;
+        border-right: none;
         line-height: 1.2em;
         font-size: 1.25em;
         margin-right: 3.75em; }
       .user-posts .posts .post .meta {
         background: #eeeeee;
-        border-left: none;
-        border-right: none;
+        border: 1px solid #e5e5e5;
         color: #995555;
         font-size: 0.833em;
         font-weight: bold;
@@ -282,7 +284,7 @@ a:hover {
         right: 0;
         text-align: center;
         top: 3.6em;
-        width: 54px; }
+        width: 52px; }
       .user-posts .posts .post .entry {
         color: black;
         line-height: 1.5em;
