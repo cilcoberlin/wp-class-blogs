@@ -382,13 +382,32 @@ $margin-post-header: 2.25em;
 		}
 	}
 
-	// The fadeout div at the end of each post list
+	// The fadeout div at the end of each post list, which will have a different
+	// position depending on whether or not the user has a blog tied to all of
+	// their posts, which will cause a "read more" link to appear at the column's end
 	.end-posts {
 		background: url("images/post-list-fadeout.png") repeat-x bottom left;
 		bottom: 0;
 		height: 72px;
 		position: absolute;
 		width: 100%;
+	}
+	&.has-link .end-posts {
+		bottom: 1.5em;
+	}
+
+	// A view-all-posts link at the end of the posts column
+	.view-all-link {
+		border-top: 1px solid $color-border-light;
+		background: $color-page-bg;
+		bottom: 0;
+		display: block;
+		font-weight: bold;
+		padding-top: 0.75em;
+		position: absolute;
+		text-align: center;
+		width: 100%;
+		z-index: 1000;
 	}
 }
 

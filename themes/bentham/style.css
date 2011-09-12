@@ -298,6 +298,19 @@ a:hover {
     height: 72px;
     position: absolute;
     width: 100%; }
+  .user-posts.has-link .end-posts {
+    bottom: 1.5em; }
+  .user-posts .view-all-link {
+    border-top: 1px solid #e5e5e5;
+    background: white;
+    bottom: 0;
+    display: block;
+    font-weight: bold;
+    padding-top: 0.75em;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    z-index: 1000; }
 
 /* ===POST LISTS=== */
 .archive .navigation a,

@@ -15,9 +15,17 @@
 	endif;
 
 	foreach ( $posts_by_user as $current_user => $post_info ):
+
+		// Use the student's blog URL if they appear to be a student with a
+		// single blog, or use the author archives URL if they seem to be the
+		// professor by virtue of being an admin on the parent blog
+		$user_url = bentham_get_blog_url_for_student( $post_info->user_id );
+		if ( ! $user_url ) {
+			$user_url = get_author_posts_url( $post_info->user_id );
+		}
 ?>
 
-		<div class="user-posts <?php if ( $current_user == $total_users ) { echo 'last'; } ?>" id="user-posts-<?php echo $post_info->user_id; ?>">
+		<div class="user-posts <?php if ( $current_user == $total_users ) { echo 'last'; } ?> <?php if ( $user_url ) { echo 'has-link'; } ?>" id="user-posts-<?php echo $post_info->user_id; ?>">
 
 			<div class="user-info">
 
@@ -81,7 +89,9 @@
 						<h3 class="title">
 							<a href="<?php echo $post->cb_sw_permalink; ?>"><?php the_title(); ?></a>
 						</h3>
-						<h4 class="meta"><?php the_time( 'M j' ); ?></h4>
+						<h4 class="meta">
+							<span class="date value"><?php the_time( _x( 'M j', 'date format', 'bentham' ) ); ?></span>
+						</h4>
 						<div class="entry">
 							<?php echo bentham_get_post_excerpt( $post->post_content, 25 ); ?>
 							<a href="<?php echo $post->cb_sw_permalink; ?>" class="read-more"><?php _e( 'Read more', 'bentham' ); ?></a>
@@ -92,6 +102,13 @@
 					}
 				?>
 			</ul>
+
+			<?php /* Display a "view all posts" link at the end of the post list */ ?>
+			<?php
+				if ( $user_url ) {
+					printf( '<a class="view-all-link" href="%s">%s</a>', $user_url, __( 'View all posts', 'bentham' ) );
+				}
+			?>
 
 			<?php /* Used to make the fadeout at the end of the list work */ ?>
 			<div class="end-posts"></div>
