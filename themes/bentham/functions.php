@@ -126,8 +126,11 @@ function bentham_show_no_posts_message()
  */
 function bentham_show_archive_page_title( $title, $filter )
 {
-	printf( '<h1 id="page-title">%s &ndash; <strong class="filter">%s</strong></h1>',
-		$title, $filter );
+	$filter_markup = "";
+	if ( $filter ) {
+		$filter_markup = sprintf( '&ndash; <strong class="filter">%s</strong>', $filter );
+	}
+	printf( '<h1 id="page-title">%s %s</h1>', $title, $filter_markup );
 }
 
 /**
