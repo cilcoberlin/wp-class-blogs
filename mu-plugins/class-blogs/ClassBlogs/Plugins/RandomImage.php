@@ -187,6 +187,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 			$image_search = $wpdb->prepare( "
 				SELECT post_title, guid FROM $wpdb->posts
 				WHERE post_type = %s AND ( $mime_filter )
+				AND post_content <> guid
 				ORDER BY RAND() LIMIT 1",
 				self::_MEDIA_ID );
 			$upload = $wpdb->get_row( $image_search );
