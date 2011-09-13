@@ -30,8 +30,6 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 */
 	public function __construct()
 	{
-		$this->_maybe_open_plugin_pages();
-
 		// Provide plugins with the option of enabling an admin page
 		if ( is_admin() ) {
     		add_action( 'admin_menu', array( $this, '_maybe_enable_admin_page' ) );
@@ -323,6 +321,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 
 		// If a page with the given ID already exists, abort early
 		if ( get_page( $page_id ) ) {
+			ClassBlogs::register_plugin_page( $page_id );
 			return $page_id;
 		}
 
@@ -344,62 +343,9 @@ abstract class ClassBlogs_Plugins_BasePlugin
 			'post_title'  => $page_name,
 			'post_type'   => 'page' );
 		$page_id = wp_insert_post( $new_page );
-
-		$plugin_pages = $this->get_option( ' _plugin_pages ' );
-		if ( ! empty( $plugin_pages ) ) {
-			$plugin_pages = array();
-		}
-		$plugin_pages[] = $page_id;
-		$this->update_option( '_plugin_pages', $plugin_pages );
+		ClassBlogs::register_plugin_page( $page_id );
 
 		return $page_id;
-	}
-
-	/**
-	 * Open up any plugin pages if the plugin has created pseudo-private pages
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _maybe_open_plugin_pages()
-	{
-		add_filter( 'posts_results', array( $this, '_allow_access_to_plugin_pages' ) );
-	}
-
-	/**
-	 * Allows a non-admin user access to a private page
-	 *
-	 * This provides access only to the private pages created using the
-	 * create_plugin_page function, which creates a private page that should
-	 * be accessible to any user.
-	 *
-	 * @param array $results the posts found when the page loaded
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _allow_access_to_plugin_pages( $results )
-	{
-		global $wpdb;
-
-		// Abort if we have no private pages that need opening
-		$pages = $this->get_option( '_plugin_pages' );
-		if ( empty( $pages ) ) {
-			return $results;
-		}
-
-		// If we have private pages and we're on one of them, make it temporarily
-		// public and return its contents
-		foreach ( $pages as $page ) {
-			if ( is_page( $page ) ) {
-				$content = $wpdb->get_row( $wpdb->prepare ( "
-					SELECT * FROM $wpdb->posts WHERE ID = %d",  $page ) );
-				$content->comment_status = 'closed';
-				$content->post_status = 'publish';
-				return array( $content );
-			}
-		}
-		return $results;
 	}
 
 	/**
