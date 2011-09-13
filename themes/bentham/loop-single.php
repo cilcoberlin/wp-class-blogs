@@ -10,22 +10,27 @@
 	<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 		<?php /* Show the title with the possible page number */ ?>
-		<h1 class="title">
+		<div class="post-info">
 			<?php
-
-				global $page, $paged;
-				$current_page = max( $page, $paged );
-
-				the_title();
-				if ( $current_page > 1 ) {
-					echo ' &ndash; ';
-					printf( __( 'Page %d', 'bentham' ), $current_page );
-				}
 				bentham_show_edit_link();
+				if ( ! is_page() ) {
+					bentham_show_author_and_date();
+				}
 			?>
-		</h1>
+			<h1 class="title">
+				<?php
 
-		<?php bentham_show_author_and_date(); ?>
+					global $page, $paged;
+					$current_page = max( $page, $paged );
+
+					the_title();
+					if ( $current_page > 1 ) {
+						echo ' &ndash; ';
+						printf( __( 'Page %d', 'bentham' ), $current_page );
+					}
+				?>
+			</h1>
+		</div>
 
 		<div class="content">
 			<?php the_content(); ?>

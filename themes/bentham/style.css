@@ -343,25 +343,22 @@ a:hover {
 .search .hentry {
   clear: both;
   margin-bottom: 3em; }
-  .archive .hentry .title,
-  .home .hentry .title,
-  .search .hentry .title {
+  .archive .hentry .post-info .title,
+  .home .hentry .post-info .title,
+  .search .hentry .post-info .title {
     font-size: 1.5em;
     line-height: 2em;
     margin-left: -2.4em;
     margin-right: -2em;
     padding-left: 2.4em;
     padding-right: 2em; }
-    .archive .hentry .title .post-edit-link,
-    .home .hentry .title .post-edit-link,
-    .search .hentry .title .post-edit-link {
-      font-size: 0.67em;
-      line-height: 3.1em; }
-  .archive .hentry .meta,
-  .home .hentry .meta,
-  .search .hentry .meta {
-    margin-top: -2.25em;
-    margin-bottom: 2.25em; }
+  .archive .hentry .post-info .meta,
+  .archive .hentry .post-info .post-edit-link,
+  .home .hentry .post-info .meta,
+  .home .hentry .post-info .post-edit-link,
+  .search .hentry .post-info .meta,
+  .search .hentry .post-info .post-edit-link {
+    line-height: 3em; }
   .archive .hentry .interaction,
   .home .hentry .interaction,
   .search .hentry .interaction {
@@ -387,35 +384,32 @@ a:hover {
     margin-right: 0.75em; }
 
 /* ===POST CONTENT=== */
-.hentry .title {
+.hentry .post-info {
   background: #f5f5f5;
   border: 1px solid #aaaaaa;
   border-left: none;
   border-right: none;
-  font-size: 2em;
-  font-weight: bold;
-  line-height: 2.25em;
-  margin: -0.375em -1.5em 0 -1.8em;
-  padding: 0 1.5em 0 1.8em; }
-  .hentry .title .post-edit-link {
-    float: right;
-    font-size: 0.5em;
-    line-height: 4.5em;
+  margin: -0.75em -3em 0 -3.6em;
+  padding: 0 3em 0 3.6em; }
+  .hentry .post-info .title {
+    font-size: 2em;
     font-weight: bold;
-    margin-top: 1px;
-    margin-left: 2.5em; }
-.hentry .meta {
-  line-height: 1.5em;
-  margin: -3em 0 3em;
-  text-align: right; }
-  .hentry .meta .key,
-  .hentry .meta .value {
+    line-height: 2.25em; }
+  .hentry .post-info .meta,
+  .hentry .post-info .post-edit-link {
+    float: right;
+    line-height: 4.5em; }
+  .hentry .post-info .meta .key,
+  .hentry .post-info .meta .value {
     display: inline; }
-  .hentry .meta .key {
+  .hentry .post-info .meta .key {
     color: black;
     font-weight: bold;
     margin-left: 2.25em;
     margin-right: 0.75em; }
+  .hentry .post-info .post-edit-link {
+    font-weight: bold;
+    margin-left: 2.5em; }
 .hentry .content {
   font-size: 1.25em;
   line-height: 1.5em;

@@ -126,11 +126,17 @@ function bentham_show_no_posts_message()
  */
 function bentham_show_archive_page_title( $title, $filter )
 {
-	$filter_markup = "";
+	global $page, $paged;
+	$current_page = max( $page, $paged );
+
+	$title_parts = array( $title );
 	if ( $filter ) {
-		$filter_markup = sprintf( '&ndash; <strong class="filter">%s</strong>', $filter );
+		$title_parts[] = sprintf( '<strong class="filter">%s</strong>', $filter );
 	}
-	printf( '<h1 id="page-title">%s %s</h1>', $title, $filter_markup );
+	if ( $current_page > 1 ) {
+		$title_parts[] = sprintf( __( 'Page %d', 'bentham' ), $current_page );
+	}
+	printf( '<h1 id="page-title">%s</h1>', implode( ' &ndash; ', $title_parts ) );
 }
 
 /**

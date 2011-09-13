@@ -13,12 +13,24 @@
 
 	<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-		<h2 class="title">
-			<a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
-			<?php bentham_show_edit_link(); ?>
-		</h2>
-
-		<?php bentham_show_author_and_date(); ?>
+		<div class="post-info">
+			<?php
+				bentham_show_edit_link();
+				bentham_show_author_and_date();
+			 ?>
+			<h2 class="title">
+				<a href="<?php the_permalink(); ?>" rel="bookmark">
+					<?php
+						$post_title = get_the_title();
+						if ( $post_title ) {
+							echo $post_title;
+						} else {
+							printf( '( %s )', __( 'Unnamed Post', 'bentham' ) );
+						}
+					?>
+				</a>
+			</h2>
+		</div>
 
 		<div class="content">
 			<?php the_excerpt(); ?>

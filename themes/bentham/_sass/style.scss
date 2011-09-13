@@ -451,22 +451,19 @@ $margin-post-header: 2.25em;
 
 		// Reduce the size of the title and meta information of a post when
 		// shown on an archive page
-		.title {
-			font-size: 1.5em;
-			line-height: 2em;
-			margin-left: -2.4em;
-			margin-right: -2em;
-			padding-left: 2.4em;
-			padding-right: 2em;
-
-			.post-edit-link {
-				font-size: 0.67em;
-				line-height: 3.1em;
+		.post-info {
+			.title {
+				font-size: 1.5em;
+				line-height: 2em;
+				margin-left: -2.4em;
+				margin-right: -2em;
+				padding-left: 2.4em;
+				padding-right: 2em;
 			}
-		}
-		.meta {
-			margin-top: -2.25em;
-			margin-bottom: 2.25em;
+			.meta,
+			.post-edit-link {
+				line-height: 3em;
+			}
 		}
 
 		// The comment-count info
@@ -521,44 +518,46 @@ $margin-post-header: 2.25em;
 
 .hentry {
 
-	// The title of a post or page
-	.title {
+	// Wrapper for the post's title, meta and edit link
+	.post-info {
 		background: $color-bg-sidebar;
 		border: 1px solid $color-border-dark;
 		border-left: none;
 		border-right: none;
-		font-size: 2em;
-		font-weight: bold;
-		line-height: 2.25em;
-		margin: -0.375em -1.5em 0 -1.8em;
-		padding: 0 1.5em 0 1.8em;
+		margin: -0.75em -3em 0 -3.6em;
+		padding: 0 3em 0 3.6em;
+
+		// The title of a post or page
+		.title {
+			font-size: 2em;
+			font-weight: bold;
+			line-height: 2.25em;
+		}
+
+		// Information on the author and date of a post
+		.meta,
+		.post-edit-link {
+			float: right;
+			line-height: 4.5em;
+		}
+		.meta {
+
+			.key,
+			.value {
+				display: inline;
+			}
+			.key {
+				color: $color-headers;
+				font-weight: bold;
+				margin-left: 2.25em;
+				margin-right: 0.75em;
+			}
+		}
 
 		// The edit-post link
 		.post-edit-link {
-			float: right;
-			font-size: 0.5em;
-			line-height: 4.5em;
 			font-weight: bold;
-			margin-top: 1px;
 			margin-left: 2.5em;
-		}
-	}
-
-	// Information on the author and date of a post
-	.meta {
-		line-height: 1.5em;
-		margin: -3em 0 3em;
-		text-align: right;
-
-		.key,
-		.value {
-			display: inline;
-		}
-		.key {
-			color: $color-headers;
-			font-weight: bold;
-			margin-left: 2.25em;
-			margin-right: 0.75em;
 		}
 	}
 
