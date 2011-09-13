@@ -220,7 +220,7 @@ function bentham_show_taxonomy()
 				get_the_category_list() );
 			_bentham_show_taxonomy_group(
 				_x( 'Tags', 'plural noun', 'bentham' ),
-				get_the_tag_list() );
+				get_the_tag_list( '', ' ', '' ) );
 		?>
 	</div>
 <?php
