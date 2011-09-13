@@ -282,8 +282,11 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function get_tag_url( $slug )
 	{
+		if ( ! property_exists( $this, '_tag_page_url' ) ) {
+			$this->_tag_page_url = $this->get_tag_page_url();
+		}
 		return sprintf( '%s?%s=%s',
-			$this->get_tag_page_url(),
+			$this->_tag_page_url,
 			self::_TAG_QUERY_VAR_NAME,
 			$slug );
 	}
