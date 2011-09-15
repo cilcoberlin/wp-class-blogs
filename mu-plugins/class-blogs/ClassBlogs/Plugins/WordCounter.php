@@ -400,7 +400,16 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 */
 	private function _get_word_count( $text )
 	{
-		return str_word_count( strip_shortcodes( strip_tags( $text ) ) );
+		// Code derived from http://www.php.net/manual/en/function.str-word-count.php#85579,
+		// which allows this word counter to make a good-faith effort at counting
+		// words in Unicode strings
+		$plaintext = strip_shortcodes( strip_tags( $text ) );
+		preg_match_all( "/\p{L}[\p{L}\p{Mn}\p{Pd}'\x{2019}]*/u", $plaintext, $matches );
+		if ( ! empty( $matches ) ) {
+			return count( $matches[0] );
+		} else {
+			return 0;
+		}
 	}
 }
 
