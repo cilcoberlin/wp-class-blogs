@@ -324,6 +324,13 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 			return $by_week;
 		}
 
+		// If the current date falls before the calculated end date, use today's
+		// date as the end date
+		$today = new DateTime();
+		if ( $today < $end_date ) {
+			$end_date = $today;
+		}
+
 		// Calculate the word counts for each user for each week between the
 		// start and end date, with each entry in the array containing information
 		// on the user counts and the date of the Monday that began the week
