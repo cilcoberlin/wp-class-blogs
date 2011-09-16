@@ -4,7 +4,11 @@
  * The word-counter plugin
  *
  * This provides an admin page available to any admins on the root blog that
- * displays the number of words written by each student over a period of time.
+ * displays the number of words written by each student over a period of time,
+ * drawn from the content of their posts and comments.
+ *
+ * It also provides each student with a dashboard widget that displays their
+ * word counts for the current week and the previous one.
  *
  * @package Class Blogs
  * @since 0.1
@@ -101,12 +105,12 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Gets the number of words used in a student's posts for the week, starting
-	 * on Monday, that contains the given date.
+	 * Gets the number of words used in a student's posts and comments for the
+	 * week, starting on Monday, that contains the given date.
 	 *
 	 * @param  int    $student_id the ID of the student user
 	 * @param  object $date       a DateTime instance of a date during a desired week
-	 * @return int                the number of words used in posts during the week
+	 * @return int                the number of words used in content during the week
 	 *
 	 * @access private
 	 * @since 0.1
@@ -118,10 +122,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		$start_date = $this->_find_weekday_near_date( self::MONDAY, $date, '-1 day' );
 		$end_date = $this->_find_weekday_near_date( self::SUNDAY, $date, '+1 day' );
 
-		// Get the word count for the posts made during the week
-		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
-		$posts = $sitewide_posts->filter_posts( $student_id, $start_date, $end_date );
-		return $this->_get_word_count_for_posts( $posts );
+		return $this->_get_word_count_for_student( $student_id, $start_date, $end_date );
 	}
 
 	/**
@@ -146,7 +147,8 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	public function enable_admin_page( $admin )
 	{
 		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
-		if ( ! empty( $sitewide_posts ) ) {
+		$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
+		if ( ! empty( $sitewide_posts ) && ! empty( $sitewide_comments ) ) {
 			$admin->add_admin_page( $this->get_uid(), __( 'Word Counts', 'classblogs' ), array( $this, 'admin_page' ) );
 		}
 	}
@@ -197,7 +199,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		<h3><?php _e( 'Word Counts by Week', 'classblogs' ); ?></h3>
 
 		<p id="student-word-counts-instructions">
-			<?php _e( 'The table below shows the word counts for each student, broken down by the week for which those counts are calculated.  The date displayed in the "Week of" column is for the Monday that started that week.', 'classblogs' ); ?>
+			<?php _e( 'The table below shows the word counts for each student, drawn from any posts and comments that they have written, broken down by the week for which those counts are calculated.  The date displayed in the "Week of" column is for the Monday that started that week.', 'classblogs' ); ?>
 		</p>
 
 		<div id="student-word-counts-wrap">
@@ -289,15 +291,16 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	/**
 	 * Gets weekly word counts for all students that are part of a class
 	 *
-	 * This returns an array ordered by the week in which the posts that provide
-	 * the word count were made.  Each entry in the array has a `week_start` key
-	 * whose value is a DateTime instance of the Monday that began that week.
-	 * There is also a `user_counts` key, which is in turn another array, this
-	 * one keyed by a student's user ID, with a value of the total number of
-	 * words used in all posts for that week.
+	 * This returns an array ordered by the week in which the posts and comments
+	 * that provide the word counts were made.  Each entry in the array has a
+	 * `week_start` key whose value is a DateTime instance of the Monday that
+	 * began that week. There is also a `user_counts` key, which is in turn
+	 * another array, this one keyed by a student's user ID, with a value of
+	 * the total number of words used in all posts and comments for that week.
 	 *
 	 * @return array the student word counts by week
 	 *
+	 * @access private
 	 * @since 0.1
 	 */
 	private function _get_weekly_word_counts()
@@ -305,19 +308,25 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		global $wpdb;
 		$by_week = array();
 
-		// Get the dates of the oldest and newest posts, which will be used to
-		// influence our date bounds
+		// Get the dates of the oldest and newest posts and comments, which will
+		// be used to influence our date bounds
 		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
 		$newest_post = $sitewide_posts->get_newest_post();
 		$oldest_post = $sitewide_posts->get_oldest_post();
 		if ( empty( $newest_post ) || empty( $oldest_post ) ) {
 			return $by_week;
 		}
+		$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
+		$newest_comment = $sitewide_comments->get_newest_comment();
+		$oldest_comment = $sitewide_comments->get_oldest_comment();
+		if ( empty( $newest_comment ) || empty( $oldest_comment ) ) {
+			return $by_week;
+		}
 
 		// Move the start date back until we hit a Monday, and move the end date
 		// forward until we hit another Monday
-		$start_date = new DateTime($oldest_post->post_date);
-		$end_date = new DateTime($newest_post->post_date);
+		$start_date = new DateTime( min( $oldest_post->post_date, $newest_comment->comment_date ) );
+		$end_date = new DateTime( max( $newest_post->post_date, $newest_comment->comment_date ) );
 		$start_date = $this->_find_weekday_near_date( self::MONDAY, $start_date, '-1 day' );
 		$end_date = $this->_find_weekday_near_date( self::MONDAY, $end_date, '+1 day' );
 		if ( $start_date > $end_date ) {
@@ -343,8 +352,8 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 			$until_date = clone $current_date;
 			$until_date->modify( '+6 days' );
 			foreach ( $student_ids as $student_id ) {
-				$posts = $sitewide_posts->filter_posts( $student_id, $current_date, $until_date );
-				$user_counts[$student_id] = $this->_get_word_count_for_posts( $posts );
+				$user_counts[$student_id] = $this->_get_word_count_for_student(
+					$student_id, $current_date, $until_date );
 			}
 
 			$by_week[] = array(
@@ -367,6 +376,9 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * @param  object $date    a DateTime instance
 	 * @param  string $step    an interval by which to modify the date object
 	 * @return object          a DateTime instance that falls on a Monday
+	 *
+	 * @access private
+	 * @since 0.1
 	 */
 	private function _find_weekday_near_date( $weekday, $date, $step )
 	{
@@ -379,21 +391,35 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Gets the total number of words used in the given posts
+	 * Calculates the number of words produced by a student in the given date window
 	 *
-	 * The posts that are passed to this function are identical to a row returned
-	 * from a blog's posts table.
+	 * @param  int    $user_id    the ID of the user
+	 * @param  object $start_date a DateTime of the start date
+	 * @param  object $end_date   a DateTime of the end date
+	 * @return int                the number of words produced by the student
 	 *
-	 * @param  array $posts an array of post objects
-	 * @return int          the number of words used in all the posts given
+	 * @access private
+	 * @since 0.1
 	 */
-	private function _get_word_count_for_posts( $posts )
+	private function _get_word_count_for_student( $user_id, $start_date, $end_date )
 	{
-		$total = 0;
+		$words = 0;
+
+		// Start with the word counts from the posts
+		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
+		$posts = $sitewide_posts->filter_posts( $user_id, $start_date, $end_date );
 		foreach ( $posts as $post ) {
-			$total += $this->_get_word_count( $post->post_content );
+			$words += $this->_get_word_count_for_text( $post->post_content );
 		}
-		return $total;
+
+		// Add the word count from all comments
+		$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
+		$comments = $sitewide_comments->filter_comments( $user_id, $start_date, $end_date );
+		foreach ( $comments as $comment ) {
+			$words += $this->_get_word_count_for_text( $comment->comment_content );
+		}
+
+		return $words;
 	}
 
 	/**
@@ -404,8 +430,11 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @param  string $text the text whose words should be counted
 	 * @return int          the number of words in the text
+	 *
+	 * @access private
+	 * @since 0.1
 	 */
-	private function _get_word_count( $text )
+	private function _get_word_count_for_text( $text )
 	{
 		// Code derived from http://www.php.net/manual/en/function.str-word-count.php#85579,
 		// which allows this word counter to make a good-faith effort at counting
