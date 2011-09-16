@@ -13,14 +13,20 @@ Requirements
 * PHP >= 5.2.0
 * WordPress >= 3.0 running in multisite mode
 
+For this plugin suite to function as intended, you must give the class its
+own WordPress multisite instance, where the professor has admin rights on the
+main blog, and each student in the class has a single child blog created for
+them, on which they are the only user with administrative rights.  A configuration
+that differs from this might function, but it is not supported.
+
 Installation
 ============
 
 To use the class blogs suite, copy the contents of the `mu-plugins` directory
-to the `mu-plugins` directory in your WordPress content directory, which will
-normally be `wp-content`.  If you do not have an `mu-plugins` directory in your
-content directory, you can create one first or simply copy the entire `mu-plugins`
-directory in this repo to the content directory.
+to the `mu-plugins` directory in your WordPress multisite installation's content
+directory, which will normally be `wp-content`.  If you do not have an
+`mu-plugins` directory in your content directory, you can create one first or
+simply copy the entire `mu-plugins` directory in this repo to the content directory.
 
 To use the included themes, copy the contents of the `themes` directory to
 the `themes` directory of your WordPress content directory.
