@@ -285,6 +285,52 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 		}
 		return $count;
 	}
+
+	/**
+	* Gets the sitewide comment with the newest creation date.
+	*
+	* @return object a single row from the comments table
+	*
+	* @since 0.1
+	*/
+	public function get_newest_comment()
+	{
+		global $wpdb;
+		return $wpdb->get_row( $wpdb->prepare( "SELECT comment_date FROM {$this->sw_tables->comments} ORDER BY comment_date DESC LIMIT 1" ) );
+	}
+
+	/**
+	 * Gets the sitewide comment with the oldest creation date.
+	 *
+	 * @return object a single row from the comments table
+	 *
+	 * @since 0.1
+	 */
+	public function get_oldest_comment()
+	{
+		global $wpdb;
+		return $wpdb->get_row( $wpdb->prepare( "SELECT comment_date FROM {$this->sw_tables->comments} ORDER BY comment_date LIMIT 1" ) );
+	}
+
+	/**
+	 * Returns a subset of the sitewide comments, filtered by user and date.
+	 *
+	 * @param  int    $user_id    the ID of the desired comment author
+	 * @param  object $start_date the start date of the date filter window
+	 * @param  object $end_date   the end date of the date filter window
+	 * @return array              a list of the comments matching the given filters
+	 *
+	 * @since 0.1
+	 */
+	public function filter_comments( $user_id, $start_date, $end_date )
+	{
+		global $wpdb;
+		return $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM {$this->sw_tables->comments} WHERE user_id=%s AND comment_date >= %s AND comment_date <= %s",
+			$user_id,
+			$start_date->format( 'Ymd' ),
+			$end_date->format( 'Ymd' ) ) );
+	}
 }
 
 ClassBlogs::register_plugin( 'sitewide_comments', new ClassBlogs_Plugins_Aggregation_SitewideComments() );
