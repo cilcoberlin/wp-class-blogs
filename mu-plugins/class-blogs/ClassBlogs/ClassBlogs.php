@@ -78,7 +78,7 @@ class ClassBlogs {
 		// public and return its contents
 		global $wpdb;
 		foreach ( $pages as $page ) {
-			if ( is_page( $page ) ) {
+			if ( ClassBlogs::is_page( $page ) ) {
 				$content = $wpdb->get_row( $wpdb->prepare ( "
 					SELECT * FROM $wpdb->posts WHERE ID = %d",  $page ) );
 				$content->comment_status = 'closed';
@@ -123,6 +123,36 @@ class ClassBlogs {
 	public static function get_plugin( $name )
 	{
 		return self::$_plugins[$name];
+	}
+
+	/**
+	 * Functions identically to WordPress's native `is_page` function, but returns
+	 * false if the current page is in a state where `is_page` could not be
+	 * called without creating an error.
+	 *
+	 * @param  int  $page_id the ID of the page being checked
+	 * @return bool          whether or not the current page matches the page ID
+	 *
+	 * @since 0.1
+	 */
+	public static function is_page( $page_id )
+	{
+
+		// This exists due to a flaw, likely due to some unknown structural
+		// deficiency of the class blogs suite, that causes WordPress to spew
+		// errors about a null post object when `is_page` is called on a page
+		// where no posts were found.  Making the `post` property of the `wp_query`
+		// object be a null post with all of the properties that are checked
+		// for in the `is_page` call prevents these errors from occurring.
+		global $wp_query;
+		if ( ! isset( $wp_query->post ) ) {
+			$wp_query->post = (object) array(
+				'ID' => null,
+				'post_title' => null,
+				'post_name' => null );
+		}
+
+		return is_page( $page_id );
 	}
 }
 

@@ -210,7 +210,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 
 
 		//  Only register the filters and tags if we're on the sitewide tags page
-		if ( is_page( $this->get_option( 'tag_page_id' ) ) ) {
+		if ( ClassBlogs::is_page( $this->get_option( 'tag_page_id' ) ) ) {
 
 			// Get information on the tag being displayed
 			global $wpdb;
