@@ -185,17 +185,20 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 		foreach ( $blogs as $blog_id ) {
 			switch_to_blog( $blog_id );
 			$image_search = $wpdb->prepare( "
-				SELECT post_title, guid FROM $wpdb->posts
+				SELECT ID, post_title FROM $wpdb->posts
 				WHERE post_type = %s AND ( $mime_filter )
 				AND post_content <> guid
 				ORDER BY RAND() LIMIT 1",
 				self::_MEDIA_ID );
 			$upload = $wpdb->get_row( $image_search );
 			if ( $upload ) {
-				$image = array(
-					'blog_id' => $blog_id,
-					'title'   => $upload->post_title,
-					'url'     => $upload->guid );
+				$info = wp_get_attachment_image_src( $upload->ID );
+				if ( ! empty( $info ) ) {
+					$image = array(
+						'blog_id' => $blog_id,
+						'title'   => $upload->post_title,
+						'url'     => $info[0] );
+				}
 				restore_current_blog();
 				break;
 			}
