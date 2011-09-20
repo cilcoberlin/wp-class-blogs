@@ -146,6 +146,9 @@ class ClassBlogs_Admin
 			<h4><?php _e( 'Student Blog List', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Provides a main-blog-only widget that shows a list of all student blogs that are part of this class.', 'classblogs' ); ?></p>
 
+			<h4><?php _e( 'Student Pseudonym', 'classblogs' ); ?></h4>
+			<p><?php _e( 'Adds a page to the Users group on the admin side of any student blog that allows them to quickly change their username, blog URL and display name.', 'classblogs' ); ?></p>
+
 			<h4><?php _e( 'Word Counter', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Adds a page for the professor on the admin side to view student word counts by week, and adds a dashboard widget to each student blog that shows the word counts for the current and previous weeks.  Word counts are drawn from any posts or comments that students have made.', 'classblogs' ); ?></p>
 

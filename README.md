@@ -85,6 +85,11 @@ Student Blog List
 Provides a main-blog-only widget that shows a list of all student blogs that
 are part of this class.
 
+Student Pseudonym
+-----------------
+Adds a page to the Users group on the admin side of any student blog that allows
+them to quickly change their username, blog URL and display name.
+
 Word Counter
 ------------
 Adds a page for the professor on the admin side to view student word counts by

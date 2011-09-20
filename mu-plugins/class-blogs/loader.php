@@ -27,6 +27,7 @@ $plugins = array(
 	'RandomImage',
 	'StudentBlogLinks',
 	'StudentBlogList',
+	'StudentPseudonym',
 	'WordCounter',
 	'YouTubeClassPlaylist'
 );
