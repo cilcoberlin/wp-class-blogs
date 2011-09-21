@@ -52,20 +52,20 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 				<li class="cb-youtube-video">
 					<?php if ( ! empty( $video->thumbnail ) ): ?>
 						<p class="cb-youtube-video-image-link">
-							<a rel="external" href="<?php echo htmlspecialchars( $video->link ); ?>">
-								<img alt="<?php echo $video->title; ?>" class="cb-youtube-video-thumbnail" src="<?php echo $video->thumbnail; ?>" width="100%" />
+							<a rel="external" href="<?php echo esc_url( $video->link ); ?>">
+								<img alt="<?php echo esc_attr( $video->title ); ?>" class="cb-youtube-video-thumbnail" src="<?php echo esc_url( $video->thumbnail ); ?>" width="100%" />
 							</a>
 						</p>
 					<?php endif; ?>
-					<a class="cb-youtube-video-title" href="<?php echo htmlspecialchars( $video->link ); ?>" rel="external"><?php echo $video->title; ?></a>
+					<a class="cb-youtube-video-title" href="<?php echo esc_url( $video->link ); ?>" rel="external"><?php echo esc_html( $video->title ); ?></a>
 				</li>
 			<?php endforeach; ?>
 
 			<li class="cb-youtube-local-playlist-link">
-				<a href="<?php echo $plugin->get_local_playlist_page_url(); ?>"><?php _e( 'View videos used on blogs', 'classblogs' ); ?></a>
+				<a href="<?php echo esc_url( $plugin->get_local_playlist_page_url() ); ?>"><?php _e( 'View videos used on blogs', 'classblogs' ); ?></a>
 			</li>
 			<li class="cb-youtube-remote-playlist-link">
-				<a href="<?php echo $plugin->get_youtube_playlist_page_url(); ?>" rel="external"><?php _e( 'View playlist on YouTube', 'classblogs' ); ?></a>
+				<a href="<?php echo esc_url( $plugin->get_youtube_playlist_page_url() ); ?>" rel="external"><?php _e( 'View playlist on YouTube', 'classblogs' ); ?></a>
 			</li>
 
 		</ul>
@@ -543,25 +543,25 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		foreach ( $this->get_playlist_videos() as $index => $video ) {
 
 			// Add the video with a title
-			$markup .= '<div class="%1$s-video post hentry">';
-			$markup .= '<h2 class="%1$s-title"><a href="' . $video->link . '" title="' . __( 'View on YouTube', 'classblogs' ) . '">' . $video->title . '</a></h2>';
-			$markup .= '<div class="%1$s-video-thumbnail" id="' . $video->video_id . '">';
-			$markup .= sprintf( '<a href="%s"><img src="%s" title="%s" /></a>',
-				$video->link,
-				$this->_get_large_thumbnail_url( $video->video_id ),
+			$markup .= '<div class="cb-youtube-local-playlist-page-video post hentry">';
+			$markup .= '<h2 class="cb-youtube-local-playlist-page-title"><a href="' . esc_url( $video->link ) . '" title="' . __( 'View on YouTube', 'classblogs' ) . '">' . esc_html( $video->title ) . '</a></h2>';
+			$markup .= '<div class="cb-youtube-local-playlist-page-video-thumbnail" id="video__' . esc_attr( $video->video_id ) . '">';
+			$markup .= sprintf( '<a href="%1$s"><img src="%2$s" title="%3$s" alt="%3$s" /></a>',
+				esc_url( $video->link ),
+				esc_url( $this->_get_large_thumbnail_url( $video->video_id ) ),
 				esc_attr( $video->title ) );
 			$markup .= '</div>';
 
 			// Add metadata for the video
-			$markup .= '<p class="%1$s-meta">' . sprintf( __( 'Added to the playlist on %s', 'classblogs' ), '<span class="%1$s-date">' . $video->published . '</span>' ) . '</p>';
+			$markup .= '<p class="cb-youtube-local-playlist-page-meta">' . sprintf( __( 'Added to the playlist on %s', 'classblogs' ), '<span class="cb-youtube-local-playlist-page-date">' . esc_html( $video->published ) . '</span>' ) . '</p>';
 			if ( ! empty( $video->used_by ) ) {
-				$markup .= '<p class="%1$s-usage">' . __( 'Embedded in', 'classblogs' ) . ' ';
+				$markup .= '<p class="cb-youtube-local-playlist-page-usage">' . __( 'Embedded in', 'classblogs' ) . ' ';
 				$links = array();
 				foreach ( $video->used_by as $usage ) {
-					$link = '<a class="%1$s-usage-post" ';
+					$link = '<a class="cb-youtube-local-playlist-page-usage-post" ';
 					switch_to_blog( $usage->blog_id );
 					$link .= sprintf( ' href="%s">%s</a>',
-						get_permalink( $usage->post_id ),
+						esc_url( get_permalink( $usage->post_id ) ),
 						get_post( $usage->post_id )->post_title );
 					restore_current_blog();
 					$links[] = $link;
@@ -571,7 +571,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 			$markup .= '</div>';
 		}
 
-		return $content . sprintf( $markup, 'cb-youtube-local-playlist-page' );
+		return $content . $markup;
 	}
 
 	/**
@@ -1495,7 +1495,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 				if ( $this->get_option( 'account_linked' ) ) {
 					$message = sprintf(
 						__( "You have successfully linked your YouTube account (%s) with this blog!  You may now select a playlist to which all posted videos will be added.", 'classblogs' ),
-						$this->get_option( 'youtube_user_id' ) );
+						esc_html( $this->get_option( 'youtube_user_id' ) ) );
 				} else {
 					$message = __( "Your YouTube account was not able to be linked to this blog!", 'classblogs' );
 				}
@@ -1550,7 +1550,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 							if ( $this->get_option( 'account_linked' ) ) {
 								printf( '<p style="color: #0c0; font-weight: bold;">%s</p>',
 									sprintf( __( 'Your YouTube account (%s) has been linked with this blog', 'classblogs' ),
-										$this->get_option( 'youtube_user_id' ) ) );
+										esc_html( $this->get_option( 'youtube_user_id' ) ) ) );
 							}
 
 							// If it's not linked, show a message conveying this
@@ -1561,7 +1561,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 								if ( $this->get_option( 'request_token' ) ) {
 									printf( '<p style="color: #c00; font-weight: bold;">%s</p><p><a href="%s">%s</a></p>',
 										__( 'You have not associated a YouTube account with this blog.', 'classblogs' ),
-										$this->_get_oauth_signin_link(),
+										esc_url( $this->_get_oauth_signin_link() ),
 										__( 'Click here to sign in to your YouTube account and link it with this blog.', 'classblogs' ) );
 								} else {
 									printf( '<p style="color: #c00; font-weight: bold;">%s</p>',
@@ -1586,9 +1586,9 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 											<?php
 												foreach ( $playlists as $playlist ) {
 													printf( '<option value="%s" %s>%s</option>',
-														$playlist->id,
+														esc_attr( $playlist->id ),
 														( $playlist->id == $this->get_option( 'youtube_playlist' ) ) ? 'selected="selected"' : "",
-														$playlist->name );
+														esc_html( $playlist->name ) );
 												}
 											?>
 										</select>

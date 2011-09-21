@@ -21,6 +21,17 @@ DelayedYouTubeLoader.initializeLoaders = function() {
 	});
 };
 
+/** Gets the YouTube ID of a video from the ID of a video wrapper element. */
+DelayedYouTubeLoader.getVideoIDFromElementID = function(id) {
+	return id.replace(DelayedYouTubeLoader.VIDEO_ID_PREFIX, "");
+};
+
+/**
+ * The prefix of the YouTube video ID contained in the `id` attribute of the
+ * video wrapper element.
+ */
+DelayedYouTubeLoader.VIDEO_ID_PREFIX = "video__";
+
 /** CSS selectors for the loader. */
 DelayedYouTubeLoader.CSS = {
 	'thumbnails': ".cb-youtube-local-playlist-page-video-thumbnail"
@@ -49,7 +60,7 @@ DelayedYouTubeLoader.prototype.enableOnClick = function(e) {
 	var $thumbnail = $(this);
 	iframe = '<iframe width="' + DelayedYouTubeLoader.IFRAME_WIDTH + '" height="';
 	iframe += DelayedYouTubeLoader.IFRAME_HEIGHT + '" src="';
-	iframe += DelayedYouTubeLoader.EMBED_URL_BASE + $thumbnail.attr('id') + '"';
+	iframe += DelayedYouTubeLoader.EMBED_URL_BASE + DelayedYouTubeLoader.getVideoIDFromElementID($thumbnail.attr('id')) + '"';
 	iframe += ' frameborder="0" allowfullscreen></iframe>';
 	$thumbnail.html(iframe);
 
