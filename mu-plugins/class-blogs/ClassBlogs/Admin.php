@@ -191,10 +191,8 @@ class ClassBlogs_Admin
 	 */
 	public function get_page_url( $uid )
 	{
-		$site = get_current_site();
-		return sprintf( 'http://%s%swp-admin/admin.php?page=%s',
-			$site->domain,
-			$site->path,
+		return sprintf( '%sadmin.php?page=%s',
+			get_admin_url(),
 			$this->_page_ids[ $uid ]
 		);
 	}
