@@ -90,7 +90,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 		$instance['max_posts']          = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_posts'] ) );
 		$instance['max_posts_per_blog'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_posts_per_blog'] ) );
 		$instance['meta_format']        = ClassBlogs_Utils::sanitize_user_input( $new['meta_format'] );
-		$instance['show_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $new['show_excerpt'] );
+		$instance['show_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $new, 'show_excerpt' );
 		$instance['title']              = ClassBlogs_Utils::sanitize_user_input( $new['title'] );
 		return $instance;
 	}
@@ -522,9 +522,9 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 
 			$options = $this->get_options();
 			$options['root_excerpt_words']     = absint( ClassBlogs_Utils::sanitize_user_input( $_POST['root_excerpt_words'] ) );
-			$options['root_show_posts']        = ClassBlogs_Utils::checkbox_as_bool( $_POST['root_show_posts'] );
-			$options['root_strip_formatting']  = ClassBlogs_Utils::checkbox_as_bool( $_POST['root_strip_formatting'] );
-			$options['root_use_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $_POST['root_use_excerpt'] );
+			$options['root_show_posts']        = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_show_posts' );
+			$options['root_strip_formatting']  = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_strip_formatting' );
+			$options['root_use_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_use_excerpt' );
 			$this->update_options( $options );
 
 			echo '<div id="message" class="updated fade"><p>' . __( 'Your sitewide posts options have been updated', 'classblogs' ) . '</p></div>';

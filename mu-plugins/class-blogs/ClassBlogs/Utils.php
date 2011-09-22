@@ -85,13 +85,14 @@ class ClassBlogs_Utils
 	 * Since checkboxes that have been checked are represented in the POST data
 	 * as 'on', any value other than that will evaluate to false.
 	 *
+	 * @param  array  $post  the POST data from a form
 	 * @param  string $value the value of a checkbox
 	 * @return bool          the boolean equivalent of the value
 	 *
 	 * @since 0.1
 	 */
-	public static function checkbox_as_bool( $value ) {
-		return $value == 'on';
+	public static function checkbox_as_bool( $post, $value ) {
+		return array_key_exists( $value, $post ) && $post[$value] == 'on';
 	}
 
 	/**

@@ -94,7 +94,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 		$instance['max_comments']          = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_comments'] ) );
 		$instance['max_comments_per_blog'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_comments_per_blog'] ) );
 		$instance['meta_format']           = ClassBlogs_Utils::sanitize_user_input( $new['meta_format'] );
-		$instance['show_excerpt']          = ClassBlogs_Utils::checkbox_as_bool( $new['show_excerpt'] );
+		$instance['show_excerpt']          = ClassBlogs_Utils::checkbox_as_bool( $new, 'show_excerpt' );
 		$instance['title']                 = ClassBlogs_Utils::sanitize_user_input( $new['title'] );
 		return $instance;
 	}
