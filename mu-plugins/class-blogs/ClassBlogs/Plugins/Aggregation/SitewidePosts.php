@@ -104,23 +104,23 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 ?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'classblogs' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ) ?>" name="<?php echo $this->get_field_name( 'title' ) ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ) ?>" name="<?php echo $this->get_field_name( 'title' ) ?>" type="text" value="<?php echo $this->safe_instance_attr( $instance, 'title' ); ?>" />
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'max_posts' ); ?>"><?php _e( 'Post Limit', 'classblogs' ); ?></label>
-			<input size="3" id="<?php echo $this->get_field_id( 'max_posts' ); ?>" name="<?php echo $this->get_field_name( 'max_posts' ); ?>" type="text" value="<?php echo esc_attr( $instance['max_posts'] ); ?>" />
+			<input size="3" id="<?php echo $this->get_field_id( 'max_posts' ); ?>" name="<?php echo $this->get_field_name( 'max_posts' ); ?>" type="text" value="<?php echo $this->safe_instance_attr( $instance, 'max_posts' ); ?>" />
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'max_posts_per_blog' ); ?>"><?php _e( 'Posts-per-Blog Limit', 'classblogs' ); ?></label>
-			<input size="3" id="<?php echo $this->get_field_id( 'max_posts_per_blog' ); ?>" name="<?php echo $this->get_field_name( 'max_posts_per_blog' ); ?>" type="text" value="<?php echo esc_attr( $instance['max_posts_per_blog'] ); ?>" />
+			<input size="3" id="<?php echo $this->get_field_id( 'max_posts_per_blog' ); ?>" name="<?php echo $this->get_field_name( 'max_posts_per_blog' ); ?>" type="text" value="<?php echo $this->safe_instance_attr( $instance, 'max_posts_per_blog' ); ?>" />
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'show_excerpt' ); ?>"><?php _e( 'Show Post Excerpt', 'classblogs' ); ?></label>
-			<input class="checkbox" id="<?php echo $this->get_field_id( 'show_excerpt' ); ?>" name="<?php echo $this->get_field_name( 'show_excerpt' ); ?>" type="checkbox" <?php if ( $instance['show_excerpt'] ): ?>checked="checked"<?php endif; ?> />
+			<input class="checkbox" id="<?php echo $this->get_field_id( 'show_excerpt' ); ?>" name="<?php echo $this->get_field_name( 'show_excerpt' ); ?>" type="checkbox" <?php if ( $this->safe_instance_attr( $instance, 'show_excerpt' ) ): ?>checked="checked"<?php endif; ?> />
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'meta_format' ); ?>"><?php _e( 'Meta Format', 'classblogs' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'meta_format' ); ?>" name="<?php echo $this->get_field_name( 'meta_format' ); ?>" type="text" value="<?php echo esc_attr( $instance['meta_format'] ); ?>" />
+			<input class="widefat" id="<?php echo $this->get_field_id( 'meta_format' ); ?>" name="<?php echo $this->get_field_name( 'meta_format' ); ?>" type="text" value="<?php echo $this->safe_instance_attr( $instance, 'meta_format' ); ?>" />
 		</p>
 		<div>
 			<h3><?php _e( 'Format variables you can use', 'classblogs' ) ?></h3>

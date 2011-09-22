@@ -248,7 +248,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 		// Replace any occurrences of the old URL in the blog's posts
 		$referring_posts = $wpdb->get_results( "
 			SELECT ID, post_content FROM $wpdb->posts
-			WHERE post_content LIKE '%%$old_url%%' " );
+			WHERE post_content LIKE '%%" . like_escape( $old_url ) . "%%' " );
 		foreach ( $referring_posts as $post ) {
 			$wpdb->update(
 				$wpdb->posts,

@@ -245,7 +245,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 		$post_search = $wpdb->prepare( "
 			SELECT ID FROM $wpdb->posts
 			WHERE post_status='publish'
-			AND post_content LIKE '%%$url%%'
+			AND post_content LIKE '%%" . like_escape( $url ) . "%%'
 			ORDER BY post_date
 			LIMIT 1" );
 		$post = $wpdb->get_row( $post_search );

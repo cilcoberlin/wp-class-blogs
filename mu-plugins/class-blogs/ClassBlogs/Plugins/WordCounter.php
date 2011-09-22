@@ -134,7 +134,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	public function _add_admin_styles()
 	{
 		printf( '<link rel="stylesheet" href="%sword-counter.css" />',
-			ClassBlogs_Utils::get_plugin_css_url() );
+			esc_url( ClassBlogs_Utils::get_plugin_css_url() ) );
 	}
 
 	/**
