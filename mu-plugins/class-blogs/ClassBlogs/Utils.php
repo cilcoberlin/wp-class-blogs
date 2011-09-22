@@ -145,7 +145,8 @@ class ClassBlogs_Utils
 		foreach ( $lookup as $variable => $value ) {
 			$format = str_replace(
 				sprintf( '%1$s%2$s%1$s', $sigil, $variable ),
-				sprintf( '<span class="%s%s format">%s</span>', $prefix, $variable, $value ),
+				sprintf( '<span class="%s format">%s</span>',
+					sanitize_html_class( $prefix . $variable ), esc_html( $value ) ),
 				$format );
 		}
 		return $format;

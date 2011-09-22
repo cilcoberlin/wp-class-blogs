@@ -79,7 +79,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 	public function update( $new, $old )
 	{
 		$instance = $old;
-		$instance['limit'] = ClassBlogs_Utils::sanitize_user_input( $new['limit'] );
+		$instance['limit'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['limit'] ) );
 		$instance['title'] = ClassBlogs_Utils::sanitize_user_input( $new['title'] );
 		return $instance;
 	}

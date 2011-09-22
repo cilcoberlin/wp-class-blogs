@@ -47,7 +47,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 		$this->start_widget( $args, $instance );
 		echo '<ul class="cb-student-blogs">';
 		foreach ( $student_blogs as $blog ) {
-			echo '<li class="cb-student-blog"><a class="cb-student-blog-link" href="' . $blog->url . '">' . $blog->name . '</a></li>';
+			echo '<li class="cb-student-blog"><a class="cb-student-blog-link" href="' . esc_url( $blog->url ) . '">' . esc_html( $blog->name ) . '</a></li>';
 		}
 		echo '</ul>';
 		$this->end_widget( $args );

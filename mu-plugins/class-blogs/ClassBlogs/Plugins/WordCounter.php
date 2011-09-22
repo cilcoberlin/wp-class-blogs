@@ -165,10 +165,9 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		// Update the plugin options
 		if ( $_POST ) {
 			check_admin_referer( $this->get_uid() );
-			$this->update_option( 'required_weekly_words', ClassBlogs_Utils::sanitize_user_input( $_POST['required_weekly_words'] ) );
+			$this->update_option( 'required_weekly_words', absint( ClassBlogs_Utils::sanitize_user_input( $_POST['required_weekly_words'] ) ) );
 			echo '<div id="message" class="updated fade"><p>' . __( 'Your word-counter options been updated.', 'classblogs' ) . '</p></div>';
 		}
-
 ?>
 
 	<div class="wrap">
@@ -211,7 +210,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 						<?php
 							// Show each student's name in the header
 							foreach ( $student_ids as $student_id ) {
-								printf( '<th>%s</th>', $student_names[$student_id] );
+								printf( '<th>%s</th>',esc_html( $student_names[$student_id] ) );
 							}
 						?>
 					</tr>
@@ -223,7 +222,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 						// Display each student's total words in the footer
 						foreach ( $student_ids as $student_id ) {
 							printf( '<td title="%s">%s</td>',
-								$student_names[$student_id],
+								esc_attr( $student_names[$student_id] ),
 								number_format( $total_counts[$student_id] ) );
 						}
 					?>
@@ -251,7 +250,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 								$classes[] = ($counter % 2) ? 'even' : 'odd';
 								$counter++;
 								printf( '<td title="%s" class="%s">%s</td>',
-									sprintf( __('%1$s on %2$s'), $student_names[$student_id], $verbose_date ),
+									esc_attr( sprintf( __('%1$s on %2$s'), $student_names[$student_id], $verbose_date ) ),
 									implode( ' ', $classes ),
 									number_format( $count ) );
 							}

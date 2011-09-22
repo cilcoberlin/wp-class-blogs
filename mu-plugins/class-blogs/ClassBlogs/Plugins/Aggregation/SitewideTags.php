@@ -57,11 +57,11 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 		// Display each tag as a weighted link a list
 		echo "<div class='tagcloud'>";
 		foreach ( $plugin->get_tags_for_tag_cloud( $instance['min_usage'] ) as $tag ) {
-			printf( '<a class="tag-link" href="%s" rel="tag" title="%s" style="font-size: %spt;">%s</a> ',
-				$tag->url,
-				sprintf( _n( '%d topic', '%d topics', $tag->count ), $tag->count ),
+			printf( '<a class="tag-link" href="%s" rel="tag" title="%s" style="font-size: %dpt;">%s</a> ',
+				esc_url( $tag->url ),
+				esc_attr( sprintf( _n( '%d topic', '%d topics', $tag->count ), $tag->count ) ),
 				$min_font + floor( ( ( $tag->count - $least_usage ) / max( $most_usage - $least_usage, 1 ) ) * ( $max_font - $min_font ) ),
-				$tag->name );
+				esc_html( $tag->name ) );
 		}
 		echo "</div>";
 
@@ -74,9 +74,9 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 	public function update( $new, $old )
 	{
 		$instance = $old;
-		$instance['max_font_size'] = ClassBlogs_Utils::sanitize_user_input( $new['max_font_size'] );
-		$instance['min_font_size'] = ClassBlogs_Utils::sanitize_user_input( $new['min_font_size'] );
-		$instance['min_usage']     = ClassBlogs_Utils::sanitize_user_input( $new['min_usage'] );
+		$instance['max_font_size'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_font_size'] ) );
+		$instance['min_font_size'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['min_font_size'] ) );
+		$instance['min_usage']     = absint( ClassBlogs_Utils::sanitize_user_input( $new['min_usage'] ) );
 		$instance['title']         = ClassBlogs_Utils::sanitize_user_input( $new['title'] );
 		return $instance;
 	}

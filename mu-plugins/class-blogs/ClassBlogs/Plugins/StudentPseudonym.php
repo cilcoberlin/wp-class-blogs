@@ -76,10 +76,10 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 				// Get information on the applied pseudonym
 				$blog_url = home_url();
 				$new_info = array(
-					__( 'First Name', 'classblogs' ) => $first_name,
-					__( 'Last Name', 'classblogs' ) => $last_name,
-					__( 'Username', 'classblogs' ) => $username,
-					__( 'Blog URL', 'classblogs' ) => sprintf( '<a href="%1$s">%1$s</a>', $blog_url ) );
+					__( 'First Name', 'classblogs' ) => esc_html( $first_name ),
+					__( 'Last Name', 'classblogs' ) => esc_html( $last_name ),
+					__( 'Username', 'classblogs' ) => esc_html( $username ),
+					__( 'Blog URL', 'classblogs' ) => sprintf( '<a href="%1$s">%1$s</a>', esc_url( $blog_url ) ) );
 
 ?>
 				<?php /* Show the user their new information and URLs */ ?>
@@ -101,7 +101,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 					_e( 'You cannot have a blank username.', 'classblogs' );
 				} else {
 					printf( __( 'The username %s is invalid or conflicts with another user or blog.  Please choose a different username.', 'classblogs' ),
-						'<strong>' . $username . '</strong>' );
+						'<strong>' . esc_html( $username ) . '</strong>' );
 				}
 				echo '</p></div>';
 			}
@@ -127,10 +127,10 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 						<label for="new-username"><?php _e( 'Changing this will change the username that you use to access your blog and the URL at which it can be found.', 'classblogs' ); ?></label>
 						<hr />
 						<label for="new-username">
-							<?php printf( __( 'Your current username is %s', 'classblogs' ), '<strong>' . $username . '</strong>' ); ?>
+							<?php printf( __( 'Your current username is %s', 'classblogs' ), '<strong>' . esc_html( $username ) . '</strong>' ); ?>
 						</label><br />
 						<label for="new-username">
-							<?php printf( __( 'Your current blog URL is %s', 'classblogs' ), sprintf( '<a href="%1$s">%1$s</a>', $blog_url ) ); ?>
+							<?php printf( __( 'Your current blog URL is %s', 'classblogs' ), sprintf( '<a href="%1$s">%1$s</a>', esc_url( $blog_url ) ) ); ?>
 						</label><br />
 					</td>
 				</tr>
@@ -139,7 +139,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 					<td>
 						<input type="text" name="new_first_name" id="new-first-name" value="<?php echo esc_attr( $first_name );  ?>"/><br />
 						<label for="new-first-name">
-							<?php printf( __( 'Your current first name is %s', 'classblogs' ), '<strong>' . $first_name . '</strong>' ); ?>
+							<?php printf( __( 'Your current first name is %s', 'classblogs' ), '<strong>' . esc_html( $first_name ) . '</strong>' ); ?>
 						</label>
 					</td>
 				</tr>
@@ -148,7 +148,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 					<td>
 						<input type="text" name="new_last_name" id="new-last-name" value="<?php echo esc_attr( $last_name );  ?>" /><br />
 						<label for="new-last-name">
-							<?php printf( __( 'Your current last name is %s', 'classblogs' ), '<strong>' . $last_name . '</strong>' ); ?>
+							<?php printf( __( 'Your current last name is %s', 'classblogs' ), '<strong>' . esc_html( $last_name ) . '</strong>' ); ?>
 						</label>
 					</td>
 				</tr>

@@ -66,12 +66,12 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 		foreach ( $sitewide_posts as $post ) {
 ?>
 			<li class="cb-sitewide-post">
-				<a href="<?php echo $post->permalink; ?>" class="cb-sitewide-post-title"><?php echo $post->title; ?></a>
+				<a href="<?php echo esc_url( $post->permalink ); ?>" class="cb-sitewide-post-title"><?php echo esc_html( $post->title ); ?></a>
 				<?php if ( $post->meta ): ?>
 					<p class="cb-sitewide-post-meta"><?php echo $post->meta; ?></p>
 				<?php endif; ?>
 				<?php if ( $instance['show_excerpt'] ): ?>
-					<p class="cb-sitewide-post-excerpt"><?php echo ClassBlogs_Utils::make_post_excerpt( $post->content, self::_EXCERPT_LENGTH_WORDS ); ?></p>
+					<p class="cb-sitewide-post-excerpt"><?php echo esc_html( ClassBlogs_Utils::make_post_excerpt( $post->content, self::_EXCERPT_LENGTH_WORDS ) ); ?></p>
 				<?php endif; ?>
 			</li>
 <?php
@@ -87,8 +87,8 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	public function update( $new, $old )
 	{
 		$instance = $old;
-		$instance['max_posts']          = ClassBlogs_Utils::sanitize_user_input( $new['max_posts'] );
-		$instance['max_posts_per_blog'] = ClassBlogs_Utils::sanitize_user_input( $new['max_posts_per_blog'] );
+		$instance['max_posts']          = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_posts'] ) );
+		$instance['max_posts_per_blog'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_posts_per_blog'] ) );
 		$instance['meta_format']        = ClassBlogs_Utils::sanitize_user_input( $new['meta_format'] );
 		$instance['show_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $new['show_excerpt'] );
 		$instance['title']              = ClassBlogs_Utils::sanitize_user_input( $new['title'] );
@@ -159,10 +159,10 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 * @var array
 	 */
 	protected $default_options = array (
-		'root_excerpt_words'          => 50,
-		'root_show_posts'             => true,
-		'root_strip_formatting'       => true,
-		'root_use_excerpt'            => true
+		'root_excerpt_words'    => 50,
+		'root_show_posts'       => true,
+		'root_strip_formatting' => true,
+		'root_use_excerpt'      => true
 	);
 
 	/**
@@ -332,8 +332,8 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		//  Display the link to the sitewide usage page for each used tag
 		foreach ( $this->getTagsForPost( $post->ID, $post->from_blog ) as $tag ) {
 			$new_tags[] = sprintf( '<a href="%s">%s</a>',
-				$tag->name,
-				ClassBlogs_Plugins_Aggregation_SitewideTags::get_tag_page_url( $tag->slug ) );
+				esc_url( ClassBlogs_Plugins_Aggregation_SitewideTags::get_tag_page_url( $tag->slug ) ),
+				esc_html( $tag->name ) );
 		}
 
 		return $before . join( $sep, $new_tags ) . $after;
@@ -521,7 +521,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			check_admin_referer( $this->get_uid() );
 
 			$options = $this->get_options();
-			$options['root_excerpt_words']     = ClassBlogs_Utils::sanitize_user_input( $_POST['root_excerpt_words'] );
+			$options['root_excerpt_words']     = absint( ClassBlogs_Utils::sanitize_user_input( $_POST['root_excerpt_words'] ) );
 			$options['root_show_posts']        = ClassBlogs_Utils::checkbox_as_bool( $_POST['root_show_posts'] );
 			$options['root_strip_formatting']  = ClassBlogs_Utils::checkbox_as_bool( $_POST['root_strip_formatting'] );
 			$options['root_use_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $_POST['root_use_excerpt'] );

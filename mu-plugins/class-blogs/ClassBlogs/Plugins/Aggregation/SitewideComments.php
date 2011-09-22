@@ -68,14 +68,14 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 			<li class="cb-sitewide-comment">
 				<?php
 					printf( _x( '%1$s on %2$s', 'comment author, then post', 'classblogs' ),
-						'<span class="cb-sitewide-comment-author">' . $comment->author_name . '</span>',
-						'<a class="cb-sitewide-comment-post" href="' . $comment->permalink . '">' . $comment->post_title . '</a>' );
+						'<span class="cb-sitewide-comment-author">' . esc_html( $comment->author_name ) . '</span>',
+						'<a class="cb-sitewide-comment-post" href="' . esc_url( $comment->permalink ) . '">' . esc_html( $comment->post_title ) . '</a>' );
 				?>
 				<?php if ( $comment->meta ): ?>
 					<p class="cb-sitewide-comment-meta"><?php echo $comment->meta; ?></p>
 				<?php endif; ?>
 				<?php if ( $instance['show_excerpt'] ): ?>
-					<p class="cb-sitewide-comment-excerpt"><?php echo ClassBlogs_Utils::make_post_excerpt( $comment->content, self::_EXCERPT_LENGTH_WORDS ); ?></p>
+					<p class="cb-sitewide-comment-excerpt"><?php echo esc_html( ClassBlogs_Utils::make_post_excerpt( $comment->content, self::_EXCERPT_LENGTH_WORDS ) ); ?></p>
 				<?php endif; ?>
 			</li>
 <?php
@@ -91,8 +91,8 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	public function update( $new, $old )
 	{
 		$instance = $old;
-		$instance['max_comments']          = ClassBlogs_Utils::sanitize_user_input( $new['max_comments'] );
-		$instance['max_comments_per_blog'] = ClassBlogs_Utils::sanitize_user_input( $new['max_comments_per_blog'] );
+		$instance['max_comments']          = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_comments'] ) );
+		$instance['max_comments_per_blog'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_comments_per_blog'] ) );
 		$instance['meta_format']           = ClassBlogs_Utils::sanitize_user_input( $new['meta_format'] );
 		$instance['show_excerpt']          = ClassBlogs_Utils::checkbox_as_bool( $new['show_excerpt'] );
 		$instance['title']                 = ClassBlogs_Utils::sanitize_user_input( $new['title'] );

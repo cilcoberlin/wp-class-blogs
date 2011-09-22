@@ -152,15 +152,17 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function render_link_list( $params )
 	{
-		echo $params['before_widget'] . $params['before_title'] . $this->get_option( 'title' ) . $params['after_title'] . '<ul>';
+		echo $params['before_widget'] . $params['before_title'] . esc_html( $this->get_option( 'title' ) ) . $params['after_title'] . '<ul>';
 
 		$link_count = count( $this->get_option( 'links' ) );
 		for ( $i = 0; $i < $link_count; $i++ ) {
 			$links = $this->get_option( 'links' );
 			$link = $links[$i];
 			if ( $link['url'] ) {
-				$external = ( preg_match( '!^https?://' . get_current_site()->domain . '!', $link['url'] ) ) ? "" : 'rel="external"';
-				echo '<li><a ' . $external . ' href="' . $link['url'] . '">' . $link['title'] . '</a></li>';
+				printf( '<li><a %s href="%s">%s</a></li>',
+					( preg_match( '!^https?://' . get_current_site()->domain . '!', $link['url'] ) ) ? "" : 'rel="external"',
+					esc_url( $link['url'] ),
+					esc_html( $link['title'] ) );
 			}
 		}
 
@@ -220,7 +222,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 				$link_title = $post['link_title_' . $current_link];
 				if ( $link_url && $link_title ) {
 					$links[] = array(
-						'url'   => ClassBlogs_Utils::sanitize_user_input( $link_url ),
+						'url'   => esc_url_raw( ClassBlogs_Utils::sanitize_user_input( $link_url ) ),
 						'title' => ClassBlogs_Utils::sanitize_user_input( $link_title )
 					);
 				}
@@ -288,10 +290,10 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 						<tr valign="top" class="link">
 							<th scope="row"><?php _e( 'Link', 'classblogs' ); ?></th>
 							<td>
-								<label for="<?php echo $title_id; ?>"><?php _e( 'Title', 'classblogs' ); ?></label>
-								<input type="text" name="<?php echo $title_id; ?>" id="<?php echo $title_id; ?>" value="<?php echo esc_attr( $link['title'] ); ?>" />
-								<label style="margin-left: 2em;" for="<?php echo $url_id; ?>"><?php _e( 'URL', 'classblogs' ); ?></label>
-								<input size="40" type="text" name="<?php echo $url_id; ?>" id="<?php echo $url_id; ?>" value="<?php echo esc_attr( $link['url'] ); ?>" />
+								<label for="<?php echo esc_attr( $title_id ); ?>"><?php _e( 'Title', 'classblogs' ); ?></label>
+								<input type="text" name="<?php echo esc_attr( $title_id ); ?>" id="<?php echo esc_attr( $title_id ); ?>" value="<?php echo esc_attr( $link['title'] ); ?>" />
+								<label style="margin-left: 2em;" for="<?php echo esc_attr( $url_id ); ?>"><?php _e( 'URL', 'classblogs' ); ?></label>
+								<input size="40" type="text" name="<?php echo esc_attr( $url_id ); ?>" id="<?php echo esc_attr( $url_id ); ?>" value="<?php echo esc_url( $link['url'] ); ?>" />
 								<a href="#delete-link" class="delete-link"><?php _e( 'Delete', 'classblogs' ); ?></a>
 							</td>
 						</tr>

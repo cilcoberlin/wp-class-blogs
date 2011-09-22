@@ -49,15 +49,16 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 			if ( $image->post_id ) {
 				$caption = sprintf( __( 'From the post %1$s on %2$s', 'classblogs' ),
 					sprintf( '<a href="%s">%s</a>',
-						get_permalink( $image->post_id ),
-						get_post( $image->post_id )->post_title ),
+						esc_url( get_permalink( $image->post_id ) ),
+						esc_html( get_post( $image->post_id )->post_title ) ),
 					sprintf( '<a href="%s">%s</a>',
-						get_blogaddress_by_id( $image->blog_id ),
-						get_blog_option( $image->blog_id, 'blogname' )) );
+						esc_url( get_blogaddress_by_id( $image->blog_id ) ),
+						esc_html( get_blog_option( $image->blog_id, 'blogname' ) ) ) );
 			} else {
-				$caption = _( 'From the blog', 'classblogs' ) . sprintf(' <a href="%s">%s</a>',
-					get_blogaddress_by_id( $image->blog_id ),
-					get_blog_option( $image->blog_id, 'blogname' ) );
+				$caption = sprintf( __( 'From the blog %s', 'classblogs' ),
+					sprintf( '<a href="%s">%s</a>',
+						esc_url( get_blogaddress_by_id( $image->blog_id ) ),
+						esc_html( get_blog_option( $image->blog_id, 'blogname' ) ) ) );
 			}
 
 			printf(
@@ -68,7 +69,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 						%3$s
 					</li>
 				</ul>',
-				$image->url,
+				esc_url( $image->url ),
 				esc_attr( $image->title ),
 				$caption );
 			restore_current_blog();

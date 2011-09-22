@@ -320,7 +320,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		foreach ( $post as $key => $value ) {
 			if ( preg_match( '/^exclude_blog_(\d+)$/', $key, $matches ) ) {
 				if ( 'on' == $value ) {
-					$blogs[] = $matches[1];
+					$blogs[] = absint( $matches[1] );
 				}
 			}
 		}
@@ -388,7 +388,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 				'exclude_blog_' . $blog_id,
 				( array_search( $blog_id, $excluded_blogs ) !== false ) ? 'checked="checked"' : "",
 				$details->blogname,
-				$details->siteurl );
+				esc_url( $details->siteurl ) );
 		}
 
 		?>
