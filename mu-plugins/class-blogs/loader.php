@@ -10,7 +10,7 @@ if ( is_admin() ) {
 	require_once( 'ClassBlogs/Admin.php' );
 }
 
-// Load each class blogs plugin
+// Load the suite's plugins
 $plugins = array(
 	'BasePlugin',
 	'SidebarWidget',
@@ -35,9 +35,6 @@ foreach ( $plugins as $plugin ) {
 	require_once( 'ClassBlogs/Plugins/' . $plugin . '.php' );
 }
 
-// Enable i18n fuctionality
-add_action( 'init', '_classblogs_init' );
-
 /**
  * Performs global class-blogs plugin initialization actions
  *
@@ -53,5 +50,6 @@ function _classblogs_init()
 		false,
 		basename( dirname( __FILE__ ) ) . '/languages' );
 }
+add_action( 'init', '_classblogs_init' );
 
 ?>
