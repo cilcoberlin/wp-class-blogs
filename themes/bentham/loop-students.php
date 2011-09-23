@@ -84,17 +84,20 @@
 							$post_classes[] = 'last';
 						}
 						switch_to_blog( $post->from_blog );
+
+						// Store the post's permalink
+						$permalink = get_permalink( $post->ID );
 				?>
 					<li class="post <?php echo implode( ' ', $post_classes ); ?>">
 						<h3 class="title">
-							<a href="<?php echo $post->cb_sw_permalink; ?>"><?php the_title(); ?></a>
+							<a href="<?php echo $permalink; ?>"><?php the_title(); ?></a>
 						</h3>
 						<h4 class="meta">
 							<span class="date value"><?php the_time( _x( 'M j', 'date format', 'bentham' ) ); ?></span>
 						</h4>
 						<div class="entry">
 							<?php echo bentham_get_post_excerpt( $post->post_content, 25 ); ?>
-							<a href="<?php echo $post->cb_sw_permalink; ?>" class="read-more"><?php _e( 'Read more', 'bentham' ); ?></a>
+							<a href="<?php echo $permalink; ?>" class="read-more"><?php _e( 'Read more', 'bentham' ); ?></a>
 						</div>
 					</li>
 				<?php
