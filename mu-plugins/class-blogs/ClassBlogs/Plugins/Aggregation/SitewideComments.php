@@ -34,6 +34,15 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	);
 
 	/**
+	 * A container for comment totals by student
+	 *
+	 * @access private
+	 * @var array
+	 * @since 0.1
+	 */
+	private $_comment_totals_by_student;
+
+	/**
 	 * Creates the sitewide comments widget
 	 */
 	public function __construct()
@@ -181,20 +190,19 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	{
 
 		// Return the cached comments if possible
-		if ( isset( $this->_sitewide_comments ) ) {
-			return $this->_sitewide_comments;
+		$cached = $this->get_sw_cache( 'comments' );
+		if ( $cached !== null ) {
+			return $cached;
 		}
 
 		global $wpdb;
-
 		$comments = $wpdb->get_results( "
 			SELECT c.comment_ID, c.comment_post_ID, c.comment_content, c.from_blog, c.comment_author,
 				   c.comment_date, c.user_id, p.post_title
 			FROM {$this->sw_tables->comments} AS c, {$this->sw_tables->posts} AS p
 			WHERE p.ID = c.comment_post_ID AND c.from_blog = p.from_blog
 			ORDER BY c.comment_date DESC" );
-
-		$this->_sitewide_comments = $comments;
+		$this->set_sw_cache( 'comments', $comments );
 		return $comments;
 	}
 
@@ -220,6 +228,12 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 */
 	public function get_comments_for_sidebar( $max_comments, $max_comments_per_blog, $meta_format )
 	{
+
+		// Use cached values if possible
+		$cached = $this->get_sw_cache( 'sidebar' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
 
 		$comments = array();
 		$raw_comments = $this->limit_sitewide_resources(
@@ -257,6 +271,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				'post_title'  => $comment->post_title );
 		}
 
+		$this->set_sw_cache( 'sidebar', $comments );
 		return $comments;
 	}
 
@@ -271,6 +286,34 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
+	 * Calculates the total number of comments left by each student
+	 *
+	 * @return array a list of totals for student, keyed by user ID
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _calculate_comment_totals_for_students()
+	{
+		$cached = $this->get_sw_cache( 'totals' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
+		global $wpdb;
+		$totals = array();
+		$counts = $wpdb->get_results( "
+			SELECT user_id, COUNT(*) AS total
+			FROM {$this->sw_tables->comments}
+			GROUP BY user_id" );
+		foreach ( $counts as $count ) {
+			$totals[$count->user_id] = $count->total;
+		}
+		$this->set_sw_cache( 'totals', $totals );
+		return $totals;
+	}
+
+	/**
 	 * Gets the total number of comments left by a student
 	 *
 	 * @param  int    $user_id the user ID of a student
@@ -278,12 +321,16 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 *
 	 * @since 0.1
 	 */
-	public function get_total_comments_for_student( $user_id ) {
-		$count = 0;
-		foreach ( $this->get_sitewide_comments() as $comment ) {
-			$count += $comment->user_id == $user_id;
+	public function get_total_comments_for_student( $user_id )
+	{
+		if ( ! isset ( $this->_comment_totals_by_student ) ) {
+			$this->_comment_totals_by_student = $this->_calculate_comment_totals_for_students();
 		}
-		return $count;
+		if ( array_key_exists( $user_id, $this->_comment_totals_by_student ) ) {
+			return $this->_comment_totals_by_student[ $user_id ];
+		} else {
+			return 0;
+		}
 	}
 
 	/**

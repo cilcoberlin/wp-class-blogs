@@ -349,7 +349,6 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 * Since the posts will be from multiple different blogs, certain values
 	 * are precomputed and added each post.  The values are as follows:
 	 *
-	 *     cb_sw_permalink - the permalink for the post
 	 *     cb_sw_excerpt   - the post's excerpt
 	 *
 	 * @return array a list of sitewide posts
@@ -360,8 +359,9 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	{
 
 		// Return the cached version if we've already built the sitewide post list
-		if ( isset( $this->_sitewide_posts ) ) {
-			return $this->_sitewide_posts;
+		$cached = $this->get_sw_cache( 'all_posts' );
+		if ( $cached !== null ) {
+			return $cached;
 		}
 
 		global $wpdb;
@@ -371,9 +371,6 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 
 		foreach ( $wpdb->get_results( "SELECT * FROM {$this->sw_tables->posts} ORDER BY post_date DESC" ) as $post ) {
 
-			// Precompute each post's permalink
-			$post->cb_sw_permalink = get_blog_permalink( $post->from_blog, $post->ID );
-
 			// Precompute each post's excerpt
 			if ( $use_root_excerpt ) {
 				$post->cb_sw_excerpt = ClassBlogs_Utils::make_post_excerpt( $post->post_content, $excerpt_words );
@@ -382,7 +379,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$posts[] = $post;
 		}
 
-		$this->_sitewide_posts = $posts;
+		$this->set_sw_cache( 'all_posts', $posts );
 		return $posts;
 	}
 
@@ -453,6 +450,13 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 */
 	public function get_posts_for_sidebar( $max_posts, $max_posts_per_blog, $meta_format )
 	{
+
+		// Use cache values if possible
+		$cached = $this->get_sw_cache( 'sidebar' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
 		$posts = array();
 		$raw_posts = $this->limit_sitewide_resources(
 			$this->get_sitewide_posts(),
@@ -481,10 +485,11 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$posts[] = (object) array(
 				'content'   => $post->post_content,
 				'meta'      => $meta,
-				'permalink' => $post->cb_sw_permalink,
+				'permalink' => get_blog_permalink( $post->from_blog, $post->ID ),
 				'title'     => $post->post_title );
 		}
 
+		$this->set_sw_cache( 'sidebar', $posts );
 		return $posts;
 	}
 
@@ -594,6 +599,12 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	{
 		$by_user = array();
 
+		// Use cached values if possible
+		$cached = $this->get_sw_cache( 'by_user' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
 		// Build the list of posts by user
 		foreach ( $this->get_sitewide_posts() as $post ) {
 			if ( ! array_key_exists( $post->post_author, $by_user ) ) {
@@ -610,7 +621,9 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 
 		// Sort the posts by the published date of the first post of each user
 		usort( $by_user, array( $this, '_sort_posts_by_user_by_date' ) );
-		return array_values( $by_user );
+		$values = array_values( $by_user );
+		$this->set_sw_cache( 'by_user', $values );
+		return $values;
 	}
 
 	/**

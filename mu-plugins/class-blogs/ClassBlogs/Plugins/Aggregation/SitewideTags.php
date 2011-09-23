@@ -159,22 +159,6 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	private $_sitewide_tags;
 
 	/**
-	 * The lowest tag usage count
-	 *
-	 * @access private
-	 * @var int
-	 */
-	private $_min_tag_count;
-
-	/**
-	 * The highest tag usage count
-	 *
-	 * @access private
-	 * @var int
-	 */
-	private $_max_tag_count;
-
-	/**
 	 * Information on the tag displayed on a sitewide tags page
 	 *
 	 * @access private
@@ -309,13 +293,13 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	{
 
 		// Return the cached version if we've already built the sitewide tags list
-		if ( isset( $this->_sitewide_tags ) ) {
-			return $this->_sitewide_tags;
+		$cached = $this->get_sw_cache( 'tags' );
+		if ( $cached !== null ) {
+			return $cached;
 		}
 
 		global $wpdb;
 		$tags = array();
-		$tag_counts = array();
 		$raw_tags = $wpdb->get_results( $wpdb->prepare( "
 			SELECT name, slug, count FROM {$this->sw_tables->tags}" ) );
 
@@ -323,25 +307,50 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 		// the usage count and the full name of the tag
 		foreach ( $raw_tags as $tag ) {
 			$tags[$tag->slug] = array(
-					'count' => $tag->count,
-					'name'  => $tag->name );
-			$tag_counts[] = $tag->count;
+				'count' => $tag->count,
+				'name'  => $tag->name );
 		}
-
-		//  Get the max and min tag usage counts
-		if ( count( $tag_counts ) ) {
-			 $tag_min = min( $tag_counts );
-			 $tag_max = max( $tag_counts );
-		} else {
-			$tag_min = $tag_max = 0;
-		}
-		$this->_min_tag_count = $tag_min;
-		$this->_max_tag_count = $tag_max;
 
 		//  Cache and return the tag list sorted by tag name
 		ksort( $tags );
-		$this->_sitewide_tags = $tags;
+		$this->set_sw_cache( 'tags', $tags );
 		return $tags;
+	}
+
+	/**
+	 * Calculate the maximum and minimum sitewide tag usage counts
+	 *
+	 * The counts are returned in an array with a 'max' and 'min' key.
+	 *
+	 * @return array the max and min counts
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _get_tag_counts()
+	{
+		// Use cached information if possible
+		$cached = $this->get_sw_cache( 'tag_counts' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
+		//  Get the max and min tag usage counts
+		$counts = array();
+		foreach ( $this->get_sitewide_tags() as $tag  ) {
+			$counts[] = $tag['count'];
+		}
+		if ( count( $counts ) ) {
+			 $tag_min = min( $counts );
+			 $tag_max = max( $counts );
+		} else {
+			$tag_min = $tag_max = 0;
+		}
+		$max_min = array(
+			'max' => $tag_max,
+			'min' => $tag_min );
+		$this->set_sw_cache( 'tag_counts', $max_min );
+		return $max_min;
 	}
 
 	/**
@@ -353,10 +362,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function get_min_usage_count()
 	{
-		if ( ! isset( $this->_min_tag_count ) ) {
-			$this->get_sitewide_tags();
-		}
-		return $this->_min_tag_count;
+		return $this->_get_usage_count( 'min' );
 	}
 
 	/**
@@ -368,10 +374,26 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function get_max_usage_count()
 	{
-		if ( ! isset( $this->_max_tag_count ) ) {
-			$this->get_sitewide_tags();
+		return $this->_get_usage_count( 'max' );
+	}
+
+	/**
+	 * Gets the cached value of the max or min tag usage
+	 *
+	 * @param  string $key the cached count key
+	 * @return int         the tag usage count
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _get_usage_count( $key )
+	{
+		$counts = $this->_get_tag_counts();
+		if ( array_key_exists( $key, $counts ) ) {
+			return (int) $counts[$key];
+		} else {
+			return 0;
 		}
-		return $this->_max_tag_count;
 	}
 
 	/**
@@ -392,6 +414,12 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function get_tags_for_tag_cloud( $threshold )
 	{
+		// Use cached values if possible
+		$cached = $this->get_sw_cache( 'cloud' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
 		$tags = array();
 		foreach ( $this->get_sitewide_tags() as $slug => $tag ) {
 			if ( $tag['count'] >= $threshold ) {
@@ -401,6 +429,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 					'url'   => $this->get_tag_url( $slug ) );
 			}
 		}
+		$this->set_sw_cache( 'cloud', $tags );
 		return $tags;
 	}
 
