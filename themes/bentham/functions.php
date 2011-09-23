@@ -274,7 +274,11 @@ function bentham_get_total_comments_for_student( $user_id )
 function bentham_get_blog_url_for_student( $user_id )
 {
 	$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
-	return $student_blogs->get_blog_url_for_student( $user_id );
+	if ( $student_blogs ) {
+		return $student_blogs->get_blog_url_for_student( $user_id );
+	} else {
+		return "";
+	}
 }
 
 /**
