@@ -113,27 +113,6 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
  */
 class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 {
-
-	/**
-	 * The media ID used to identify attachments
-	 *
-	 * @access private
-	 * @var string
-	 */
-	const _MEDIA_ID = "attachment";
-
-	/**
-	 * A list of MIME types that count as valid images
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private static $_image_mimes = array(
-		"image/gif",
-		"image/jpeg",
-		"image/png"
-	);
-
 	/**
 	 * Registers the random image sidebar widget
 	 */
@@ -169,45 +148,36 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	public function get_random_image()
 	{
 
-		global $wpdb;
+		global $blog_id, $wpdb;
+		$current_blog_id = $blog_id;
 		$image = null;
 		$urls = array();
-
-		// Build the search for any valid images
-		$mime_searches = array();
-		foreach ( self::$_image_mimes as $mime ) {
-			$mime_searches[] = "post_mime_type = '$mime'";
-		}
-		$mime_filter = implode( ' OR ', $mime_searches );
 
 		// Search through every blog for a usable image.  If an image is found, build
 		// the link to it and add a possible caption.
 		$blogs = $this->get_all_blog_ids();
 		shuffle( $blogs );
-		foreach ( $blogs as $blog_id ) {
-			switch_to_blog( $blog_id );
-			$image_search = $wpdb->prepare( "
+		foreach ( $blogs as $blog ) {
+			switch_to_blog( $blog );
+			$images = $wpdb->get_results( "
 				SELECT ID, post_title, GUID FROM $wpdb->posts
-				WHERE post_type = %s AND ( $mime_filter )
-				AND post_content <> guid
-				ORDER BY RAND() LIMIT 1",
-				self::_MEDIA_ID );
-			$upload = $wpdb->get_row( $image_search );
-			if ( $upload ) {
-				$urls[] = $upload->GUID;
-				$info = wp_get_attachment_image_src( $upload->ID );
+				WHERE post_mime_type LIKE 'image/%%'
+				AND post_content <> guid" );
+			if ( $images ) {
+				$image = $images[array_rand( $images )];
+				$urls[] = $image->GUID;
+				$info = wp_get_attachment_image_src( $image->ID );
 				if ( ! empty( $info ) ) {
 					$image = array(
-						'blog_id' => $blog_id,
-						'title'   => $upload->post_title,
+						'blog_id' => $blog,
+						'title'   => $image->post_title,
 						'url'     => $info[0] );
 					$urls[] = $info[0];
 				}
-				restore_current_blog();
 				break;
 			}
-			restore_current_blog();
 		}
+		ClassBlogs::restore_blog( $current_blog_id );
 
 		// If we have a valid image, try to find the first post on which it was
 		// used and add its ID to the image data
@@ -236,7 +206,6 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	 */
 	private function _find_first_post_to_use_image( $blog_id, $url )
 	{
-
 		global $wpdb;
 		$post_id = null;
 
@@ -252,7 +221,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 		if ( ! empty( $post ) ) {
 			$post_id = $post->ID;
 		}
-		restore_current_blog( $blog_id );
+		restore_current_blog();
 
 		return $post_id;
 	}
