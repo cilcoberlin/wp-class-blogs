@@ -109,6 +109,26 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
  */
 class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 {
+	/**
+	 * A lookup table containing student blog URLs, keyed by user ID
+	 *
+	 * @access private
+	 * @var array
+	 * @since 0.1
+	 */
+	private $_blog_urls;
+
+	/**
+	 * Actions that should result in the blog list cache being cleared
+	 *
+	 * @access private
+	 * @var array
+	 * @since 0.1
+	 */
+	private static $_CLEAR_CACHE_ACTIONS = array(
+		'profile_update',
+		'update_option_blogname'
+	);
 
 	/**
 	 * Registers WordPress hooks to enable the student blog list widget
@@ -116,6 +136,22 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	function __construct() {
 		parent::__construct();
 		add_action( 'widgets_init',  array( $this, '_enable_widget' ) );
+
+		// Register a cache-clearning listener for any actions that break the cache
+		foreach ( self::$_CLEAR_CACHE_ACTIONS as $action ) {
+			add_action( $action, array( $this, '_clear_cache' ) );
+		}
+	}
+
+	/**
+	 * Clears the cache of student blogs
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _clear_cache( $one = null, $two = null )
+	{
+		$this->clear_site_cache( 'student_blogs' );
 	}
 
 	/**
@@ -143,6 +179,12 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function get_student_blogs( $title_format = "" )
 	{
+		// Use cached data if possible
+		$cached = $this->get_site_cache( 'student_blogs' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
 		// Determine the URL and display name for each student blog
 		$student_blogs = array();
 		foreach ( $this->_get_blog_list() as $blog ) {
@@ -155,6 +197,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 
 		// Return the blogs sorted by their computed display name
 		usort( $student_blogs, array( $this, "_sort_blogs_by_name" ) );
+		$this->set_site_cache( 'student_blogs', $student_blogs, 300 );
 		return $student_blogs;
 	}
 
@@ -190,12 +233,21 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function get_blog_url_for_student( $user_id )
 	{
-		foreach ( $this->get_student_blogs() as $blog ) {
-			if ( $blog->user_id === $user_id ) {
-				return $blog->url;
+		// Build a lookup table if one has not been built
+		$lookup = $this->_blog_urls;
+		if ( empty( $lookup ) ) {
+			$lookup = array();
+			foreach ( $this->get_student_blogs() as $blog ) {
+				$lookup[$blog->user_id] = $blog->url;
 			}
+			$this->_blog_urls = $lookup;
 		}
-		return "";
+
+		if ( array_key_exists( $user_id, $lookup ) ) {
+			return $lookup[$user_id];
+		} else {
+			return "";
+		}
 	}
 
 	/**
