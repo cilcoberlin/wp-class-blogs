@@ -213,6 +213,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 
 		// Drop all data before proceeding
 		$this->_clear_tables();
+		$this->_clear_sw_cache();
 
 		// Export the post, comment and tag data for each blog to our tables
 		foreach ( $blogs as $blog_id ) {
@@ -293,6 +294,27 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 			}
 
 			restore_current_blog();
+		}
+	}
+
+	/**
+	 * Clears any cached sitewide data
+	 *
+	 * This clears the values of any registered sitewide cache keys and clears
+	 * the registry of keys as wells.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _clear_sw_cache()
+	{
+		$option_key = ClassBlogs_Plugins_Aggregation_Settings::CACHE_KEY_OPTION_NAME;
+		$keys = get_site_option( $option_key );
+		if ( ! empty( $keys ) ) {
+			foreach ( $keys as $key => $null ) {
+				delete_site_transient( $key );
+			}
+			update_site_option( $option_key, array() );
 		}
 	}
 
@@ -407,6 +429,6 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 }
 
-$plugin = new ClassBlogs_Plugins_Aggregation_Aggregator();
+ClassBlogs::register_plugin( 'sitewide_aggregator', new ClassBlogs_Plugins_Aggregation_Aggregator() );
 
 ?>

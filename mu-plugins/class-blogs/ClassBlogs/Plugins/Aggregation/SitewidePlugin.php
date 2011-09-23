@@ -177,6 +177,63 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 			$wp_query->posts[$i]->ID = $this->_sitewide_post_ids[$i];
 		}
 	}
+
+	/**
+	 * Sets a value in the sitewide cache
+	 *
+	 * Not that no cache value will be stored if WP_DEBUG is true.
+	 *
+	 * @param  string $key        the key under which to cache the data
+	 * @param  mixed  $value      the data to be cached
+	 * @param  int    $expiration the expiration time of the value, in seconds
+	 *
+	 * @since 0.1
+	 */
+	public function set_sw_cache( $key, $value, $expiration = ClassBlogs_Settings::DEFAULT_CACHE_LENGTH )
+	{
+		if ( WP_DEBUG ) {
+			return;
+		}
+
+		// Add the key to the list of sitewide cache keys if it's not there
+		$option_key = ClassBlogs_Plugins_Aggregation_Settings::CACHE_KEY_OPTION_NAME;
+		$full_key = $this->make_cache_key_name( $key );
+		$keys = get_site_option( $option_key );
+		if ( empty( $keys ) ) {
+			$keys = array();
+		}
+		if ( ! array_key_exists( $full_key, $keys ) ) {
+			$keys[$full_key] = true;
+			update_site_option( $option_key, $keys );
+		}
+
+		// Update the cached value
+		set_site_transient( $full_key, $value, $expiration );
+	}
+
+	/**
+	 * Retrieves a value from the sitewide cache
+	 *
+	 * This will always return null if WP_DEBUG is true.
+	 *
+	 * @param  string $key the key under which data was cached
+	 * @return mixed       the cached data or null
+	 *
+	 * @since 0.1
+	 */
+	public function get_sw_cache( $key )
+	{
+		if ( WP_DEBUG ) {
+			return null;
+		}
+
+		$cached = get_site_transient( $this->make_cache_key_name( $key ) );
+		if ( $cached === false ) {
+			return null;
+		} else {
+			return $cached;
+		}
+	}
 }
 
 ?>

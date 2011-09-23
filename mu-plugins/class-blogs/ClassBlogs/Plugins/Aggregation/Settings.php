@@ -42,6 +42,14 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	const TAG_TAXONOMY_NAME = 'post_tag';
 
 	/**
+	 * The name of the option used to store any sitewide cache keys
+	 *
+	 * @var string
+	 * @since 0.1
+	 */
+	const CACHE_KEY_OPTION_NAME = 'cb_sw_cache_keys';
+
+	/**
 	 * The available short names for the sitewide tables
 	 *
 	 * @access private
