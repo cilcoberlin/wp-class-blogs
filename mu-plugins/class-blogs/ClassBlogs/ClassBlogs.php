@@ -158,6 +158,25 @@ class ClassBlogs {
 
 		return is_page( $page_id );
 	}
+
+	/**
+	 * Restores an arbitrary blog
+	 *
+	 * This functions identically to `restore_current_blog`, but with the option
+	 * of passing a blog ID to restore to.  This switches to that blog, then
+	 * clears the switched stack and resets the switched state flag to false.
+	 *
+	 * @param  int $blog_id the ID of the blog to restore to
+	 *
+	 * @since 0.1
+	 */
+	public static function restore_blog( $blog_id )
+	{
+		global $switched_stack, $switched;
+		switch_to_blog( $blog_id );
+		$switched_stack = array();
+		$switched = false;
+	}
 }
 
 ClassBlogs::register_plugin( 'class_blogs', new ClassBlogs() );
