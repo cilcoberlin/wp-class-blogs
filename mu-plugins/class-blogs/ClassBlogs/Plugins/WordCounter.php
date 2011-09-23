@@ -11,6 +11,8 @@
  * word counts for the current week and the previous one.
  *
  * @package Class Blogs
+ * @uses ClassBlogs_Plugins_Aggregation_SitewideComments to get weekly comments
+ * @uses ClassBlogs_Plugins_Aggregation_SitewidePosts to get weekly posts
  * @since 0.1
  */
 class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
