@@ -122,7 +122,11 @@ class ClassBlogs {
 	 */
 	public static function get_plugin( $name )
 	{
-		return self::$_plugins[$name];
+		if ( array_key_exists( $name, self::$_plugins ) ) {
+			return self::$_plugins[$name];
+		} else {
+			return null;
+		}
 	}
 
 	/**
