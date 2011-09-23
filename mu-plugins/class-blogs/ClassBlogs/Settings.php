@@ -18,6 +18,14 @@ class ClassBlogs_Settings
 	const VERSION = "0.1";
 
 	/**
+	 * The default cache length, in seconds
+	 *
+	 * @var int
+	 * @since 0.1
+	 */
+	const DEFAULT_CACHE_LENGTH = 3600;
+
+	/**
 	 * The name of the directory containing the class blogs source
 	 *
 	 * @var string
