@@ -180,32 +180,81 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	/**
 	 * Adds a value to the cache
 	 *
+	 * This will never add a value to the cache if WP_DEBUG is true.
+	 *
 	 * @param string the key under which to cache the data
-	 * @param mixed  the date to cache
+	 * @param mixed  the data to cache
 	 * @param int    the optional number of seconds for which to cache the value
 	 *
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected function set_cache( $key, $value, $expiration = 3600 )
+	protected function set_cache( $key, $value, $expiration = ClassBlogs_Settings::DEFAULT_CACHE_LENGTH )
 	{
-		set_transient( $this->_make_cache_key_name( $key ), $value, $expiration );
+		if ( WP_DEBUG ) {
+			return;
+		}
+		set_transient( $this->make_cache_key_name( $key ), $value, $expiration );
+	}
+
+	/**
+	 * Functions identically to `set_cache`, but uses the site cache.
+	 *
+	 * @access protected
+	 * @since 0.1
+	 */
+	protected function set_site_cache( $key, $value, $expiration = ClassBlogs_Settings::DEFAULT_CACHE_LENGTH )
+	{
+		if ( WP_DEBUG ) {
+			return;
+		}
+		set_site_transient( $this->make_cache_key_name( $key ), $value, $expiration );
 	}
 
 	/**
 	 * Retrieves the requested cache value
 	 *
-	 * If the cache value is not found, and empty string is returned
+	 * If the cache value is not found, a null value is returned.  If WP_DEBUG
+	 * is true, this will always return null.
 	 *
 	 * @param  string $key the cache key whose value should be retrieved
-	 * @return mixed       the cached value or an empty string
+	 * @return mixed       the cached value or null
 	 *
 	 * @access protected
 	 * @since 0.1
 	 */
 	protected function get_cache( $key )
 	{
-		return get_transient( $this->_make_cache_key_name( $key ) );
+		if ( WP_DEBUG ) {
+			return null;
+		}
+
+		$cached = get_transient( $this->make_cache_key_name( $key ) );
+		if ( $cached === false ) {
+			return null;
+		} else {
+			return $cached;
+		}
+	}
+
+	/**
+	 * Functions identically to `get_cache`, but uses the site cache.
+	 *
+	 * @access protected
+	 * @since 0.1
+	 */
+	protected function get_site_cache( $key )
+	{
+		if ( WP_DEBUG ) {
+			return null;
+		}
+
+		$cached = get_site_transient( $this->make_cache_key_name( $key ) );
+		if ( $cached === false ) {
+			return null;
+		} else {
+			return $cached;
+		}
 	}
 
 	/**
@@ -218,7 +267,18 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 */
 	protected function clear_cache( $key )
 	{
-		delete_transient( $this->_make_cache_key_name( $key ) );
+		delete_transient( $this->make_cache_key_name( $key ) );
+	}
+
+	/**
+	 * Functions identically to `clear_cache`, but uses the site cache.
+	 *
+	 * @access protected
+	 * @since 0.1
+	 */
+	protected function clear_site_cache( $key )
+	{
+		delete_site_transient( $this->make_cache_key_name( $key ) );
 	}
 
 	/**
@@ -227,10 +287,9 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 * @param  string $key the base name of the cache key
 	 * @return string      the full name of the cache key
 	 *
-	 * @access private
 	 * @since 0.1
 	 */
-	private function _make_cache_key_name( $key ) {
+	public function make_cache_key_name( $key ) {
 		return $this->get_uid() . '_' . $key;
 	}
 
