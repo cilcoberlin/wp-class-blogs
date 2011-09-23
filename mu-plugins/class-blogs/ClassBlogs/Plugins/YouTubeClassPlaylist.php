@@ -272,14 +272,6 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _PLAYLIST_CACHE_LENGTH = 300;
 
 	/**
-	 * The ID to use for the cached YouTube playlist
-	 *
-	 * @access private
-	 * @var string
-	 */
-	const _PLAYLIST_CACHE_ID = 'youtube_playlist';
-
-	/**
 	 * The prefix for any tables created by this plugin
 	 *
 	 * @access private
@@ -586,20 +578,6 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Retrieves the cached playlist
-	 *
-	 * @return array the cached playlist or an empty array
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _get_cached_playlist()
-	{
-		$playlist = get_transient( self::_PLAYLIST_CACHE_ID );
-		return ( empty( $playlist ) ) ? array() : $playlist;
-	}
-
-	/**
 	 * Clears the playlist cache
 	 *
 	 * @access private
@@ -607,23 +585,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 */
 	private function _clear_cached_playlist()
 	{
-		delete_transient( self::_PLAYLIST_CACHE_ID );
-	}
-
-	/**
-	 * Caches the given playlist
-	 *
-	 * @param array $playlist the parsed YouTube playlist
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _cache_playlist( $playlist )
-	{
-		set_transient(
-			self::_PLAYLIST_CACHE_ID,
-			$playlist,
-			self::_PLAYLIST_CACHE_LENGTH );
+		$this->clear_cache( 'playlist' );
 	}
 
 	/**
@@ -1691,11 +1653,15 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	public function get_playlist_videos()
 	{
 		global $wpdb;
+		$videos = array();
 
 		// Return early if we have a cached playlist or no valid playlist
-		$videos = $this->_get_cached_playlist();
-		if ( ! $this->get_option( 'youtube_playlist' ) || ! empty( $videos ) ) {
+		if (! $this->get_option( 'youtube_playlist' ) ) {
 			return $videos;
+		}
+		$cached = $this->get_cache( 'playlist' );
+		if ( $cached !== null ) {
+			return $cached;
 		}
 
 		// Get the YouTube feed for the class playlist
@@ -1757,7 +1723,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		}
 
 		// Cache the full playlist
-		$this->_cache_playlist( $videos );
+		$this->set_cache( 'playlist', $videos, self::_PLAYLIST_CACHE_LENGTH );
 		return $videos;
 	}
 
