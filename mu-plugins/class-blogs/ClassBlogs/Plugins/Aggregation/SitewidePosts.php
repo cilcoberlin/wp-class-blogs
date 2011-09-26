@@ -412,21 +412,21 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	/**
 	 * Returns a subset of the sitewide posts, filtered by user and date.
 	 *
-	 * @param  int    $user_id    the ID of the desired post author
-	 * @param  object $start_date the start date of the date filter window
-	 * @param  object $end_date   the end date of the date filter window
-	 * @return array              a list of the posts matching the given filters
+	 * @param  int    $user_id  the ID of the desired post author
+	 * @param  object $start_dt a DateTime instance after which to retrieve posts
+	 * @param  object $end_dt   a DateTime instance before which to retrieve posts
+	 * @return array            a list of the posts matching the given filters
 	 *
 	 * @since 0.1
 	 */
-	public function filter_posts( $user_id, $start_date, $end_date )
+	public function filter_posts( $user_id, $start_dt, $end_dt )
 	{
 		global $wpdb;
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT * FROM {$this->sw_tables->posts} WHERE post_author=%s AND post_date >= %s AND post_date <= %s",
 			$user_id,
-			$start_date->format( 'Ymd' ),
-			$end_date->format( 'Ymd' ) ) );
+			$start_dt->format( 'YmdHis' ),
+			$end_dt->format( 'YmdHis' ) ) );
 	}
 
 	/**
