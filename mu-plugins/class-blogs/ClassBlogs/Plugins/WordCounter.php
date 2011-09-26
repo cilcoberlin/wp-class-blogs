@@ -395,27 +395,32 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * Calculates the number of words produced by a student in the given date window
 	 *
 	 * @param  int    $user_id    the ID of the user
-	 * @param  object $start_date a DateTime of the start date
-	 * @param  object $end_date   a DateTime of the end date
+	 * @param  object $start_dt   a DateTime of the start date
+	 * @param  object $end_dt     a DateTime of the end date
 	 * @return int                the number of words produced by the student
 	 *
 	 * @access private
 	 * @since 0.1
 	 */
-	private function _get_word_count_for_student( $user_id, $start_date, $end_date )
+	private function _get_word_count_for_student( $user_id, $start_dt, $end_dt )
 	{
 		$words = 0;
 
+		// Be explicit about the times of the given dates, making the start date
+		// begin at midnight an the end date end at one second before midnight
+		$start_dt->setTime( 0, 0, 0 );
+		$end_dt->setTime( 23, 59, 59 );
+
 		// Start with the word counts from the posts
 		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
-		$posts = $sitewide_posts->filter_posts( $user_id, $start_date, $end_date );
+		$posts = $sitewide_posts->filter_posts( $user_id, $start_dt, $end_dt );
 		foreach ( $posts as $post ) {
 			$words += $this->_get_word_count_for_text( $post->post_content );
 		}
 
 		// Add the word count from all comments
 		$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
-		$comments = $sitewide_comments->filter_comments( $user_id, $start_date, $end_date );
+		$comments = $sitewide_comments->filter_comments( $user_id, $start_dt, $end_dt );
 		foreach ( $comments as $comment ) {
 			$words += $this->_get_word_count_for_text( $comment->comment_content );
 		}
