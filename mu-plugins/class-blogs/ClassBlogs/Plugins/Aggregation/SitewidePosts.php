@@ -166,6 +166,14 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	);
 
 	/**
+	 * The number of posts to show per page on the professor's admin page
+	 *
+	 * @var int
+	 * @since 0.1
+	 */
+	const POSTS_PER_ADMIN_PAGE = 20;
+
+	/**
 	 * A list of the URLs for any pages on the main blog
 	 *
 	 * @access private
@@ -194,6 +202,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		if ( ! is_admin() && $this->get_option( 'root_show_posts' ) ) {
 			add_action( 'pre_get_posts', array( $this, 'initialize_root_blog_hooks' ) );
 		}
+		add_action( 'admin_head',   array( $this, 'add_admin_css' ) );
 		add_action( 'widgets_init', array( $this, 'enable_widget' ) );
 	}
 
@@ -504,13 +513,14 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Configures the plugin's admin page
+	 * Configures the plugin's admin pages
 	 *
 	 * @since 0.1
 	 */
 	public function enable_admin_page( $admin )
 	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Posts', 'classblogs' ), array( $this, 'admin_page' ) );
+		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Post Options', 'classblogs' ), array( $this, 'options_admin_page' ) );
+		$admin->add_admin_page( $this->get_uid(), __( 'Student Posts', 'classblogs' ), array( $this, 'posts_admin_page' ) );
 	}
 
 	/**
@@ -518,7 +528,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 *
 	 * @since 0.1
 	 */
-	public function admin_page()
+	public function options_admin_page()
 	{
 
 		if ( $_POST ) {
@@ -532,12 +542,12 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$options['root_use_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_use_excerpt' );
 			$this->update_options( $options );
 
-			echo '<div id="message" class="updated fade"><p>' . __( 'Your sitewide posts options have been updated', 'classblogs' ) . '</p></div>';
+			echo '<div id="message" class="updated fade"><p>' . __( 'Your sitewide post options have been updated', 'classblogs' ) . '</p></div>';
 		}
 	?>
 		<div class="wrap">
 
-			<h2><?php _e( 'Sitewide Posts Configuration', 'classblogs' ); ?></h2>
+			<h2><?php _e( 'Sitewide Post Options', 'classblogs' ); ?></h2>
 
 			<p>
 				<?php _e( 'This page allows you to control options that will affect the display of sitewide posts on the home page of the root blog.', 'classblogs' ); ?>
@@ -572,10 +582,121 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 					</table>
 
 				<?php wp_nonce_field( $this->get_uid() ); ?>
-				<p class="submit"><input type="submit" name="Submit" value="<?php _e( 'Update Sitewide Posts Options', 'classblogs' ); ?>" /></p>
+				<p class="submit"><input type="submit" name="Submit" value="<?php _e( 'Update Sitewide Post Options', 'classblogs' ); ?>" /></p>
 			</form>
 		</div>
 	<?php
+	}
+
+	/**
+	 * Adds CSS for small styling tweaks to the admin pages
+	 *
+	 * @since 0.1
+	 */
+	public function add_admin_css()
+	{
+		printf( '<link rel="stylesheet" href="%ssitewide-posts.css" />',
+			esc_url( ClassBlogs_Utils::get_plugin_css_url() ) );
+	}
+
+	/**
+	 * Shows a professor a list of student posts
+	 *
+	 * @uses ClassBlogs_Plugins_StudentBlogList
+	 *
+	 * @since 0.1
+	 */
+	public function posts_admin_page()
+	{
+
+		// Create a lookup table for student names and blogs keyed by user ID
+		$students = array();
+		$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
+		foreach ( $student_blogs->get_student_blogs() as $blog ) {
+			$user_data = get_userdata( $blog->user_id );
+			$students[$blog->user_id] = array(
+				'blog_url' => $blog->url,
+				'name' => sprintf( '%s %s', $user_data->first_name, $user_data->last_name ) );
+		}
+
+		// Paginate the data, restricting the data set to student-only posts
+		$student_posts = array();
+		foreach ( $this->get_sitewide_posts() as $post ) {
+			if ( array_key_exists( $post->post_author, $students ) ) {
+				$student_posts[] = $post;
+			}
+		}
+		$paginator = new ClassBlogs_Paginator( $student_posts, self::POSTS_PER_ADMIN_PAGE );
+		$current_page = ( array_key_exists( 'paged', $_GET ) ) ? absint( $_GET['paged'] ) : 1;
+?>
+		<div class="wrap">
+
+			<h2><?php _e( 'Student Posts', 'classblogs' );  ?></h2>
+
+			<p>
+				<?php _e( 'This page allows you to view all of the posts that your students have published.', 'classblogs' );  ?>
+			</p>
+
+			<?php $paginator->show_admin_page_links( $current_page ); ?>
+
+			<table class="widefat" id="cb-sw-student-posts-list">
+
+				<thead>
+					<tr>
+						<th class="student"><?php _e( 'Student', 'classblogs' ); ?></th>
+						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
+						<th class="excerpt"><?php _e( 'Excerpt', 'classblogs' ); ?></th>
+						<th class="posted"><?php _e( 'Posted', 'classblogs' ); ?></th>
+					</tr>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<th class="student"><?php _e( 'Student', 'classblogs' ); ?></th>
+						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
+						<th class="excerpt"><?php _e( 'Excerpt', 'classblogs' ); ?></th>
+						<th class="posted"><?php _e( 'Posted', 'classblogs' ); ?></th>
+					</tr>
+				</tfoot>
+
+				<tbody>
+					<?php foreach ( $paginator->get_items_for_page( $current_page ) as $post ): ?>
+						<tr>
+							<td class="student">
+								<strong>
+									<?php
+										echo get_avatar( $post->post_author, 32 ) . ' ';
+										printf( '<a href="%s">%s</a>',
+											$students[$post->post_author]['blog_url'],
+											$students[$post->post_author]['name'] );
+									?>
+								</strong>
+							</td>
+							<td class="post">
+								<strong>
+									<?php
+										printf( '<a href="%s">%s</a>',
+											get_blog_permalink( $post->from_blog, $post->ID ),
+											$post->post_title );
+									?>
+								</strong>
+							</td>
+							<td class="excerpt"><?php echo ClassBlogs_Utils::make_post_excerpt( $post->post_content, 25 ); ?></td>
+							<td class="posted">
+								<?php
+									echo mysql2date(
+										get_option( 'date_format' ),
+										$post->post_date );
+								?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+
+			</table>
+
+		</div>
+<?php
 	}
 
 	/**
