@@ -391,10 +391,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 					<tr>
 						<th class="author"><?php _e( 'Author', 'classblogs' ); ?></th>
 						<th class="comment"><?php _e( 'Comment', 'classblogs' ); ?></th>
-						<th class="post"><?php _e( 'For Post', 'classblogs' ); ?></th>
+						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
 						<th class="student"><?php _e( 'Student Blog', 'classblogs' ); ?></th>
 						<th class="status"><?php _e( 'Status', 'classblogs' ); ?></th>
-						<th class="left"><?php _e( 'Left On', 'classblogs' ); ?></th>
+						<th class="left"><?php _e( 'Date', 'classblogs' ); ?></th>
 					</tr>
 				</thead>
 
@@ -402,10 +402,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 					<tr>
 						<th class="author"><?php _e( 'Author', 'classblogs' ); ?></th>
 						<th class="comment"><?php _e( 'Comment', 'classblogs' ); ?></th>
-						<th class="post"><?php _e( 'For Post', 'classblogs' ); ?></th>
+						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
 						<th class="student"><?php _e( 'Student Blog', 'classblogs' ); ?></th>
 						<th class="status"><?php _e( 'Status', 'classblogs' ); ?></th>
-						<th class="left"><?php _e( 'Left On', 'classblogs' ); ?></th>
+						<th class="left"><?php _e( 'Date', 'classblogs' ); ?></th>
 					</tr>
 				</tfoot>
 

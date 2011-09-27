@@ -1,7 +1,13 @@
 
 /* Prevent the comments on the admin post list table from taking up too much space */
+#cb-sw-student-comments-list .author {
+	width: 20%;
+}
 #cb-sw-student-comments-list .comment {
 	width: 35%;
+}
+#cb-sw-student-comments-list .left {
+	width: 15%;
 }
 
 /* Properly align the commenter's gravatar on the admin comment list page */
