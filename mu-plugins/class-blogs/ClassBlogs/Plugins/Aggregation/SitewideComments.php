@@ -182,27 +182,55 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	/**
 	 * Returns a list of all sitewide comments
 	 *
-	 * @return array all sitewide comments
+	 * If desired, this function can be passed a boolean indicating whether or
+	 * not to return only approved comments, which is the action performed when
+	 * `$approved_only` is true.  By default, this value is true.
+	 *
+	 * @param  bool  $approved_only only return approved comments
+	 * @return array                all sitewide comments
 	 *
 	 * @since 0.1
 	 */
-	public function get_sitewide_comments()
+	public function get_sitewide_comments( $approved_only=true )
 	{
+		// Set a proper cache key based upon which sort of comments are allowed
+		$cache_key = 'comments_';
+		$cache_key .= ( $approved_only ) ? 'approved' : 'all';
 
 		// Return the cached comments if possible
-		$cached = $this->get_sw_cache( 'comments' );
+		$cached = $this->get_sw_cache( $cache_key );
 		if ( $cached !== null ) {
 			return $cached;
 		}
 
+		$approved_filter = "";
+		if ( $approved_only ) {
+			$approved_filter = "AND c.comment_approved = '1'";
+		}
+
 		global $wpdb;
 		$comments = $wpdb->get_results( "
-			SELECT c.comment_ID, c.comment_post_ID, c.comment_content, c.from_blog, c.comment_author,
-				   c.comment_date, c.user_id, p.post_title
+			SELECT c.*, p.post_title
 			FROM {$this->sw_tables->comments} AS c, {$this->sw_tables->posts} AS p
-			WHERE p.ID = c.comment_post_ID AND c.from_blog = p.from_blog
+			WHERE p.ID = c.comment_post_ID AND c.from_blog = p.from_blog $approved_filter
 			ORDER BY c.comment_date DESC" );
-		$this->set_sw_cache( 'comments', $comments );
+
+		// Even if all comments are allowed, don't display spam comments
+		if ( ! $approved_only ) {
+			global $blog_id;
+			$current_blog_id = $blog_id;
+			$no_spam = array();
+			foreach ( $comments as $comment ) {
+				switch_to_blog( $comment->from_blog );
+				if ( wp_get_comment_status( $comment->comment_ID ) != 'spam' ) {
+					$no_spam[] = $comment;
+				}
+			}
+			ClassBlogs::restore_blog( $current_blog_id );
+			$comments = $no_spam;
+		}
+
+		$this->set_sw_cache( $cache_key, $comments );
 		return $comments;
 	}
 

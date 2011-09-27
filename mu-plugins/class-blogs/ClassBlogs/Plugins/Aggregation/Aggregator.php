@@ -231,7 +231,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 			$wpdb->query( $wpdb->prepare( "
 				INSERT INTO {$this->tables->comments}
 				SELECT c.*, %d FROM $wpdb->comments AS c
-				WHERE c.comment_author <> %s AND comment_approved = '1'",
+				WHERE c.comment_author <> %s",
 				$blog_id, ClassBlogs_Plugins_Aggregation_Settings::FIRST_COMMENT_AUTHOR ) );
 
 			// Add all tags used by the blog to a master list
