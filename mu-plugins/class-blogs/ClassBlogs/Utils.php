@@ -213,6 +213,55 @@ class ClassBlogs_Utils
 		return ClassBlogs_Settings::TABLE_PREFIX . $table;
 	}
 
+	/**
+	 * Gets a value from the $_SERVER global if it exists, or returns an empty
+	 * string if it is not found.
+	 *
+	 * @param  string $name the name of a key in the $_SERVER array
+	 * @return string       the value of the $_SERVER value, or an empty string
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private static function _get_server_var( $name )
+	{
+		if ( array_key_exists( $name, $_SERVER ) ) {
+			return $_SERVER[$name];
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 * Gets the full URL of the current page, including the query string
+	 *
+	 * @return string the absolute URL of the current page
+	 *
+	 * @since 0.1
+	 */
+	public static function get_current_url()
+	{
+		// Build the base URL
+		$request = self::_get_server_var( 'REQUEST_URI' );
+		if ( ! $request ) {
+			$request = self::_get_server_var( 'PHP_SELF' );
+		}
+		$url = sprintf( 'http%s://%s%s%s',
+			( self::_get_server_var( 'HTTPS' ) == 'on' ) ? 's' : '',
+			self::_get_server_var( 'SERVER_NAME' ),
+			( self::_get_server_var('SERVER_PORT') == '80' ) ? '' : ( ':' . self::_get_server_var( 'SERVER_PORT' ) ),
+			$request );
+
+		// Make sure that any query string information is included
+		if ( ! empty( $_GET ) ) {
+			$query = parse_url( $url, PHP_URL_QUERY );
+			if ( ! $query ) {
+				$url .= '?' . http_build_query( $_GET );
+			}
+		}
+		return $url;
+	}
+
 }
 
 ?>
