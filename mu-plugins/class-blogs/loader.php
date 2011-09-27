@@ -1,13 +1,17 @@
 <?php
 
-// Load utilities and settings
-require_once( 'ClassBlogs/ClassBlogs.php' );
-require_once( 'ClassBlogs/Settings.php' );
-require_once( 'ClassBlogs/Utils.php' );
-
-// If we're on the admin side, configure shared admin functionality
+// Load core, utilities and settings
+$core = array(
+	'ClassBlogs',
+	'Paginator',
+	'Settings',
+	'Utils'
+);
 if ( is_admin() ) {
-	require_once( 'ClassBlogs/Admin.php' );
+	$core[] = 'Admin';
+}
+foreach ( $core as $file ) {
+	require_once( 'ClassBlogs/' . $file . '.php' );
 }
 
 // Load the suite's plugins
