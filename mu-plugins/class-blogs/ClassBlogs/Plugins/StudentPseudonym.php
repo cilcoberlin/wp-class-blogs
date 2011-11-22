@@ -109,6 +109,8 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 ?>
 
 	<div class="wrap">
+
+		<div id="icon-users" class="icon32"></div>
 		<h2><?php _e( 'Use a Pseudonym', 'classblogs' ); ?></h2>
 
 		<h3><?php _e( 'User Information', 'classblogs' ); ?></h3>
