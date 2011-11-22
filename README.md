@@ -62,8 +62,10 @@ from all the images used on all blogs that are part of this class.
 
 Sitewide Comments
 -----------------
-Provides a main-blog-only widget that shows recent comments left on all
-student blogs.
+Provides a main-blog-only widget that shows recent comments left on all student
+blogs, as well as a professor-only admin page showing a table of all student
+comments and a student-only admin page showing a table of all comments that
+they have left.
 
 Sitewide Posts
 --------------

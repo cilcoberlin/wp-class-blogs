@@ -185,6 +185,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	{
 		parent::__construct();
 		add_action( 'admin_head',   array( $this, 'add_admin_css' ) );
+		add_action( 'admin_menu',   array( $this, 'add_student_comment_list' ) );
 		add_action( 'widgets_init', array( $this, 'enable_widget' ) );
 	}
 
@@ -355,7 +356,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 		global $blog_id;
 		$current_blog_id = $blog_id;
 
-		// Create a lookup table for student names and blog URLs keyed by blog ID
+		// Create a lookup table of student data keyed by blog ID
 		$students = array();
 		$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
 		foreach ( $student_blogs->get_student_blogs() as $blog ) {
@@ -385,27 +386,27 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 
 			<?php $paginator->show_admin_page_links( $current_page ); ?>
 
-			<table class="widefat" id="cb-sw-student-comments-list">
+			<table class="widefat cb-cw-comments-table" id="cb-sw-student-comments-list">
 
 				<thead>
 					<tr>
 						<th class="author"><?php _e( 'Author', 'classblogs' ); ?></th>
-						<th class="comment"><?php _e( 'Comment', 'classblogs' ); ?></th>
+						<th class="content"><?php _e( 'Comment', 'classblogs' ); ?></th>
 						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
 						<th class="student"><?php _e( 'Student Blog', 'classblogs' ); ?></th>
 						<th class="status"><?php _e( 'Status', 'classblogs' ); ?></th>
-						<th class="left"><?php _e( 'Date', 'classblogs' ); ?></th>
+						<th class="posted"><?php _e( 'Date', 'classblogs' ); ?></th>
 					</tr>
 				</thead>
 
 				<tfoot>
 					<tr>
 						<th class="author"><?php _e( 'Author', 'classblogs' ); ?></th>
-						<th class="comment"><?php _e( 'Comment', 'classblogs' ); ?></th>
+						<th class="content"><?php _e( 'Comment', 'classblogs' ); ?></th>
 						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
 						<th class="student"><?php _e( 'Student Blog', 'classblogs' ); ?></th>
 						<th class="status"><?php _e( 'Status', 'classblogs' ); ?></th>
-						<th class="left"><?php _e( 'Date', 'classblogs' ); ?></th>
+						<th class="posted"><?php _e( 'Date', 'classblogs' ); ?></th>
 					</tr>
 				</tfoot>
 
@@ -425,7 +426,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 											esc_html( $comment->comment_author_email ) );
 									?>
 							</td>
-							<td class="comment">
+							<td class="content">
 								<?php comment_text( $comment->comment_ID ); ?>
 							</td>
 							<td class="post">
@@ -461,7 +462,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 									}
 								?>
 							</td>
-							<td class="left">
+							<td class="posted">
 								<?php
 									printf( '<span class="date">%s</span> <span class="time">%s</span>',
 										mysql2date(
@@ -483,6 +484,156 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 
 		</div>
 <?php
+	}
+
+	/**
+	 * Renders the student-only page showing all comments that they have left
+	 *
+	 * @since 0.1
+	 */
+	public function student_admin_page()
+	{
+		global $blog_id;
+		$current_blog_id = $blog_id;
+		$student_id = wp_get_current_user()->ID;
+
+		// Create a lookup table for blog names and URLs
+		$all_blogs = array();
+		foreach ( $this->get_all_blog_ids() as $blog_id ) {
+			$all_blogs[$blog_id] = array(
+				'name' => get_blog_option( $blog_id, 'blogname' ),
+				'url' => get_blogaddress_by_id( $blog_id ) );
+		}
+
+		// Paginate the data, restricting the data set to only posts that the
+		// current student wrote
+		$comments = array();
+		foreach ( $this->get_sitewide_comments( false ) as $comment ) {
+			if ( $comment->user_id === $student_id ) {
+				$comments[] = $comment;
+			}
+		}
+		$paginator = new ClassBlogs_Paginator( $comments, self::COMMENTS_PER_ADMIN_PAGE );
+		$current_page = ( array_key_exists( 'paged', $_GET ) ) ? absint( $_GET['paged'] ) : 1;
+?>
+
+		<div class="wrap">
+
+			<div id="icon-edit-comments" class="icon32"></div>
+			<h2><?php _e( 'My Comments', 'classblogs' );  ?></h2>
+
+			<p>
+				<?php _e( "This page allows you to view all of the comments that you have left on other students' blogs.", 'classblogs' );  ?>
+			</p>
+
+			<?php $paginator->show_admin_page_links( $current_page ); ?>
+
+			<table class="widefat cb-sw-comments-table" id="cb-sw-my-comments-list">
+
+				<thead>
+					<tr>
+						<th class="blog"><?php _e( 'Blog', 'classblogs' ); ?></th>
+						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
+						<th class="content"><?php _e( 'Content', 'classblogs' ); ?></th>
+						<th class="status"><?php _e( 'Status', 'classblogs' ); ?></th>
+						<th class="posted"><?php _e( 'Date', 'classblogs' ); ?></th>
+					</tr>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<th class="blog"><?php _e( 'Blog', 'classblogs' ); ?></th>
+						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
+						<th class="content"><?php _e( 'Content', 'classblogs' ); ?></th>
+						<th class="status"><?php _e( 'Status', 'classblogs' ); ?></th>
+						<th class="posted"><?php _e( 'Date', 'classblogs' ); ?></th>
+					</tr>
+				</tfoot>
+
+				<tbody>
+					<?php
+						foreach ( $paginator->get_items_for_page( $current_page ) as $comment ):
+							switch_to_blog( $comment->from_blog );
+							$status = wp_get_comment_status( $comment->comment_ID );
+					?>
+						<tr class="<?php echo $status; ?>">
+							<td class="blog">
+								<strong>
+									<?php
+										printf( '<a href="%s">%s</a>',
+											esc_url( $all_blogs[$comment->from_blog]['url'] ),
+											esc_html( $all_blogs[$comment->from_blog]['name'] ) );
+									?>
+								</strong>
+							</td>
+							<td class="post">
+								<strong>
+									<?php
+										printf( '<a href="%s">%s</a>',
+											esc_url( get_comment_link( $comment ) ),
+											esc_html( $comment->post_title ) );
+									?>
+								</strong>
+							</td>
+							<td class="content">
+								<?php comment_text( $comment->comment_ID ); ?>
+							</td>
+							<td class="status">
+								<?php
+									if ( $status == 'approved' ) {
+										_e( 'Approved', 'classblogs' );
+									} elseif ( $status == 'deleted' || $status == 'trash' ) {
+										_e( 'Deleted', 'classblogs' );
+									} elseif ( $status == 'spam' ) {
+										_e( 'Spam', 'classblogs' );
+									} elseif ( $status == 'unapproved' ) {
+										_e( 'Unapproved', 'classblogs' );
+									} else {
+										_e( 'Unknown', 'classblogs' );
+									}
+								?>
+							</td>
+							<td class="posted">
+								<?php
+									printf( '<span class="date">%s</span> <span class="time">%s</span>',
+										mysql2date(
+											get_option( 'date_format' ),
+											$comment->comment_date ),
+										mysql2date(
+											get_option( 'time_format' ),
+											$comment->comment_date ) );
+								?>
+							</td>
+						</tr>
+					<?php
+						endforeach;
+						ClassBlogs::restore_blog( $current_blog_id );
+					?>
+				</tbody>
+
+			</table>
+
+		</div>
+
+<?php
+	}
+
+	/**
+	 * Adds a link to a student admin page that lets them view all comments
+	 * that they have left on other students' blogs
+	 *
+	 * @since 0.1
+	 */
+	public function add_student_comment_list()
+	{
+		if ( is_admin() && ! ClassBlogs_Utils::is_root_blog() ) {
+			add_comments_page(
+				__('My Comments'),
+				__('My Comments'),
+				'manage_options',
+				$this->get_uid() . '-my-comments',
+				array( $this, 'student_admin_page' ) );
+		}
 	}
 
 	/**

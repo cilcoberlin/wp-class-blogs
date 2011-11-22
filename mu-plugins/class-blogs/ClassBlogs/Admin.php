@@ -132,7 +132,7 @@ class ClassBlogs_Admin
 			<p><?php _e( 'Provides a main-blog-only widget that displays a randomly selected image chosen from all the images used on all blogs that are part of this class.', 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'Sitewide Comments', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides a main-blog-only widget that shows recent comments left on all student blogs.', 'classblogs' ); ?></p>
+			<p><?php _e( 'Provides a main-blog-only widget that shows recent comments left on all student blogs, as well as a professor-only admin page showing a table of all student comments and a student-only admin page showing a table of all comments that they have left.', 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'Sitewide Posts', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Provides a main-blog-only widget that shows recent posts made on all student blogs and allows for displaying all recent sitewide posts on the main blog.', 'classblogs' ); ?></p>
