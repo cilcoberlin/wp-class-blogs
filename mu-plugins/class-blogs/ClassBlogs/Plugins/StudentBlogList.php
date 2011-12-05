@@ -213,14 +213,26 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function format_blog_display_name( $format, $user_id, $blog_id )
 	{
-		return ClassBlogs_Utils::format_user_string(
+		$blog_title = get_blog_option( $blog_id, 'blogname' );
+		$first_name = get_user_meta( $user_id, 'first_name', true );
+		$last_name = get_user_meta( $user_id, 'last_name', true );
+		$blog_name = ClassBlogs_Utils::format_user_string(
 			$format,
 			array(
-				'blog'      => get_blog_option( $blog_id, 'blogname' ),
-				'firstname' => get_user_meta( $user_id, 'first_name', true ),
-				'lastname'  => get_user_meta( $user_id, 'last_name', true ),
+				'blog'      => $blog_title,
+				'firstname' => $first_name,
+				'lastname'  => $last_name,
 				'nickname'  => get_user_meta( $user_id, 'nickname', true ) ),
 			'cb-student-blog' );
+
+		// If the blog name is the same as that of the main blog, use the
+		// student's full name instead
+		$main_blog_title = get_blog_option( ClassBlogs_Settings::get_root_blog_id(), 'blogname' );
+		if ( $blog_title === $main_blog_title ) {
+			$blog_name = $first_name . " " . $last_name;
+		}
+
+		return $blog_name;
 	}
 
 	/**
