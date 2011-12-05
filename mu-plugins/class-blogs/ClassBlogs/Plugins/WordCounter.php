@@ -28,6 +28,16 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	);
 
 	/**
+	 * Admin media files
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $admin_media = array(
+		'css' => array( 'word-counter.css' )
+	);
+
+	/**
 	 * The numerical representation of Monday when using PHP's `date` function.
 	 */
 	const MONDAY = 1;
@@ -42,8 +52,6 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 */
 	function __construct() {
 		parent::__construct();
-
-		add_action( 'admin_head',         array( $this, '_add_admin_styles' ) );
 		add_action( 'wp_dashboard_setup', array( $this, '_add_student_dashboard_widget' ) );
 	}
 
@@ -125,18 +133,6 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		$end_date = $this->_find_weekday_near_date( self::SUNDAY, $date, '+1 day' );
 
 		return $this->_get_word_count_for_student( $student_id, $start_date, $end_date );
-	}
-
-	/**
-	 * Adds admin styles to the word counter page.
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _add_admin_styles()
-	{
-		printf( '<link rel="stylesheet" href="%sword-counter.css" />',
-			esc_url( ClassBlogs_Utils::get_plugin_css_url() ) );
 	}
 
 	/**

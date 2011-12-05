@@ -166,6 +166,16 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	);
 
 	/**
+	 * Admin media files
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $admin_media = array(
+		'css' => array( 'sitewide-posts.css' )
+	);
+
+	/**
 	 * The number of posts to show per page on the professor's admin page
 	 *
 	 * @var int
@@ -202,7 +212,6 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		if ( ! is_admin() && $this->get_option( 'root_show_posts' ) ) {
 			add_action( 'pre_get_posts', array( $this, 'initialize_root_blog_hooks' ) );
 		}
-		add_action( 'admin_head',   array( $this, 'add_admin_css' ) );
 		add_action( 'widgets_init', array( $this, 'enable_widget' ) );
 	}
 
@@ -586,17 +595,6 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			</form>
 		</div>
 	<?php
-	}
-
-	/**
-	 * Adds CSS for small styling tweaks to the admin pages
-	 *
-	 * @since 0.1
-	 */
-	public function add_admin_css()
-	{
-		printf( '<link rel="stylesheet" href="%ssitewide-posts.css" />',
-			esc_url( ClassBlogs_Utils::get_plugin_css_url() ) );
 	}
 
 	/**

@@ -511,10 +511,11 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	*/
 	public function _add_playlist_page_scripts()
 	{
-		wp_register_script( $this->get_uid(),
+		wp_register_script(
+			$this->get_uid(),
 			ClassBlogs_Utils::get_plugin_js_url() . 'youtube-class-playlist.js',
 			array( 'jquery' ),
-			'1.0'
+			ClassBlogs_Settings::VERSION
 		);
 		wp_enqueue_script( $this->get_uid() );
 	}

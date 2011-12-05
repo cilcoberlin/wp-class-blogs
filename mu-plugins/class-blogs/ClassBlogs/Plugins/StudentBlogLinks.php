@@ -26,17 +26,22 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	);
 
 	/**
+	 * Admin media files
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $admin_media = array(
+		'js' => array( 'student-blog-links.js' )
+	);
+
+	/**
 	 * Registers plugin hooks and sets default options
 	 */
 	function __construct()
 	{
 
 		parent::__construct();
-
-		// Add scripts used on the admin page
-		if ( is_admin() ) {
-			add_action( 'admin_footer', array( $this, 'add_admin_scripts' ) );
-		}
 
 		// Update the default links options to be a single link pointing back
 		// to the main class blog
@@ -177,22 +182,6 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	public function enable_admin_page( $admin )
 	{
 		$admin->add_admin_page( $this->get_uid(), __( 'Student Blog Links', 'classblogs' ), array( $this, 'admin_page' ) );
-	}
-
-	/**
-	 * Adds JavaScript files for the admin interface
-	 *
-	 * @since 0.1
-	 */
-	public function add_admin_scripts()
-	{
-		wp_register_script(
-			$this->get_uid(),
-			ClassBlogs_Utils::get_plugin_js_url() . 'student-blog-links.js',
-			array( 'jquery' ),
-			ClassBlogs_Settings::VERSION,
-			true );
-		wp_print_scripts( $this->get_uid() );
 	}
 
 	/**

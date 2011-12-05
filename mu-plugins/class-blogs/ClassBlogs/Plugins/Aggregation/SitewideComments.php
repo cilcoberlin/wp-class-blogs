@@ -171,6 +171,16 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	private $_sitewide_comments;
 
 	/**
+	 * Admin media files
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $admin_media = array(
+		'css' => array( 'sitewide-comments.css' )
+	);
+
+	/**
 	 * The number of comments to show per page on the professor's admin page
 	 *
 	 * @var int
@@ -184,7 +194,6 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	function __construct()
 	{
 		parent::__construct();
-		add_action( 'admin_head',   array( $this, 'add_admin_css' ) );
 		add_action( 'admin_menu',   array( $this, 'add_student_comment_list' ) );
 		add_action( 'widgets_init', array( $this, 'enable_widget' ) );
 	}
@@ -331,17 +340,6 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	public function enable_admin_page( $admin )
 	{
 		$admin->add_admin_page( $this->get_uid(), __( 'Student Comments', 'classblogs' ), array( $this, 'admin_page' ) );
-	}
-
-	/**
-	 * Adds CSS for small styling tweaks to the admin pages
-	 *
-	 * @since 0.1
-	 */
-	public function add_admin_css()
-	{
-		printf( '<link rel="stylesheet" href="%ssitewide-comments.css" />',
-			esc_url( ClassBlogs_Utils::get_plugin_css_url() ) );
 	}
 
 	/**

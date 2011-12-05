@@ -26,13 +26,32 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	private $_options;
 
 	/**
+	 * The admin CSS or JavaScript used by the plugin
+	 *
+	 * A plugin can add admin media by providing values for the `css` or `js`
+	 * keys of the array, which should be assigned to arrays of strings, where
+	 * each string is the name of the media file.  CSS files will be interpreted
+	 * as relative to the CSS media directory (`media/css`) and JavaScript files
+	 * will be viewed as relative to the JavaScript media directory (`media/js`).
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $admin_media = array(
+		'css' => array(),
+		'js'  => array()
+	);
+
+	/**
 	 * Performs sanity checks and configuration when loaded
 	 */
 	public function __construct()
 	{
 		// Provide plugins with the option of enabling an admin page
 		if ( is_admin() ) {
-    		add_action( 'admin_menu', array( $this, '_maybe_enable_admin_page' ) );
+    		add_action( 'admin_footer', array( $this, '_add_admin_js' ) );
+    		add_action( 'admin_head',   array( $this, '_add_admin_css' ) );
+    		add_action( 'admin_menu',   array( $this, '_maybe_enable_admin_page' ) );
     	}
 	}
 
@@ -433,6 +452,51 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 * @since 0.1
 	 */
 	public function enable_admin_page( $admin ) {}
+
+	/**
+	 * Adds the plugin's admin CSS to the page.
+	 *
+	 * This uses the value of the `$admin_media` member variable to determine
+	 * which admin files should be added.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _add_admin_css()
+	{
+		if ( array_key_exists( 'css', $this->admin_media ) ) {
+			$css_url = esc_url( ClassBlogs_Utils::get_plugin_css_url() );
+			foreach ( $this->admin_media['css'] as $css_file ) {
+				printf( '<link rel="stylesheet" href="%s%s" />',
+					$css_url, $css_file );
+			}
+		}
+	}
+
+	/**
+	 * Adds the plugin's admin JavaScript to the page.
+	 *
+	 * This uses the value of the `$admin_media` member variable to determine
+	 * which admin files should be added.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _add_admin_js()
+	{
+		if ( array_key_exists( 'js', $this->admin_media ) ) {
+			$js_url = ClassBlogs_Utils::get_plugin_js_url();
+			foreach ( $this->admin_media['js'] as $js_file ) {
+				wp_register_script(
+					$this->get_uid(),
+					$js_url . $js_file,
+					array( 'jquery' ),
+					ClassBlogs_Settings::VERSION,
+					true );
+			}
+			wp_print_scripts( $this->get_uid() );
+		}
+	}
 }
 
 ?>
