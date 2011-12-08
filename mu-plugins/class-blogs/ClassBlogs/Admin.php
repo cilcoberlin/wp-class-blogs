@@ -75,6 +75,19 @@ class ClassBlogs_Admin
 	}
 
 	/**
+	 * Returns markup for an admin notification message
+	 *
+	 * @param  string $message the text of the message to display
+	 * @return string          markup for the admin message
+	 *
+	 * @since 0.2
+	 */
+	public static function make_admin_message( $message )
+	{
+		return sprintf( '<div id="message" class="updated fade"><p>%s</p></div>', $message);
+	}
+
+	/**
 	 * Creates the base class blogs admin menu that is available to any admin
 	 * user with administrative rights on the root blog who is on the admin side
 	 *
