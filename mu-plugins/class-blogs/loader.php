@@ -5,6 +5,7 @@ $core = array(
 	'ClassBlogs',
 	'Paginator',
 	'Settings',
+	'Schema',
 	'Utils'
 );
 if ( is_admin() ) {
