@@ -66,7 +66,7 @@ class ClassBlogs_Admin
 	 *
 	 * @since 0.1
 	 */
-	public function get_admin()
+	public static function get_admin()
 	{
 		if ( ! isset(self::$_instance ) ) {
 			self::$_instance = new ClassBlogs_Admin();
