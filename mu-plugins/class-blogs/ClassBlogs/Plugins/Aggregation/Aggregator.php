@@ -67,119 +67,358 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		}
 
 		// Post modification actions that also catch new tags usages
-		add_action( 'save_post', array( $this, 'update_aggregation_data' ) );
-		add_action( 'deleted_post', array( $this, 'update_aggregation_data' ) );
-		add_action( 'transition_post_status', array( $this, 'update_aggregation_data' ), 10, 3 );
+		add_action( 'save_post', array( $this, '_track_single_post' ) );
+		add_action( 'wp_update_comment_count', array( $this, '_track_single_post' ) );
 
 		// Comment actions
-		add_action( 'comment_post', array( $this, 'update_aggregation_data' ), 10, 2 );
-		add_action( 'wp_set_comment_status', array( $this, 'update_aggregation_data' ), 10, 2 );
-		add_action( 'wp_update_comment_count', array( $this, 'update_aggregation_data' ), 10, 3 );
+		add_action( 'comment_post', array( $this, '_track_single_comment' ) );
+		add_action( 'wp_set_comment_status', array( $this, '_track_single_comment' ), 10, 2 );
 	}
 
 	/**
-	 * Updates the sitewide data tables when changes to the tracked data are made
+	 * Monitors updates to all post tables and updates the sitewide posts table
+	 * based on the status of the post
 	 *
-	 * The arguments passed are simply placeholder values to allow this to play
-	 * nicely with the WordPress actions that will be calling this.
+	 * This does not actually perform any modifications to the sitewide posts
+	 * table, as such actions are delegated to various other functions that
+	 * handle addition, deletion or modification.
 	 *
-	 * @since 0.1
-	 */
-	public function update_aggregation_data( $one = null, $two = null, $three = null )
-	{
-		$this->sync_tables();
-	}
-
-	/**
-	 * Creates a copy of a WordPress table for sitewide aggregation
-	 *
-	 * This builds a table structured like the source WordPress table and then
-	 * alters the table slightly, removing the unique auto-incrementing primary
-	 * key and adding a column to keep track of the original blog from which
-	 * the data came.
-	 *
-	 * @param string $source      the name of the WordPress table to clone
-	 * @param string $destination the name of the new table
-	 * @param string $key         the name of the WordPress table's primary key
+	 * @param int $post_id the ID of the post being modified
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	private function _clone_wp_table( $source, $destination, $key )
+	public function _track_single_post( $post_id )
+	{
+		global $blog_id;
+		$this->_clear_sw_cache();
+
+		// If the post is being published, update its sitewide record, and remove
+		// it from the sitewide table if it is no longer visible to the public,
+		// either due to a change of status or outright deletion
+		switch ( get_post_status( $post_id ) ) {
+			case 'publish':
+				$this->_update_sw_post( $blog_id, $post_id );
+				break;
+			case 'auto-draft':
+			case 'draft':
+			case 'future':
+			case 'pending':
+			case 'private':
+				$this->_delete_sw_post( $blog_id, $post_id );
+				break;
+		}
+	}
+
+	/**
+	 * Monitors updates to all comments tables and updates the sitewide comments
+	 * table based on the status of the comment
+	 *
+	 * This does not actually perform any modifications to the sitewide comments
+	 * table, as such actions are delegated to various other functions that
+	 * handle addition, deletion or modification.
+	 *
+	 * @param int    $comment_id the ID of the comment being modified
+	 * @param string $status     the optional new comment status
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	public function _track_single_comment( $comment_id, $status = "" )
+	{
+		global $blog_id;
+		$this->_clear_sw_cache();
+
+		// Since this function may be called be either the comment_posted hook
+		// or the wp_set_comment_status hook, we might receive the actual status
+		// of the post in the $status arg, or we might need to look it up using
+		// the post's ID, if no status information was passed
+		if ( ! $status ) {
+			$status = wp_get_comment_status( $comment_id );
+		}
+
+		// If the comment is being made public, update its sitewide record,
+		// and remove it if it is no longer publicly visible
+		switch ( $status ) {
+			case 'approve':
+			case 'approved':
+				$this->_update_sw_comment( $blog_id, $comment_id );
+				break;
+			default:
+				$this->_delete_sw_comment( $blog_id, $comment_id );
+		}
+	}
+
+	/**
+	 * Adds or updates a record of a post to the sitewide posts table
+	 *
+	 * In addition to modifying the record for the post, this also tracks the
+	 * tags used by the post, updating those in the sitewide tags tables
+	 *
+	 * @param int $blog_id the ID of the blog on which the post was made
+	 * @param int $post_id the post's ID on its blog
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _update_sw_post( $blog_id, $post_id )
+	{
+
+		global $wpdb;
+		switch_to_blog( $blog_id );
+
+		// Update the post's record in the sitewide table
+		$this->_copy_sw_object( $blog_id, $post_id, 'ID', $wpdb->posts, $this->tables->posts );
+
+		// Get a list of the tags used by the current post and those that have
+		// been added to the list of sitewide tags
+		$local_tags = $local_tag_slugs = $sw_tag_slugs = array();
+		foreach ( wp_get_post_tags( $post_id ) as $local_tag ) {
+			$local_tags[$local_tag->slug] = $local_tag;
+			$local_tag_slugs[] = $local_tag->slug;
+		}
+		$sw_tags = $wpdb->get_results( $wpdb->prepare( "
+			SELECT t.slug
+			FROM {$this->tables->tag_usage} AS tu, {$this->tables->tags} AS t
+			WHERE tu.post_id=%d AND tu.blog_id=%d AND tu.uses_tag=t.term_id",
+			$post_id, $blog_id ) );
+		foreach ( $sw_tags as $sw_tag ) {
+			$sw_tag_slugs[] = $sw_tag->slug;
+		}
+
+		// Create or modify records for tags that need to be added
+		$add_slugs = array_diff( $local_tag_slugs, $sw_tag_slugs );
+		foreach ( $add_slugs as $add_slug ) {
+
+			// See if a record of the tag already exists
+			$tag = $local_tags[$add_slug];
+			$sw_id = $wpdb->get_var( $wpdb->prepare(
+				"SELECT term_id FROM {$this->tables->tags} WHERE slug=%s",
+				$add_slug ) );
+
+			// Create a new record for the tag if it doesn't exist or update
+			// the usage count for an existing tag record
+			if ( $sw_id ) {
+				$wpdb->query( $wpdb->prepare( "
+					UPDATE {$this->tables->tags}
+					SET count=count+1
+					WHERE term_id=%d",
+					$sw_id ) );
+			} else {
+				$wpdb->insert(
+					$this->tables->tags,
+					array(
+						'name' => $tag->name,
+						'slug' => $tag->slug,
+						'count' => 1
+					),
+					array( '%s', '%s', '%d' ) );
+				$sw_id = $wpdb->insert_id;
+			}
+
+			// Create the actual tag-usage record
+			$wpdb->query( $wpdb->prepare(
+				"INSERT INTO {$this->tables->tag_usage} (post_id, uses_tag, blog_id) VALUES (%d, %d, %d)",
+				$post_id, $sw_id, $blog_id ) );
+		}
+
+		// Remove any unused tags, dropping the usage count, clearing the usage
+		// record, and removing any now-unused tags from the sitewide table
+		$drop_slugs = array_diff( $sw_tag_slugs, $local_tag_slugs );
+		foreach ( $drop_slugs as $drop_slug ) {
+			$sw_id = $wpdb->get_var( $wpdb->prepare(
+				"SELECT term_id FROM {$this->tables->tags} WHERE slug=%s",
+				$drop_slug ) );
+			$wpdb->query( $wpdb->prepare(
+				"UPDATE {$this->tables->tags} SET count=count-1 WHERE term_id=%d",
+				$sw_id ) );
+			$wpdb->query( $wpdb->prepare(
+				"DELETE FROM {$this->tables->tag_usage}
+				WHERE post_id=%d AND blog_id=%d AND uses_tag=%d",
+				$post_id, $blog_id, $sw_id ) );
+		}
+		if ( ! empty( $drop_slugs ) ) {
+			$this->_remove_unused_sitewide_tags();
+		}
+
+		restore_current_blog();
+	}
+
+	/**
+	 * Removes a record of a post from the sitewide posts table
+	 *
+	 * This will also remove any record of tag usage associated with the post
+	 *
+	 * @param int $blog_id the ID of the blog on which the post was made
+	 * @param int $post_id the post's ID on its blog
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _delete_sw_post( $blog_id, $post_id )
 	{
 		global $wpdb;
 
-		$wpdb->query( "CREATE TABLE IF NOT EXISTS $destination LIKE $source" );
-		$wpdb->query( "ALTER TABLE $destination CHANGE $key $key BIGINT(20) UNSIGNED NOT NULL, DROP PRIMARY KEY" );
-		$wpdb->query( "ALTER TABLE $destination ADD from_blog BIGINT(20) NOT NULL" );
-		$wpdb->query( "ALTER TABLE $destination ADD INDEX from_blog (from_blog)" );
+		// Remove the post from the sitewide table
+		$wpdb->query( $wpdb->prepare(
+			"DELETE FROM {$this->tables->posts} WHERE ID=%d AND cb_sw_blog_id=%d",
+			$post_id, $blog_id ) );
+
+		// Remove any record of tags used by the post
+		$wpdb->query( $wpdb->prepare(
+			"UPDATE {$this->tables->tags} AS t, {$this->tables->tag_usage} AS tu
+			SET t.count=t.count-1
+			WHERE tu.post_id=%d AND tu.blog_id=%d AND t.term_id=tu.uses_tag",
+			$post_id, $blog_id ) );
+		$wpdb->query( $wpdb->prepare( "
+			DELETE FROM {$this->tables->tag_usage}
+			WHERE post_id=%d AND blog_id=%d",
+			$post_id, $blog_id ) );
+		$this->_remove_unused_sitewide_tags();
 	}
 
 	/**
-	 * A convenience function that creates a table for sitewide aggregation
+	 * Creates or modifies a sitewide record of a comment left on a post
 	 *
-	 * @param string $name    the name of the table to create
-	 * @param array  $columns an array of SQL column declarations
+	 * @param int $blog_id    the ID of the blog on which the comment was made
+	 * @param int $comment_id the ID of the comment on its blog
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	private function _create_sitewide_table( $name, $columns )
+	private function _update_sw_comment( $blog_id, $comment_id )
 	{
 		global $wpdb;
-
-		$wpdb->query( sprintf("CREATE TABLE IF NOT EXISTS $name (%s) %s",
-			join( ", ", $columns ),
-			( DB_CHARSET ) ? 'DEFAULT CHARSET=' . DB_CHARSET : "" ) );
+		switch_to_blog( $blog_id );
+		$this->_copy_sw_object( $blog_id, $comment_id, 'comment_ID', $wpdb->comments, $this->tables->comments );
+		restore_current_blog();
 	}
 
 	/**
-	 * Creates the tables needed to store sitewide data
+	 * Deletes a record of a comment from the sitewide table
+	 *
+	 * @param int $blog_id    the ID of the blog on which the comment was made
+	 * @param int $comment_id the ID of the comment on its blog
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 0.2
+	 */
+	private function _delete_sw_comment( $blog_id, $comment_id )
+	{
+		global $wpdb;
+		$wpdb->query( $wpdb->prepare(
+			"DELETE FROM {$this->tables->comments} WHERE comment_ID=%d AND cb_sw_blog_id=%d",
+			$comment_id, $blog_id ) );
+	}
+
+	/**
+	 * A utility function to remove any sitewide tags whose usage count is zero
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _remove_unused_sitewide_tags()
+	{
+		global $wpdb;
+		$wpdb->query( $wpdb->prepare(
+			"DELETE FROM {$this->tables->tags} WHERE count <= 0" ) );
+	}
+
+	/**
+	 * Creates a copy of a WordPress object in the sitewide table
+	 *
+	 * This is used to abstract the logic for creating a copy of posts and
+	 * comments, which share a very similar structure.  If the given item
+	 * does not exist in the destination sitewide table, a record is created.
+	 * If a record already exists, it is updated with the current version
+	 * of the item that is being copied.
+	 *
+	 * @param int    $blog_id     the ID of the blog on which the data exists
+	 * @param int    $item_id     the ID of the data being copied
+	 * @param string $id_field    the name of the table's ID field
+	 * @param string $source      the name of the source table providing the data
+	 * @param string $destination the name of the table to receive the copy
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _copy_sw_object( $blog_id, $item_id, $id_field, $source, $destination )
+	{
+		global $wpdb;
+		$shared_fields = $this->_get_sw_shadow_fields( $source, $destination );
+
+		// See if a record already exists for the item in the sitewide table
+		$sw_record = $wpdb->get_row( $wpdb->prepare(
+			"SELECT * FROM $destination WHERE $id_field=%d AND cb_sw_blog_id=%d",
+			$item_id, $blog_id ) );
+
+		// If the item does not yet exist in the sitewide table, create a record
+		if ( empty( $sw_record ) ) {
+			$insert_fields = $select_fields = $shared_fields;
+			$insert_fields[] = 'cb_sw_blog_id';
+			$select_fields[] = $blog_id;
+			$wpdb->query( $wpdb->prepare(
+				sprintf( "INSERT INTO %s (%s) SELECT %s FROM %s WHERE %s=%%d",
+					$destination,
+					implode( ", ", $insert_fields ),
+					implode( ", ", $select_fields ),
+					$source,
+					$id_field ),
+				$item_id ) );
+		}
+
+		// If the item already exists, update its sitewide record
+		if ( ! empty( $sw_record ) ) {
+			$set_calls = array();
+			foreach ( $shared_fields as $field ) {
+				$set_calls[] = sprintf( 'd.%1$s=s.%1$s', $field );
+			}
+			$wpdb->query( $wpdb->prepare(
+				sprintf( 'UPDATE %1$s AS s, %2$s AS d SET %3$s WHERE s.%4$s=%%d AND d.%4$s=%%d AND d.cb_sw_blog_id=%%d',
+					$source,
+					$destination,
+					implode( ", ", $set_calls ),
+					$id_field ),
+				$item_id,
+				$item_id,
+				$blog_id ) );
+		}
+	}
+
+	/**
+	 * Create the tables needed to store sitewide data
+	 *
+	 * This simply applies the table schemata defined in Aggregation/Schemata.php to the
+	 * sitewide table names defined in Aggregation/Settings.php.
+	 *
+	 * @return bool whether or not the tables were synced after creation
+	 *
+	 * @access private
+	 * @since 0.2
 	 */
 	private function _create_tables()
 	{
 		global $wpdb;
+		$modified = false;
 
-		// Create copies of the posts and comments table customized to hold
-		// information on sitewide posts and comments
-		$this->_clone_wp_table( $wpdb->posts, $this->tables->posts, 'ID' );
-		$this->_clone_wp_table( $wpdb->comments, $this->tables->comments, 'comment_ID' );
-
-		//  Create the tag and tag usage tables
-		$this->_create_sitewide_table(
-			$this->tables->tags,
-			array(
-				'term_id BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY',
-				'name VARCHAR(200) NOT NULL',
-				'slug VARCHAR(200) NOT NULL',
-				'count BIGINT(20) NOT NULL DEFAULT 0' ) );
-		$this->_create_sitewide_table(
-			$this->tables->tag_usage,
-			array(
-				'post_id BIGINT(20) UNSIGNED NOT NULL',
-				'uses_tag BIGINT(20) NOT NULL',
-				'from_blog BIGINT(20) NOT NULL' ) );
-
-		// Populate the tables with sitewide data
-		$this->update_option( 'tables_created', true );
-		$this->sync_tables();
-	}
-
-	/**
-	 * Removes all data from the sitewide tables
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _clear_tables()
-	{
-		global $wpdb;
-		foreach ( $this->tables as $name => $table ) {
-			$wpdb->query( "DELETE FROM $table" );
+		// Create each table from its schema and track whether or not any
+		// modification of the database occurred
+		$table_specs = array(
+			array( $this->tables->comments, ClassBlogs_Plugins_Aggregation_Schemata::get_comments_schema() ),
+			array( $this->tables->posts, ClassBlogs_Plugins_Aggregation_Schemata::get_posts_schema() ),
+			array( $this->tables->tags, ClassBlogs_Plugins_Aggregation_Schemata::get_tags_schema() ),
+			array( $this->tables->tag_usage, ClassBlogs_Plugins_Aggregation_Schemata::get_tag_usage_schema() )
+		);
+		foreach ( $table_specs as $spec ) {
+			$modified |= $spec[1]->apply_to_table( $spec[0] );
 		}
+
+		// If any tables were modified or created, flag this and sync the sitewide data
+		if ( $modified ) {
+			$this->update_option( 'tables_created', true );
+			$this->_sync_tables();
+		}
+		return $modified;
 	}
 
 	/**
@@ -201,11 +440,98 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
+	 * Get a list of fields that should be copied from the source table to
+	 * the destination table
+	 *
+	 * This is used when copying data from tables such as the posts or comments
+	 * table, which have very similar sitewide equivalents.  This function
+	 * produces a list of fields that the sitewide table can receive, which helps
+	 * prevent errors if the core WordPress tables are modified either as part
+	 * of a planned upgrade or due to an irresponsible plugin.
+	 *
+	 * @param  string $source      the source table name
+	 * @param  string $destination the destination table name
+	 * @return array               a list of fields that can be safely copied from
+	 *                             the source table to the destination table
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _get_sw_shadow_fields( $source, $destination )
+	{
+		$source_fields = ClassBlogs_Schema::get_table_column_names( $source );
+		$dest_fields = ClassBlogs_Schema::get_table_column_names( $destination );
+		return array_intersect( $dest_fields, $source_fields );
+	}
+
+	/**
+	 * Copies data from the source table to the destination table
+	 *
+	 * This is used to copy WordPress tables that have almost identical sitewide
+	 * tables created to store their contents, such as posts or comments.  This
+	 * can take an optional WHERE clause via $where, which will be added to
+	 * the end of the SQL statement.
+	 *
+	 * If a WHERE clause is provided in $where, this function checks for any
+	 * additional parameters passed and uses those to fill in any placeholder
+	 * values in the WHERE clause.
+	 *
+	 * @param  int    $blog_id     the ID of the blog using the source table
+	 * @param  string $source      the name of the source table
+	 * @param  string $destination the name of the destination table
+	 * @param  string $where       an optional WHERE clause to limit the data
+	 * @param  mixed               multiple additional params used for string
+	 *                             substitution in the WHERE clause
+	 * @return bool                whether or not the copy succeeded
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _copy_table( $blog_id, $source, $destination, $where = "" )
+	{
+		global $wpdb;
+
+		// Build a list of fields to copy over, adding in the from-blog column
+		$fields = $this->_get_sw_shadow_fields( $source, $destination );
+		$insert_fields = $fields;
+		$insert_fields[] = 'cb_sw_blog_id';
+		$select_fields = $fields;
+		$select_fields[] = $blog_id;
+
+		// Assemble the base copy statement
+		if ( $where ) {
+			$where = 'WHERE ' . $where;
+		}
+		$prep_args = array(
+			sprintf( "INSERT INTO %s (%s) SELECT %s FROM %s %s",
+				$destination,
+				implode( ", ", $insert_fields ),
+				implode( ", ", $select_fields ),
+				$source,
+				$where ) );
+
+		// Add in the WHERE-clause variables if a WHERE statement was passed
+		if ( $where ) {
+			$num_args = func_num_args();
+			if ( $num_args > 4 ) {
+				$args = func_get_args();
+				for ( $i = 4; $i < $num_args; $i++ ) {
+					$prep_args[] = $args[$i];
+				}
+			}
+		}
+
+		// Perform the actual copying of data
+		$wpdb->query( call_user_func_array( array( $wpdb, 'prepare' ), $prep_args ) );
+	}
+
+	/**
 	 * Aggregates all sitewide posts, comments and tags into separate tables
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function sync_tables()
+	private function _sync_tables()
 	{
 		global $wpdb;
 		$tag_counts = $tag_usage = $tag_origins = array();
@@ -221,18 +547,20 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 			switch_to_blog( $blog_id );
 
 			// Populate the posts table, ignoring any default posts
-			$wpdb->query( $wpdb->prepare( "
-				INSERT INTO {$this->tables->posts}
-				SELECT p.*, %d FROM $wpdb->posts AS p
-				WHERE p.post_status = 'publish' AND p.post_type = 'post' AND p.post_title <> %s",
-				$blog_id, ClassBlogs_Plugins_Aggregation_Settings::FIRST_POST_TITLE ) );
+			$this->_copy_table(
+				$blog_id,
+				$wpdb->posts,
+				$this->tables->posts,
+				"post_status = 'publish' AND post_type = 'post' AND post_title <> %s",
+				ClassBlogs_Plugins_Aggregation_Settings::FIRST_POST_TITLE );
 
 			// Populate the comments table, ignoring any default comments
-			$wpdb->query( $wpdb->prepare( "
-				INSERT INTO {$this->tables->comments}
-				SELECT c.*, %d FROM $wpdb->comments AS c
-				WHERE c.comment_author <> %s",
-				$blog_id, ClassBlogs_Plugins_Aggregation_Settings::FIRST_COMMENT_AUTHOR ) );
+			$this->_copy_table(
+				$blog_id,
+				$wpdb->comments,
+				$this->tables->comments,
+				"comment_author <> %s",
+				ClassBlogs_Plugins_Aggregation_Settings::FIRST_COMMENT_AUTHOR );
 
 			// Add all tags used by the blog to a master list
 			$used_tags = $wpdb->get_results( $wpdb->prepare( "
@@ -274,26 +602,36 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 				continue;
 			}
 
-			switch_to_blog( $blog_id );
-
 			// Add any tag usage records on the current blog to the sitewide
 			// master list, linking the tag with its ID in the sitewide table
+			switch_to_blog( $blog_id );
 			foreach ( $wpdb->get_results( "SELECT * FROM $wpdb->term_relationships" ) as $tag ) {
 				if ( in_array( $tag->term_taxonomy_id, array_keys( $tag_origins[$blog_id] ) ) ) {
-
 					$sw_tag_id = $wpdb->get_var( $wpdb->prepare( "
 						SELECT term_id FROM {$this->tables->tags}
 						WHERE slug = %s",
 						$tag_origins[$blog_id][$tag->term_taxonomy_id] ) );
-
 					$wpdb->query( $wpdb->prepare( "
-						INSERT INTO {$this->tables->tag_usage} (post_id, uses_tag, from_blog)
+						INSERT INTO {$this->tables->tag_usage} (post_id, uses_tag, blog_id)
 						VALUES (%s, %s, %s)",
 						$tag->object_id, $sw_tag_id, $blog_id ) );
 				}
 			}
-
 			restore_current_blog();
+		}
+	}
+
+	/**
+	 * Removes all data from the sitewide tables
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _clear_tables()
+	{
+		global $wpdb;
+		foreach ( $this->tables as $name => $table ) {
+			$wpdb->query( "DELETE FROM $table" );
 		}
 	}
 

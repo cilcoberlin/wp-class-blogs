@@ -20,6 +20,7 @@ $plugins = array(
 	'BasePlugin',
 	'SidebarWidget',
 	'Aggregation/Settings',
+	'Aggregation/Schemata',
 	'Aggregation/Aggregator',
 	'Aggregation/SitewidePlugin',
 	'Aggregation/SitewideComments',

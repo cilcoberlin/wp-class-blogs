@@ -231,7 +231,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 		$comments = $wpdb->get_results( "
 			SELECT c.*, p.post_title
 			FROM {$this->sw_tables->comments} AS c, {$this->sw_tables->posts} AS p
-			WHERE p.ID = c.comment_post_ID AND c.from_blog = p.from_blog $approved_filter
+			WHERE p.ID = c.comment_post_ID AND c.cb_sw_blog_id = p.cb_sw_blog_id $approved_filter
 			ORDER BY c.comment_date DESC" );
 
 		// Even if all comments are allowed, don't display spam comments
@@ -240,7 +240,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 			$current_blog_id = $blog_id;
 			$no_spam = array();
 			foreach ( $comments as $comment ) {
-				switch_to_blog( $comment->from_blog );
+				switch_to_blog( $comment->cb_sw_blog_id );
 				if ( wp_get_comment_status( $comment->comment_ID ) != 'spam' ) {
 					$no_spam[] = $comment;
 				}
@@ -294,8 +294,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 			$meta = "";
 			if ( $meta_format ) {
 				$blog = sprintf( '<a href="%s">%s</a>',
-					get_blogaddress_by_id( $comment->from_blog ),
-					get_blog_option( $comment->from_blog, 'blogname' ) );
+					get_blogaddress_by_id( $comment->cb_sw_blog_id ),
+					get_blog_option( $comment->cb_sw_blog_id, 'blogname' ) );
 				$meta = ClassBlogs_Utils::format_user_string(
 					$meta_format,
 					array(
@@ -307,7 +307,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 
 			// Build the permalink to the comment using the post URL and an anchor
 			$permalink = sprintf( '%s#comment-%d',
-				get_blog_permalink( $comment->from_blog, $comment->comment_post_ID ),
+				get_blog_permalink( $comment->cb_sw_blog_id, $comment->comment_post_ID ),
 				$comment->comment_ID );
 
 			$comments[] = (object) array(
@@ -367,7 +367,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 		// Paginate the data, restricting the data set to student-only posts
 		$comments = array();
 		foreach ( $this->get_sitewide_comments( false ) as $comment ) {
-			if ( array_key_exists( $comment->from_blog, $students ) ) {
+			if ( array_key_exists( $comment->cb_sw_blog_id, $students ) ) {
 				$comments[] = $comment;
 			}
 		}
@@ -411,7 +411,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				<tbody>
 					<?php
 						foreach ( $paginator->get_items_for_page( $current_page ) as $comment ):
-							switch_to_blog( $comment->from_blog );
+							switch_to_blog( $comment->cb_sw_blog_id );
 							$status = wp_get_comment_status( $comment->comment_ID );
 					?>
 						<tr class="<?php echo $status; ?>">
@@ -431,7 +431,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 								<strong>
 									<?php
 										printf( '<a href="%s">%s</a>',
-											esc_url( get_blog_permalink( $comment->from_blog, $comment->comment_post_ID ) ),
+											esc_url( get_blog_permalink( $comment->cb_sw_blog_id, $comment->comment_post_ID ) ),
 											esc_html( $comment->post_title ) );
 									?>
 								</strong>
@@ -440,8 +440,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 								<strong>
 									<?php
 										printf( '<a href="%s">%s</a>',
-											esc_url( $students[$comment->from_blog]['blog_url'] ),
-											esc_html( $students[$comment->from_blog]['name'] ) );
+											esc_url( $students[$comment->cb_sw_blog_id]['blog_url'] ),
+											esc_html( $students[$comment->cb_sw_blog_id]['name'] ) );
 									?>
 								</strong>
 							</td>
@@ -551,7 +551,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				<tbody>
 					<?php
 						foreach ( $paginator->get_items_for_page( $current_page ) as $comment ):
-							switch_to_blog( $comment->from_blog );
+							switch_to_blog( $comment->cb_sw_blog_id );
 							$status = wp_get_comment_status( $comment->comment_ID );
 					?>
 						<tr class="<?php echo $status; ?>">
@@ -559,8 +559,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 								<strong>
 									<?php
 										printf( '<a href="%s">%s</a>',
-											esc_url( $all_blogs[$comment->from_blog]['url'] ),
-											esc_html( $all_blogs[$comment->from_blog]['name'] ) );
+											esc_url( $all_blogs[$comment->cb_sw_blog_id]['url'] ),
+											esc_html( $all_blogs[$comment->cb_sw_blog_id]['name'] ) );
 									?>
 								</strong>
 							</td>

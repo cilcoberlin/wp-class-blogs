@@ -348,7 +348,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		$new_tags = array();
 
 		//  Display the link to the sitewide usage page for each used tag
-		foreach ( $this->getTagsForPost( $post->ID, $post->from_blog ) as $tag ) {
+		foreach ( $this->getTagsForPost( $post->ID, $post->cb_sw_blog_id ) as $tag ) {
 			$new_tags[] = sprintf( '<a href="%s">%s</a>',
 				esc_url( ClassBlogs_Plugins_Aggregation_SitewideTags::get_tag_page_url( $tag->slug ) ),
 				esc_html( $tag->name ) );
@@ -488,8 +488,8 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			if ( $meta_format ) {
 				$user_data = get_userdata( $post->post_author );
 				$blog = sprintf( '<a href="%s" class="cb-sitewide-post-blog">%s</a>',
-					get_blogaddress_by_id( $post->from_blog ),
-					get_blog_option( $post->from_blog, 'blogname' ) );
+					get_blogaddress_by_id( $post->cb_sw_blog_id ),
+					get_blog_option( $post->cb_sw_blog_id, 'blogname' ) );
 				$meta = ClassBlogs_Utils::format_user_string(
 					$meta_format,
 					array(
@@ -503,7 +503,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$posts[] = (object) array(
 				'content'   => $post->post_content,
 				'meta'      => $meta,
-				'permalink' => get_blog_permalink( $post->from_blog, $post->ID ),
+				'permalink' => get_blog_permalink( $post->cb_sw_blog_id, $post->ID ),
 				'title'     => $post->post_title );
 		}
 
@@ -674,7 +674,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 								<strong>
 									<?php
 										printf( '<a href="%s">%s</a>',
-											get_blog_permalink( $post->from_blog, $post->ID ),
+											get_blog_permalink( $post->cb_sw_blog_id, $post->ID ),
 											$post->post_title );
 									?>
 								</strong>
@@ -733,6 +733,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 					'user_id'     => $post->post_author );
 			}
 			if ( $by_user[$post->post_author]->total_posts < $limit ) {
+				$post->from_blog = $post->cb_sw_blog_id;
 				$by_user[$post->post_author]->posts[] = $post;
 			}
 			$by_user[$post->post_author]->total_posts++;

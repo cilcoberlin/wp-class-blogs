@@ -56,10 +56,10 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 
 			// Ignore the resource if our global or per-blog quota has been exceeded for the
 			// blog on which it was made
-			if ( ! array_key_exists( $resource->from_blog, $per_blog ) ) {
-				$per_blog[$resource->from_blog] = 0;
+			if ( ! array_key_exists( $resource->cb_sw_blog_id, $per_blog ) ) {
+				$per_blog[$resource->cb_sw_blog_id] = 0;
 			} else {
-				if ( $per_blog[$resource->from_blog] >= $max_per_blog ) {
+				if ( $per_blog[$resource->cb_sw_blog_id] >= $max_per_blog ) {
 					continue;
 				}
 			}
@@ -67,7 +67,7 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 			$subset[] = $resource;
 
 			// Abort if our total resource quota has been exceeded
-			$per_blog[$resource->from_blog]++;
+			$per_blog[$resource->cb_sw_blog_id]++;
 			$total_resources++;
 			if ( $total_resources >= $max ) {
 				break;
@@ -90,7 +90,7 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	{
 		global $post, $wp_rewrite;
 
-		if ( property_exists( $post, 'from_blog' ) ) {
+		if ( property_exists( $post, 'cb_sw_blog_id' ) ) {
 
 			// Store the original rewrite rules for later
 			if ( ! isset( $this->_rewrite ) ) {
@@ -99,7 +99,7 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 
 			// Switch to the post's blog
 			restore_current_blog();
-			switch_to_blog( $post->from_blog );
+			switch_to_blog( $post->cb_sw_blog_id );
 
 			// Generate new rewrite rules for the blog, which will allow things
 			// like categories and tags to display properly
