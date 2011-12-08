@@ -663,7 +663,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	 */
 	public function enable_admin_page( $admin )
 	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Data Options', 'classblogs' ), array( $this, 'admin_page' ) );
+		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Data Options', 'classblogs' ), array( $this, '_admin_page' ) );
 	}
 
 	/**
@@ -672,9 +672,10 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	 * @param  array $post the POST data from the admin form
 	 * @return array       an array of blog IDs to exclude from aggregation
 	 *
+	 * @access private
 	 * @since 0.1
 	 */
-	public function parse_excluded_blog_list( $post )
+	private function _parse_excluded_blog_list( $post )
 	{
 		$blogs = array();
 		foreach ( $post as $key => $value ) {
@@ -690,26 +691,33 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	/**
 	 * Handles the admin page logic for the plugin
 	 *
+	 * @access private
 	 * @since 0.1
 	 */
-	public function admin_page()
+	public function _admin_page()
 	{
 
-		// Update the plugin options
+		// Perform an update action of some sort
 		if ( $_POST ) {
-
 			check_admin_referer( $this->get_uid() );
 
-			$this->update_option( 'excluded_blogs', $this->parse_excluded_blog_list( $_POST ) );
-			$this->update_option( 'aggregation_enabled', $_POST['aggregation_enabled'] == 'enabled' );
+			// If we're just refreshing the sitewide data, do so now
+			if ( array_key_exists( 'Refresh', $_POST ) ) {
+				$synced = $this->_create_tables();
+				if ( ! $synced ) {
+					$this->_sync_tables();
+				}
+				echo ClassBlogs_Admin::make_admin_message( __( 'The sitewide data has been refreshed.', 'classblogs' ) );
+			}
 
-			// Since the list of excluded blogs may have changed, resync the
-			// sitewide tables after updating the options
-			$this->sync_tables();
-
-			echo '<div id="message" class="updated fade"><p>' . __( 'Your options have been updated.', 'classblogs' ) . '</p></div>';
+			// Otherwise update the plugin options
+			else {
+				$this->update_option( 'excluded_blogs', $this->_parse_excluded_blog_list( $_POST ) );
+				$this->update_option( 'aggregation_enabled', $_POST['aggregation_enabled'] == 'enabled' );
+				$this->_sync_tables();
+				echo ClassBlogs_Admin::make_admin_message( __( 'Your options have been updated.', 'classblogs' ) );
+			}
 		}
-
 ?>
 		<div class="wrap">
 
@@ -720,6 +728,8 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 			</p>
 
 			<form method="post" action="">
+
+				<h3><?php _e( 'Data Sources', 'classblogs' ); ?></h3>
 
 				<table class="form-table">
 
@@ -758,8 +768,17 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 
 				</table>
 
+				<h3><?php _e( 'Refresh Sitewide Data', 'classblogs' ); ?></h3>
+
+				<p><?php _e(
+					sprintf( 'If you find that the sitewide data does not accurately reflect the data in each blog, you can click the %1$s button below to rebuild the sitewide data tables.',
+						'<strong>' . __( 'Refresh Sitewide Data', 'classblogs' ) . '</strong>' ), 'classblogs' ); ?></p>
+
 				<?php wp_nonce_field( $this->get_uid() ); ?>
-				<p class="submit"><input type="submit" name="Submit" value="<?php _e( 'Update Sitewide Data Options', 'classblogs' ); ?>" /></p>
+				<p class="submit">
+					<input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Sitewide Data Options', 'classblogs' ); ?>" />
+					<input type="submit" name="Refresh" value="<?php _e( 'Refresh Sitewide Data', 'classblogs' ); ?>" />
+				</p>
 
 			</form>
 		</div>
