@@ -900,6 +900,21 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
+	 * Checks whether or not the given ID appears to be a valid YouTube video ID
+	 *
+	 * A valid ID will be any string made up of 11 characters chosen from the
+	 * set [A-Za-z0-9_-].  This is not guaranteed to be a valid video ID, but
+	 * it does fit the proper format for a video ID.
+	 *
+	 * @param  string $id a possible YouTube video ID
+	 * @return bool       whether the ID appears to be valid
+	 */
+	public function _validate_video_ids( $id )
+	{
+		return preg_match( '!^[A-Za-z0-9-_]{' . self::_YOUTUBE_VIDEO_ID_LENGTH . '}$!', $id );
+	}
+
+	/**
 	 * Searches for embedded YouTube video IDs in the post's content
 	 *
 	 * @param  string $content the plaintext content of a post
@@ -924,7 +939,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 				call_user_func( array( $this, $search_function ), $content ) );
 		}
 		$ids = array();
-		foreach ( array_unique( array_filter( $videos ) ) as $video ) {
+		foreach ( array_unique( array_filter( $videos, array( $this, '_validate_video_ids' ) ) ) as $video ) {
 			$ids[] = $video;
 		}
 		return $ids;
@@ -973,24 +988,32 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		// Since a URL with a querystring might have escaped ampersands, we
 		// want to undo that before proceeding
 		$url = htmlspecialchars_decode( $url );
+		$base_id = "";
 
 		// Search for a URL using the direct link to the video page
 		preg_match( '!https?://www\.youtube\.com/watch\?(.*)!', $url, $matches );
 		if ( ! empty( $matches ) ) {
 			parse_str( $matches[1], $query );
 			if ( array_key_exists( 'v', $query ) ) {
-				return $query['v'];
+				$base_id = $query['v'];
 			}
 		}
 
 		// Search for a URL using the old and new embed URL formats
 		preg_match( '!https?://www\.youtube\.com/(v|embed)/([^\&\?]+)!', $url, $matches );
 		if ( count( $matches ) == 3 ) {
-			return $matches[2];
+			$base_id = $matches[2];
 		}
 
-		// Return a null video ID if no ID could be found in the given URL
-		return "";
+		// If the first 11 characters of the possible ID are within the set
+		// of acceptable YouTube video ID characters, return these 11 characters
+		// as our video ID.  Otherwise, return a blank string
+		preg_match( '!^[A-Za-z0-9_-]{' . self::_YOUTUBE_VIDEO_ID_LENGTH . '}!', $base_id, $matches );
+		if ( ! empty( $matches ) ) {
+			return $matches[0];
+		} else {
+			return "";
+		}
 	}
 
 	/**
