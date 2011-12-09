@@ -464,11 +464,10 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		// If we have an active account and playlist, register hooks for finding
 		// videos in post content and for showing the playlist archive page
 		if ( $this->_playlist_is_valid() ) {
-			add_action( 'deleted_post',           array( $this, '_update_videos_on_post_delete' ) );
-			add_action( 'pre_get_posts',          array( $this, '_maybe_enable_playlist_page' ) );
-			add_action( 'save_post',              array( $this, '_update_videos_on_post_save' ) );
-			add_action( 'transition_post_status', array( $this, '_update_videos_on_post_status_change' ), 10, 3 );
-			add_action( 'widgets_init',           array( $this, '_enable_widget' ) );
+			add_action( 'deleted_post',  array( $this, '_update_videos_on_post_delete' ) );
+			add_action( 'pre_get_posts', array( $this, '_maybe_enable_playlist_page' ) );
+			add_action( 'save_post',     array( $this, '_update_videos_on_post_save' ) );
+			add_action( 'widgets_init',  array( $this, '_enable_widget' ) );
 		}
 	}
 
@@ -654,7 +653,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	/**
 	 * Updates the YouTube playlist with the videos found in the just-saved post
 	 *
-	 * @param int @post_id the ID of the just-saved post
+	 * @param int $post_id the ID of the just-saved post
 	 *
 	 * @access private
 	 * @since 0.1
@@ -664,9 +663,14 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 
 		global $wpdb, $blog_id;
 
-		// Exit if the post is not published
+		// Ignore post revisions, but remove videos associated with any posts
+		// that are not publicly visible
 		$post = get_post( $post_id );
-		if ( wp_is_post_revision( $post_id ) || $post->post_status != "publish" ) {
+		if ( wp_is_post_revision( $post_id ) ) {
+			return;
+		}
+		if ( $post->post_status != "publish" ) {
+			$this->_update_videos_on_post_delete( $post_id );
 			return;
 		}
 
@@ -720,30 +724,6 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 
 		// Sync the YouTube playlist
 		$this->_sync_youtube_playlist();
-	}
-
-	/**
-	 * Update a video usage record based upon the new available state of a post
-	 *
-	 * @param string $new  the new availability of the post
-	 * @param string $old  the old availability of the post
-	 * @param object $post the post whose status is being changed
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _update_videos_on_post_status_change( $new, $old, $post )
-	{
-
-		if ( 'inherit' == $new ) {
-			return;
-		}
-
-		if ( 'publish' == $old && 'publish' !=  $new ) {
-			$this->_update_videos_on_post_delete( $post->ID );
-		} elseif ( 'publish' ==  $new && 'publish' != $old ) {
-			$this->_update_videos_on_post_save( $post->ID );
-		}
 	}
 
 	/**
