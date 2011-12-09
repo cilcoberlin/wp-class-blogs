@@ -293,7 +293,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 * @access private
 	 * @var string
 	 */
-	const _VIDEO_USAGE_TABLE = 'videos_usage';
+	const _VIDEO_USAGE_TABLE = 'video_usage';
 
 	/**
 	 * The base name for the playlist table
@@ -360,6 +360,54 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		'videos'      => self::_VIDEOS_TABLE,
 		'video_usage' => self::_VIDEO_USAGE_TABLE
 	);
+
+	/**
+	 * Get the schema used for the local playlist table
+	 *
+	 * @return ClassBlogs_Schema an instance of the videos schema
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private static function _get_videos_schema()
+	{
+		return new ClassBlogs_Schema(
+			array(
+				array( 'id',                'bigint(20) unsigned NOT NULL AUTO_INCREMENT' ),
+				array( 'youtube_id',        'varchar(11) NOT NULL' ),
+				array( 'playlist_entry_id', 'varchar(32)' ),
+			),
+			'id',
+			array(
+				array( 'youtube_id', 'youtube_id' ),
+			)
+		);
+	}
+
+	/**
+	 * Get the schema used for the video usage table
+	 *
+	 * @return ClassBlogs_Schema an instance of the video usage schema
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private static function _get_video_usage_schema()
+	{
+		return new ClassBlogs_Schema(
+			array(
+				array( 'id',       'bigint(20) unsigned NOT NULL AUTO_INCREMENT' ),
+				array( 'blog_id',  'bigint(20) unsigned NOT NULL' ),
+				array( 'post_id',  'bigint(20) unsigned NOT NULL' ),
+				array( 'video_id', 'bigint(20) unsigned NOT NULL' ),
+			),
+			'id',
+			array(
+				array( 'video_id',   'video_id' ),
+				array( 'blog_usage', array( 'blog_id', 'post_id', 'video_id' ) )
+			)
+		);
+	}
 
 	/**
 	 * The names of tables used by the plugin
@@ -438,26 +486,16 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 */
 	private function _create_tables() {
 
-		global $wpdb;
-		$id = "BIGINT(20) UNSIGNED NOT NULL";
+		// Create each table from its schema
+		$table_specs = array(
+			array( $this->tables->videos, $this->_get_videos_schema() ),
+			array( $this->tables->video_usage, $this->_get_video_usage_schema() )
+		);
+		foreach ( $table_specs as $spec ) {
+			$spec[1]->apply_to_table( $spec[0] );
+		}
 
-		// Create the video table
-		$wpdb->query( "
-			CREATE TABLE IF NOT EXISTS {$this->tables->videos} (
-			id $id AUTO_INCREMENT,
-			youtube_id VARCHAR(255) NOT NULL,
-			playlist_entry_id VARCHAR(255),
-			PRIMARY KEY (id))" );
-
-		// Create the video-usage table
-		$wpdb->query( "
-			CREATE TABLE IF NOT EXISTS {$this->tables->video_usage} (
-			id $id AUTO_INCREMENT,
-			on_blog $id,
-			for_post $id,
-			video_id $id,
-			PRIMARY KEY (id))" );
-
+		// Flag that the tables have been created
 		$this->update_option( 'tables_created', true );
 	}
 
@@ -618,7 +656,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		// are no longer present
 		$previous_videos = $wpdb->get_col( $wpdb->prepare( "
 			SELECT v.youtube_id FROM {$this->tables->video_usage} AS vu, {$this->tables->videos} AS v
-			WHERE vu.on_blog = %d AND vu.for_post = %d AND vu.video_id = v.id",
+			WHERE vu.blog_id = %d AND vu.post_id = %d AND vu.video_id = v.id",
 			$blog_id, $post_id ) );
 		$unused_videos = array_values( array_diff( $previous_videos, $current_videos ) );
 
@@ -650,7 +688,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		// Remove any videos used by the post
 		$used_videos = $wpdb->get_col( $wpdb->prepare( "
 			SELECT v.youtube_id FROM {$this->tables->video_usage} AS vu, {$this->tables->videos} AS v
-			WHERE vu.on_blog = %d AND vu.for_post = %d AND vu.video_id = v.id",
+			WHERE vu.blog_id = %d AND vu.post_id = %d AND vu.video_id = v.id",
 			$blog_id, $post_id ) );
 		foreach ( $used_videos as $video ) {
 			$this->_remove_video_usage( $video, $post_id, $blog_id );
@@ -717,8 +755,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		$wpdb->insert(
 			$this->tables->video_usage,
 			array(
-				'on_blog' => $blog_id,
-				'for_post' => $post_id,
+				'blog_id'  => $blog_id,
+				'post_id'  => $post_id,
 				'video_id' => $video_id
 			),
 			array( '%d', '%d', '%d' ) );
@@ -748,7 +786,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		// Remove the video usage record
 		$wpdb->query( $wpdb->prepare( "
 			DELETE FROM {$this->tables->video_usage}
-			WHERE on_blog = %d AND for_post = %d AND video_id = %d",
+			WHERE blog_id = %d AND post_id = %d AND video_id = %d",
 			$blog_id, $post_id, $video_id ) );
 
 		// If the removed video is no longer used by any posts, remove its
