@@ -878,14 +878,35 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 				sprintf( self::_ADD_VIDEO_PAYLOAD_TEMPLATE, $video['youtube_id'] ),
 				false );
 
-			// If the request was successful, get the ID of the new playlist
-			// entry from the returned Location header
-			if ( $response->status == 201 ) {
-				preg_match( '!/([^/]+)$!', $response->headers['Location'], $matches );
-				$wpdb->update(
-					$this->tables->videos,
-					array( 'playlist_entry_id' => $matches[1] ),
-					array( 'youtube_id' => $video['youtube_id'] ) );
+			switch ( $response->status ) {
+
+				// If the request was successful, get the ID of the new playlist
+				// entry from the returned Location header
+				case 201:
+					preg_match( '!/([^/]+)$!', $response->headers['Location'], $matches );
+					$wpdb->update(
+						$this->tables->videos,
+						array( 'playlist_entry_id' => $matches[1] ),
+						array( 'youtube_id' => $video['youtube_id'] ) );
+					break;
+
+				// If the request returned a 400 bad request code, we're likely
+				// trying to add a nonexistent YouTube video, so we should remove
+				// any record of it from our local playlist
+				case 400:
+					$wpdb->query( $wpdb->prepare( "
+						DELETE FROM {$this->tables->video_usage} AS vu, {$this->tables->videos} AS v
+						WHERE v.youtube_id=%s AND vu.video_id=v.id",
+						$video['youtube_id'] ) );
+					$wpdb->query( $wpdb->prepare(
+						"DELETE FROM {$this->tables->videos} WHERE youtube_id=%s",
+						$video['youtube_id'] ) );
+					break;
+
+				// If the request returned a 403 forbidden code, don't add any more
+				// videos, as we've likely exceeded a recent-request quota
+				case 403:
+					break 2;
 			}
 		}
 
