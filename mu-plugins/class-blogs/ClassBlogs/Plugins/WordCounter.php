@@ -277,7 +277,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 			</table>
 
 			<?php wp_nonce_field( $this->get_uid() ); ?>
-			<p class="submit"><input type="submit" name="Submit" value="<?php _e( 'Update Word-Counter Options', 'classblogs' ); ?>" /></p>
+			<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Word-Counter Options', 'classblogs' ); ?>" /></p>
 		</form>
 
 	</div>

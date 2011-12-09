@@ -591,7 +591,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 					</table>
 
 				<?php wp_nonce_field( $this->get_uid() ); ?>
-				<p class="submit"><input type="submit" name="Submit" value="<?php _e( 'Update Sitewide Post Options', 'classblogs' ); ?>" /></p>
+				<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Sitewide Post Options', 'classblogs' ); ?>" /></p>
 			</form>
 		</div>
 	<?php

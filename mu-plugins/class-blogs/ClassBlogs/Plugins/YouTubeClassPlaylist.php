@@ -1652,7 +1652,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 				<?php if ( $this->get_option( 'account_linked' ) ): ?>
 					<?php wp_nonce_field( $this->get_uid() ); ?>
 					<p class="submit">
-						<input type="submit" name="submit" value="<?php _e( 'Update Options', 'classblogs' ); ?>" />
+						<input type="submit" name="submit" class="button-primary" value="<?php _e( 'Update Options', 'classblogs' ); ?>" />
 						<input type="submit" name="unlink_account" value="<?php _e( 'Unlink YouTube Account', 'classblogs' ); ?>" style="color: #a00; font-weight: bold; margin-left: 2em;" />
 					</p>
 				<?php endif; ?>
