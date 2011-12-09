@@ -75,20 +75,7 @@ class ClassBlogs_Admin
 	}
 
 	/**
-	 * Returns markup for an admin notification message
-	 *
-	 * @param  string $message the text of the message to display
-	 * @return string          markup for the admin message
-	 *
-	 * @since 0.2
-	 */
-	public static function make_admin_message( $message )
-	{
-		return sprintf( '<div id="message" class="updated fade"><p>%s</p></div>', $message);
-	}
-
-	/**
-	 * Prints the output of a call to `make_admin_message`
+	 * Prints markup for an admin notification message
 	 *
 	 * @param string $message the text of the message to display
 	 *
@@ -96,7 +83,19 @@ class ClassBlogs_Admin
 	 */
 	public static function show_admin_message( $message )
 	{
-		echo ClassBlogs_Admin::make_admin_message( $message );
+		echo sprintf( '<div id="message" class="updated fade"><p>%s</p></div>', $message );
+	}
+
+	/**
+	 * Prints markup for an admin error message
+	 *
+	 * @param string $message the text of the error to display
+	 *
+	 * @since 0.2
+	 */
+	public static function show_admin_error( $error )
+	{
+		echo sprintf( '<div id="message" class="error fade"><p>%s</p></div>', $error );
 	}
 
 	/**
