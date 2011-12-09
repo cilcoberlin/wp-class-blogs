@@ -88,6 +88,18 @@ class ClassBlogs_Admin
 	}
 
 	/**
+	 * Prints the output of a call to `make_admin_message`
+	 *
+	 * @param string $message the text of the message to display
+	 *
+	 * @since 0.2
+	 */
+	public static function show_admin_message( $message )
+	{
+		echo ClassBlogs_Admin::make_admin_message( $message );
+	}
+
+	/**
 	 * Creates the base class blogs admin menu that is available to any admin
 	 * user with administrative rights on the root blog who is on the admin side
 	 *
