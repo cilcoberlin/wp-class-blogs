@@ -91,11 +91,16 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	public function _track_single_post( $post_id )
 	{
 		global $blog_id;
-		$this->_clear_sw_cache();
+
+		// Abort early if the post is a revision
+		if ( wp_is_post_revision( $post_id ) ) {
+			return;
+		}
 
 		// If the post is being published, update its sitewide record, and remove
 		// it from the sitewide table if it is no longer visible to the public,
 		// either due to a change of status or outright deletion
+		$this->_clear_sw_cache();
 		switch ( get_post_status( $post_id ) ) {
 			case 'publish':
 				$this->_update_sw_post( $blog_id, $post_id );
@@ -639,7 +644,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	 * Clears any cached sitewide data
 	 *
 	 * This clears the values of any registered sitewide cache keys and clears
-	 * the registry of keys as wells.
+	 * the registry of keys as well.
 	 *
 	 * @access private
 	 * @since 0.1
