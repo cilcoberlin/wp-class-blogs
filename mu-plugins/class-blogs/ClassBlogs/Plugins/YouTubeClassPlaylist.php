@@ -176,6 +176,30 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _USER_PLAYLISTS_URL = '/feeds/api/users/default/playlists?v=2';
 
 	/**
+	 * The expected length of a YouTube video ID
+	 *
+	 * @access private
+	 * @var int
+	 */
+	const _YOUTUBE_VIDEO_ID_LENGTH = 11;
+
+	/**
+	 * The maximum number of results returned by a YouTube API call
+	 *
+	 * @access private
+	 * @var int
+	 */
+	const _YOUTUBE_API_MAX_RESULTS = 50;
+
+	/**
+	 * The maximum number of entries that can be in a playlist
+	 *
+	 * @access private
+	 * @var int
+	 */
+	const _PLAYLIST_MAX_ENTRIES = 200;
+
+	/**
 	 * The version of the GData API used by this plugin
 	 *
 	 * @access private
@@ -844,8 +868,15 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	private function _sync_youtube_playlist()
 	{
 		global $wpdb;
-
 		$playlist_url = self::_PLAYLIST_API_BASE . $this->get_option( 'youtube_playlist' );
+
+		// If the local playlist exceeds the allowed number of playlist entries
+		// and we have already flagged that the remote YouTube playlist is full,
+		// abort early, as we won't be able to add any videos
+		$local_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$this->tables->videos}" ) );
+		if ( $this->get_option( 'playlist_full' ) && $local_count >= self::_PLAYLIST_MAX_ENTRIES ) {
+			return;
+		}
 
 		// Create a diff of the local and remote playlists
 		$remote_videos = array();
@@ -1457,25 +1488,11 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	/**
 	 * Configures the admin interface for the plugin
 	 *
-	 * @access private
 	 * @since 0.1
 	 */
 	public function enable_admin_page( $admin )
 	{
 		$admin->add_admin_page( $this->get_uid(), __( 'YouTube Class Playlist', 'classblogs' ), array( $this, '_admin_page' ) );
-	}
-
-	/**
-	 * Outputs markup for showing a message on a WordPress admin page
-	 *
-	 * @param string $message the message that should be shown
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _show_admin_message( $message )
-	{
-		echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
 	}
 
 	/**
@@ -1500,7 +1517,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 				} else {
 					$message = __( "Your YouTube account was not able to be linked to this blog!", 'classblogs' );
 				}
-				$this->_show_admin_message( $message );
+				ClassBlogs_Admin::show_admin_message( $message );
 			}
 		}
 
@@ -1514,7 +1531,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 					$this->_clear_cached_playlist();
 				}
 				$this->update_option( 'youtube_playlist', $playlist );
-				$this->_show_admin_message( __( 'Your YouTube class playlist settings have been updated.', 'classblogs' ) );
+				ClassBlogs_Admin::show_admin_message( __( 'Your YouTube class playlist settings have been updated.', 'classblogs' ) );
 			}
 
 			// Unlink the account if the user has chosen to do so
@@ -1526,8 +1543,17 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 				$options['account_linked'] = false;
 				$this->update_options( $options );
 				$this->_clear_cached_playlist();
-				$this->_show_admin_message( __( 'Your YouTube account has been unlinked from this blog.', 'classblogs' ) );
+				ClassBlogs_Admin::show_admin_message( __( 'Your YouTube account has been unlinked from this blog.', 'classblogs' ) );
 			}
+		}
+
+		// If the playlist has reached its maximum number of entries, display
+		// a message explaining the problem
+		if ( $this->get_option( 'playlist_full' ) ) {
+			ClassBlogs_Admin::show_admin_message(
+				sprintf(
+					__( 'Your playlist has reached the maximum number of entries allowed by YouTube (%1$d).  No new videos can be added to this playlist.', 'classblogs' ),
+					self::_PLAYLIST_MAX_ENTRIES ) );
 		}
 	?>
 		<div class="wrap">
@@ -1703,63 +1729,97 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 			return $cached;
 		}
 
-		// Get the YouTube feed for the class playlist
-		$url = sprintf( "%s%s?v=%d&orderby=published",
+		// Build the template URL for our request, with a placeholder to receive
+		// an integer specifying the start index of the playlist results.  This
+		// needs to be done due to the fact that YouTube returns at most 50
+		// results in a playlist, yet playlists can have up to 200 videos.  The
+		// start index placeholder is used to piece together the results of
+		// muliple different playlist API calls.
+		$url_template = sprintf( "%s%s?v=%d&max-results=%d&start-index=%%d",
 			self::_PLAYLIST_API_BASE,
 			$this->get_option( 'youtube_playlist' ),
-			self::_GDATA_API_VERSION );
+			self::_GDATA_API_VERSION,
+			self::_YOUTUBE_API_MAX_RESULTS );
+		$start_index = 1;
 
-		$response = $this->_make_gdata_request( $url );
-		if ( $response ) {
+		// Keep requesting playlist entries until we have every single entry
+		$are_results = true;
+		while ( $are_results ) {
 
-			// Get common namespaces for tags
-			$media_namespace   = $this->_get_namespace( $response, 'media' );
-			$youtube_namespace = $this->_get_namespace( $response, 'yt' );
+			// Request the next slice of playlist entries
+			$url = sprintf( $url_template, $start_index );
+			$response = $this->_make_gdata_request( $url );
+			if ( $response ) {
 
-			// Get info on each video entry in the playlist feed
-			foreach ( $response->getElementsByTagName( 'entry' ) as $video ) {
+				// Get common namespaces for tags
+				$media_namespace   = $this->_get_namespace( $response, 'media' );
+				$youtube_namespace = $this->_get_namespace( $response, 'yt' );
 
-				// Get the date the video was added to the playlist and the title
-				$info = array(
-					'link'      => "",
-					'published' => $this->_parse_gdata_date( $this->_get_single_tag_value( $video, 'updated' ) ),
-					'thumbnail' => "",
-					'title'     => $this->_get_single_tag_value( $video, 'title' )
-				);
+				// Get information on each entry
+				foreach ( $response->getElementsByTagName( 'entry' ) as $video ) {
 
-				// Get the link to the video's page
-				foreach ( $video->getElementsByTagName( 'link' ) as $link ) {
-					if ( $link->getAttribute( 'rel' ) == 'alternate' && $link->getAttribute( 'type' ) == 'text/html' ) {
-						$info['link'] = $link->getAttribute( 'href' );
-						break;
+					// Get the date the video was added to the playlist and the title
+					$info = array(
+						'link'      => "",
+						'published' => $this->_parse_gdata_date( $this->_get_single_tag_value( $video, 'updated' ) ),
+						'thumbnail' => "",
+						'title'     => $this->_get_single_tag_value( $video, 'title' )
+					);
+
+					// Get the link to the video's page
+					foreach ( $video->getElementsByTagName( 'link' ) as $link ) {
+						if ( $link->getAttribute( 'rel' ) == 'alternate' && $link->getAttribute( 'type' ) == 'text/html' ) {
+							$info['link'] = $link->getAttribute( 'href' );
+							break;
+						}
 					}
+
+					// Get the large default thumbnail for the video, which will
+					// be the one thumbnail without a time attribute
+					foreach ( $video->getElementsByTagNameNS( $media_namespace, 'thumbnail' ) as $thumb ) {
+						$thumb_url = $thumb->getAttribute( 'url' );
+						if ( preg_match( '/default\.\w{3,4}$/', $thumb_url ) && ! $thumb->hasAttribute( 'time' ) ) {
+							$info['thumbnail'] = $thumb_url;
+							break;
+						}
+					}
+
+					// Get the video and playlist entry ID
+					preg_match( '/:([^:]+)$/', $this->_get_single_tag_value( $video, 'id' ), $matches );
+					$info['playlist_id'] = $matches[1];
+					$info['video_id'] = $video->getElementsByTagNameNS( $youtube_namespace, 'videoid' )->item(0)->nodeValue;
+
+					// Determine which posts reference the video
+					$info['used_by'] = $wpdb->get_results( $wpdb->prepare( "
+						SELECT vu.blog_id, vu.post_id
+						FROM {$this->tables->videos} AS v, {$this->tables->video_usage} AS vu
+						WHERE v.youtube_id = %s AND vu.video_id = v.id",
+						$info['video_id'] ) );
+
+					$videos[] = (object) $info;
+					$start_index++;
 				}
 
-				// Get the large default thumbnail for the video, which will
-				// be the one thumbnail without a time attribute
-				foreach ( $video->getElementsByTagNameNS( $media_namespace, 'thumbnail' ) as $thumb ) {
-					$thumb_url = $thumb->getAttribute( 'url' );
-					if ( preg_match( '/default\.\w{3,4}$/', $thumb_url ) && ! $thumb->hasAttribute( 'time' ) ) {
-						$info['thumbnail'] = $thumb_url;
-						break;
-					}
+				// If we received less than the maximum number of results from
+				// the API query, signal that we are finished getting results
+				if ( ( $start_index - 1 ) % 50 ) {
+					$are_results = false;
 				}
-
-				// Get the video and playlist entry ID
-				preg_match( '/:([^:]+)$/', $this->_get_single_tag_value( $video, 'id' ), $matches );
-				$info['playlist_id'] = $matches[1];
-				$info['video_id'] = $video->getElementsByTagNameNS( $youtube_namespace, 'videoid' )->item(0)->nodeValue;
-
-				// Determine which posts reference the video
-				$info['used_by'] = $wpdb->get_results( $wpdb->prepare( "
-					SELECT vu.on_blog AS blog_id, vu.for_post AS post_id
-					FROM {$this->tables->videos} AS v, {$this->tables->video_usage} AS vu
-					WHERE v.youtube_id = %s AND vu.video_id = v.id",
-					$info['video_id'] ) );
-
-				$videos[] = (object) $info;
+			} else {
+				$are_results = false;
 			}
 		}
+
+		// Since the videos come to us from the API with the first video added
+		// as the first element of the array and the last added as the last
+		// element, we reverse the array to make the most recent be first
+		$videos = array_reverse( $videos );
+
+		// If the playlist has reached the maximum number of videos allowed in
+		// in a playlist, flag this for later use
+		$this->update_option(
+			'playlist_full',
+			count( $videos ) >= self::_PLAYLIST_MAX_ENTRIES );
 
 		// Cache the full playlist
 		$this->set_cache( 'playlist', $videos, self::_PLAYLIST_CACHE_LENGTH );
