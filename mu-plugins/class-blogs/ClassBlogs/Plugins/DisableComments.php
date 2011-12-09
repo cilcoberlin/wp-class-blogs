@@ -90,7 +90,7 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 		if ( $_POST ) {
 			check_admin_referer( $this->get_uid() );
 			$this->update_option( 'comments_disabled', $_POST['comment_status'] === 'disabled' );
-			echo '<div id="message" class="updated fade"><p>' . __( 'Your sitewide commenting options have been updated', 'classblogs' ) . '</p></div>';
+			ClassBlogs_Admin::show_admin_message( __( 'Your sitewide commenting options have been updated', 'classblogs' ) );
 		}
 ?>
 		<div class="wrap">

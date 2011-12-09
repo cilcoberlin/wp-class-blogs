@@ -712,7 +712,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 				if ( ! $synced ) {
 					$this->_sync_tables();
 				}
-				echo ClassBlogs_Admin::make_admin_message( __( 'The sitewide data has been refreshed.', 'classblogs' ) );
+				ClassBlogs_Admin::show_admin_message( __( 'The sitewide data has been refreshed.', 'classblogs' ) );
 			}
 
 			// Otherwise update the plugin options
@@ -720,7 +720,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 				$this->update_option( 'excluded_blogs', $this->_parse_excluded_blog_list( $_POST ) );
 				$this->update_option( 'aggregation_enabled', $_POST['aggregation_enabled'] == 'enabled' );
 				$this->_sync_tables();
-				echo ClassBlogs_Admin::make_admin_message( __( 'Your options have been updated.', 'classblogs' ) );
+				ClassBlogs_Admin::show_admin_message( __( 'Your options have been updated.', 'classblogs' ) );
 			}
 		}
 ?>

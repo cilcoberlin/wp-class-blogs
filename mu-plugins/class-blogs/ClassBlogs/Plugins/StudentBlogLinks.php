@@ -239,7 +239,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 			$this->update_option( 'title', ClassBlogs_Utils::sanitize_user_input( $_POST['sidebar_title'] ) );
 			$this->update_option( 'links', $this->parse_link_list( $_POST ) );
 
-			echo '<div id="message" class="updated fade"><p>' . __( 'Your links have been updated.', 'classblogs' ) . '</p></div>';
+			ClassBlogs_Admin::show_admin_message( __( 'Your links have been updated.', 'classblogs' ) );
 		}
 	?>
 		<div class="wrap">

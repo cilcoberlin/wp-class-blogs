@@ -1574,7 +1574,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		// If the playlist has reached its maximum number of entries, display
 		// a message explaining the problem
 		if ( $this->get_option( 'playlist_full' ) ) {
-			ClassBlogs_Admin::show_admin_message(
+			ClassBlogs_Admin::show_admin_error(
 				sprintf(
 					__( 'Your playlist has reached the maximum number of entries allowed by YouTube (%1$d).  No new videos can be added to this playlist.', 'classblogs' ),
 					self::_PLAYLIST_MAX_ENTRIES ) );

@@ -551,7 +551,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$options['root_use_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_use_excerpt' );
 			$this->update_options( $options );
 
-			echo '<div id="message" class="updated fade"><p>' . __( 'Your sitewide post options have been updated', 'classblogs' ) . '</p></div>';
+			ClassBlogs_Admin::show_admin_message( __( 'Your sitewide post options have been updated', 'classblogs' ) );
 		}
 	?>
 		<div class="wrap">

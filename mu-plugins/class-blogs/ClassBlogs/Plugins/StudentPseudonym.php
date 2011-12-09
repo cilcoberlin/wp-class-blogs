@@ -81,29 +81,25 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 					__( 'Username', 'classblogs' ) => esc_html( $username ),
 					__( 'Blog URL', 'classblogs' ) => sprintf( '<a href="%1$s">%1$s</a>', esc_url( $blog_url ) ) );
 
-?>
-				<?php /* Show the user their new information and URLs */ ?>
-				<div id="message" class="updated fade">
-					<p>
-						<?php _e( 'You are now blogging using a pseudonym.  Your new user information is as follows.', 'classblogs' ); ?>
-						<dl>
-							<?php foreach ( $new_info as $key => $value ): ?>
-								<dt><strong><?php echo $key; ?></strong></dt>
-								<dd><?php echo $value; ?></dd>
-							<?php endforeach; ?>
-						</dl>
-					</p>
-				</div>
-<?php
-			} else {
-				echo '<div class="error"><p>';
+				// Display the updated information to the user
+				$message = array( __( 'You are now blogging using a pseudonym.  Your new user information is as follows.', 'classblogs' ), '<dl>' );
+				foreach ( $new_info as $key => $value ) {
+					$message[] = sprintf( '<dt><strong>%s</strong></dt><dd>%s</dd>',
+						$key, $value );
+				}
+				$message[] = '</dl>';
+				ClassBlogs_Admin::show_admin_message( implode( "\n", $message ) );
+			}
+
+			// If there are errors, show them to the user
+			else {
 				if ( ! $username ) {
-					_e( 'You cannot have a blank username.', 'classblogs' );
+					$error = __( 'You cannot have a blank username.', 'classblogs' );
 				} else {
-					printf( __( 'The username %s is invalid or conflicts with another user or blog.  Please choose a different username.', 'classblogs' ),
+					$error = sprintf( __( 'The username %s is invalid or conflicts with another user or blog.  Please choose a different username.', 'classblogs' ),
 						'<strong>' . esc_html( $username ) . '</strong>' );
 				}
-				echo '</p></div>';
+				ClassBlogs_Admin::show_admin_error( $error );
 			}
 		}
 ?>

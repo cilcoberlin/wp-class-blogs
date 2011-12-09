@@ -164,7 +164,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		if ( $_POST ) {
 			check_admin_referer( $this->get_uid() );
 			$this->update_option( 'required_weekly_words', absint( ClassBlogs_Utils::sanitize_user_input( $_POST['required_weekly_words'] ) ) );
-			echo '<div id="message" class="updated fade"><p>' . __( 'Your word-counter options been updated.', 'classblogs' ) . '</p></div>';
+			ClassBlogs_Admin::show_admin_message( __( 'Your word-counter options been updated.', 'classblogs' ) );
 		}
 ?>
 
