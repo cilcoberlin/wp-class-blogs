@@ -118,6 +118,7 @@
 }
 #student-word-counts td.over {
 	color: #090;
+	font-weight: bold;
 }
 
 /* Highlight a row on hover. */
