@@ -166,9 +166,9 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	private $_current_tag;
 
-	//--------------------------------------------------------------------------
-	//	Initialize the tag list and add a few custom actions
-	//--------------------------------------------------------------------------
+	/**
+	 * Initialize the tag list
+	 */
 	function __construct()
 	{
 
