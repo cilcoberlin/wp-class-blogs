@@ -3,7 +3,8 @@
 /**
  * Schemata for sitewide tables
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage Schemata
  * @since 0.2
  */
 class ClassBlogs_Plugins_Aggregation_Schemata

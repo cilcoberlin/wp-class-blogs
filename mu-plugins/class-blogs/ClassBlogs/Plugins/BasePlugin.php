@@ -3,7 +3,8 @@
 /**
  * Base class for any plugin that is part of the class blogs suite
  *
- * @package ClassBlogs
+ * @package ClassBlogs_Plugins
+ * @subpackage BasePlugin
  * @since 0.1
  */
 abstract class ClassBlogs_Plugins_BasePlugin
@@ -36,6 +37,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.2
 	 */
 	protected $admin_media = array(
 		'css' => array(),
@@ -63,9 +65,10 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @return string the plugin's pseudo-unique ID
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function get_uid()
+	protected function get_uid()
 	{
 		return strtolower( str_replace( 'ClassBlogs_Plugins', 'cb', get_class( $this ) ) );
 	}
@@ -75,9 +78,10 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @return array a list of all blog IDs on the site
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function get_all_blog_ids()
+	protected function get_all_blog_ids()
 	{
 		global $wpdb;
 		$blog_ids = array();
@@ -306,9 +310,10 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 * @param  string $key the base name of the cache key
 	 * @return string      the full name of the cache key
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function make_cache_key_name( $key ) {
+	protected function make_cache_key_name( $key ) {
 		return $this->get_uid() . '_' . $key;
 	}
 
@@ -445,13 +450,19 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Allows a child plugin to register an admin page
+	 * Allows a child plugin to easily register an admin page visible to the
+	 * superuser and any users with admin rights on the root blog
+	 *
+	 * The child plugin that wishes to add a root admin page can override this
+	 * function with code that registers the admin page using the ClassBlogs_Admin
+	 * instance passed in `$admin`.
 	 *
 	 * @param object $admin a ClassBlogs_Admin instance
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function enable_admin_page( $admin ) {}
+	protected function enable_admin_page( $admin ) {}
 
 	/**
 	 * Adds the plugin's admin CSS to the page.

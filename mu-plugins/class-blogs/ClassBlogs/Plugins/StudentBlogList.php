@@ -3,8 +3,9 @@
 /**
  * A widget that shows a list of all student blogs
  *
+ * @package ClassBlogs_Plugins
+ * @subpackage StudentBlogListWidget
  * @access private
- * @package Class Blogs
  * @since 0.1
  */
 class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_SidebarWidget
@@ -104,7 +105,8 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
  * a list of student blogs.  A student blog in this case is any blog on which
  * a single user without admin privileges on the root blog has admin rights.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
+ * @subpackage StudentBlogList
  * @since 0.1
  */
 class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
@@ -155,53 +157,6 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Sorts the internal blog list by the display name of each blog
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _sort_blogs_by_name( $x, $y )
-	{
-		return strcmp( $x->name, $y->name );
-	}
-
-	/**
-	 * Returns a list of information about each student blog
-	 *
-	 * Each element in the returned array will have a 'name' key containing the
-	 * display name of the blog and a 'url' key containing its URL.  The blogs
-	 * will be sorted by the last and then first name of the student owning it.
-	 *
-	 * @param  string $format the formatting string to use for the blog title
-	 * @return array          a list of information on all student blogs
-	 *
-	 * @since 0.1
-	 */
-	public function get_student_blogs( $title_format = "" )
-	{
-		// Use cached data if possible
-		$cached = $this->get_site_cache( 'student_blogs' );
-		if ( $cached !== null ) {
-			return $cached;
-		}
-
-		// Determine the URL and display name for each student blog
-		$student_blogs = array();
-		foreach ( $this->_get_blog_list() as $blog ) {
-			$student_blogs[$blog['user_id']] = (object) array(
-				'blog_id' => $blog['blog_id'],
-				'name'    => $this->format_blog_display_name( $title_format, $blog['user_id'], $blog['blog_id'] ),
-				'user_id' => $blog['user_id'],
-				'url'     => get_blogaddress_by_id( $blog['blog_id'] ) );
-		}
-
-		// Return the blogs sorted by their computed display name
-		usort( $student_blogs, array( $this, "_sort_blogs_by_name" ) );
-		$this->set_site_cache( 'student_blogs', $student_blogs, 300 );
-		return $student_blogs;
-	}
-
-	/**
 	 * Formats the blog display name based upon the formatting string
 	 *
 	 * @param  string $format  the formatting string for the display name
@@ -209,9 +164,10 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	 * @param  int    $blog_id the ID of the blog
 	 * @return string          the formatted blog display name
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function format_blog_display_name( $format, $user_id, $blog_id )
+	private function _format_blog_display_name( $format, $user_id, $blog_id )
 	{
 		$blog_title = get_blog_option( $blog_id, 'blogname' );
 		$first_name = get_user_meta( $user_id, 'first_name', true );
@@ -233,33 +189,6 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 		}
 
 		return $blog_name;
-	}
-
-	/**
-	 * Returns the address of the student's blog
-	 *
-	 * @param  int    $user_id the user ID of the student
-	 * @return string          the address of their blog, or a blank string
-	 *
-	 * @since 0.1
-	 */
-	public function get_blog_url_for_student( $user_id )
-	{
-		// Build a lookup table if one has not been built
-		$lookup = $this->_blog_urls;
-		if ( empty( $lookup ) ) {
-			$lookup = array();
-			foreach ( $this->get_student_blogs() as $blog ) {
-				$lookup[$blog->user_id] = $blog->url;
-			}
-			$this->_blog_urls = $lookup;
-		}
-
-		if ( array_key_exists( $user_id, $lookup ) ) {
-			return $lookup[$user_id];
-		} else {
-			return "";
-		}
 	}
 
 	/**
@@ -322,6 +251,80 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	public function _enable_widget()
 	{
 		$this->register_root_only_widget( '_ClassBlogs_Plugins_StudentBlogListWidget' );
+	}
+
+	/**
+	 * Sorts the internal blog list by the display name of each blog
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _sort_blogs_by_name( $x, $y )
+	{
+		return strcmp( $x->name, $y->name );
+	}
+
+	/**
+	 * Returns a list of information about each student blog
+	 *
+	 * Each element in the returned array will have a 'name' key containing the
+	 * display name of the blog and a 'url' key containing its URL.  The blogs
+	 * will be sorted by the last and then first name of the student owning it.
+	 *
+	 * @param  string $format the formatting string to use for the blog title
+	 * @return array          a list of information on all student blogs
+	 *
+	 * @since 0.1
+	 */
+	public function get_student_blogs( $title_format = "" )
+	{
+		// Use cached data if possible
+		$cached = $this->get_site_cache( 'student_blogs' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
+		// Determine the URL and display name for each student blog
+		$student_blogs = array();
+		foreach ( $this->_get_blog_list() as $blog ) {
+			$student_blogs[$blog['user_id']] = (object) array(
+				'blog_id' => $blog['blog_id'],
+				'name'    => $this->_format_blog_display_name( $title_format, $blog['user_id'], $blog['blog_id'] ),
+				'user_id' => $blog['user_id'],
+				'url'     => get_blogaddress_by_id( $blog['blog_id'] ) );
+		}
+
+		// Return the blogs sorted by their computed display name
+		usort( $student_blogs, array( $this, "_sort_blogs_by_name" ) );
+		$this->set_site_cache( 'student_blogs', $student_blogs, 300 );
+		return $student_blogs;
+	}
+
+	/**
+	 * Returns the address of the student's blog
+	 *
+	 * @param  int    $user_id the user ID of the student
+	 * @return string          the address of their blog, or a blank string
+	 *
+	 * @since 0.1
+	 */
+	public function get_blog_url_for_student( $user_id )
+	{
+		// Build a lookup table if one has not been built
+		$lookup = $this->_blog_urls;
+		if ( empty( $lookup ) ) {
+			$lookup = array();
+			foreach ( $this->get_student_blogs() as $blog ) {
+				$lookup[$blog->user_id] = $blog->url;
+			}
+			$this->_blog_urls = $lookup;
+		}
+
+		if ( array_key_exists( $user_id, $lookup ) ) {
+			return $lookup[$user_id];
+		} else {
+			return "";
+		}
 	}
 }
 

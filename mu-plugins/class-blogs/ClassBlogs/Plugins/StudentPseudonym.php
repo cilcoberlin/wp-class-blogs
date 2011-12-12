@@ -7,7 +7,8 @@
  * change their blog URL, their username and their display name in order to
  * blog under a pen name.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
+ * @subpackage StudentPseudonym
  * @since 0.1
  */
 class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
@@ -22,7 +23,6 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 			add_action( 'admin_menu', array( $this, '_add_admin_page' ) );
 		}
 	}
-
 
 	/**
 	 * Adds the word-counter admin page if the user has sufficient privileges
@@ -202,11 +202,11 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 	 * The inputs for this function will have already been validated by another
 	 * method, so it can be assumed that they are valid.
 	 *
-	 * @param  int    $user_id
-	 * @param  int    $blog_id
-	 * @param  string $new_username
-	 * @param  string $new_first_name
-	 * @param  string $new_last_name
+	 * @param  int    $user_id        the student's user ID
+	 * @param  int    $blog_id        the ID of the student's primary blog
+	 * @param  string $new_username   the student's new username
+	 * @param  string $new_first_name the student's new first name
+	 * @param  string $new_last_name  the student's new last name
 	 *
 	 * @access private
 	 * @since 0.1

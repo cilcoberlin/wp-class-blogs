@@ -6,7 +6,8 @@
  * This automatically approves any comments left by a logged-in student on the
  * blog of another student in the class for which the class blog exists.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
+ * @subpackage ClassmateComments
  * @since 0.1
  */
 class ClassBlogs_Plugins_ClassmateComments extends ClassBlogs_Plugins_BasePlugin

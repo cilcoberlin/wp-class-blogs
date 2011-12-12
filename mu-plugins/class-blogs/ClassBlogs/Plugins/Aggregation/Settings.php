@@ -3,7 +3,8 @@
 /**
  * Settings for the class blogs aggregation plugins
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage Settings
  * @since 0.1
  */
 class ClassBlogs_Plugins_Aggregation_Settings

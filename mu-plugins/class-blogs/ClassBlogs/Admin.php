@@ -12,6 +12,7 @@
  * Trying to create an instance using the constructor will not work.
  *
  * @package ClassBlogs
+ * @subpackage Admin
  * @since 0.1
  */
 class ClassBlogs_Admin
@@ -56,7 +57,7 @@ class ClassBlogs_Admin
 	 */
 	private function __construct()
 	{
-		add_action( 'admin_menu', array( $this, 'configure_admin_interface' ) );
+		add_action( 'admin_menu', array( $this, '_configure_admin_interface' ) );
 	}
 
 	/**
@@ -102,9 +103,10 @@ class ClassBlogs_Admin
 	 * Creates the base class blogs admin menu that is available to any admin
 	 * user with administrative rights on the root blog who is on the admin side
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function configure_admin_interface()
+	public function _configure_admin_interface()
 	{
 		if ( ClassBlogs_Utils::on_root_blog_admin() ) {
 			$page = add_menu_page(
@@ -112,16 +114,17 @@ class ClassBlogs_Admin
 				__( 'Class Blogs', 'classblogs' ),
 				self::_MENU_CAPABILITY,
 				self::_MENU_ID,
-				array( $this, 'class_blogs_admin_page' ) );
+				array( $this, '_class_blogs_admin_page' ) );
 		}
 	}
 
 	/**
 	 * Handles the display of the class blogs base admin page
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function class_blogs_admin_page()
+	public function _class_blogs_admin_page()
 	{
 ?>
 		<div class="wrap">
@@ -212,8 +215,10 @@ class ClassBlogs_Admin
 	 *
 	 * @param  string $uid the calling plugin's unique identifier
 	 * @return string      the admin page's URL
+	 *
+	 * @since 0.2
 	 */
-	public function get_page_url( $uid )
+	public function get_admin_page_url( $uid )
 	{
 		return sprintf( '%sadmin.php?page=%s',
 			get_admin_url(),

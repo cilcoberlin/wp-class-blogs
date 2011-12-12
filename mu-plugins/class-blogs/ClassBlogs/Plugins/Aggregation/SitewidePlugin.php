@@ -3,7 +3,8 @@
 /**
  * An abstract base calss for a plugin that deals with sitewide data
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage SitewidePlugin
  * @since 0.1
  */
 abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_Plugins_BasePlugin
@@ -12,18 +13,20 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	/**
 	 * The names of the sitewide tables
 	 *
+	 * @access protected
 	 * @var object
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public $sw_tables;
+	protected $sw_tables;
 
 	/**
 	 * A container for actual posts made on the root blog
 	 *
+	 * @access protected
 	 * @var array
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public $root_blog_posts;
+	protected $root_blog_posts;
 
 	/**
 	 * Resolve the sitewide table names on startup
@@ -45,6 +48,9 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * @param  int   $max          the number of resources to return
 	 * @param  int   $max_per_blog the most resources per blog to allow
 	 * @return array               the limited set of passed resources
+	 *
+	 * @access protected
+	 * @since 0.1
 	 */
 	protected function limit_sitewide_resources( $resources, $max, $max_per_blog )
 	{
@@ -84,9 +90,10 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * it means that it is a sitewide post, and the blog that it exists on should
 	 * be made active so that the post's permalinks, tags, etc. can be determined.
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function use_correct_blog_for_sitewide_post()
+	protected function use_correct_blog_for_sitewide_post()
 	{
 		global $post, $wp_rewrite;
 
@@ -114,9 +121,10 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * blog on which the last sitewide post displayed was made, and that its
 	 * posts are all sitewide.
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function reset_blog_on_loop_end()
+	protected function reset_blog_on_loop_end()
 	{
 		global $wp_query, $wp_rewrite;
 		restore_current_blog();
@@ -143,9 +151,10 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * @param  array $posts the posts used to replace the normal page's posts
 	 * @return array        the posts with invalid IDs
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function prevent_sitewide_post_id_conflicts( $posts )
+	protected function prevent_sitewide_post_id_conflicts( $posts )
 	{
 		$this->_sitewide_post_ids = array();
 		for ( $i=0; $i < count( $posts ); $i++ ) {
@@ -162,9 +171,10 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * function to give a post back its proper ID when needed, such as when
 	 * a theme is in the loop.
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function restore_sitewide_post_ids()
+	protected function restore_sitewide_post_ids()
 	{
 		// If the conflict-preventing function has yet to be run, abort early
 		if ( empty( $this->_sitewide_post_ids ) ) {
@@ -187,9 +197,10 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * @param  mixed  $value      the data to be cached
 	 * @param  int    $expiration the expiration time of the value, in seconds
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function set_sw_cache( $key, $value, $expiration = ClassBlogs_Settings::DEFAULT_CACHE_LENGTH )
+	protected function set_sw_cache( $key, $value, $expiration = ClassBlogs_Settings::DEFAULT_CACHE_LENGTH )
 	{
 		if ( WP_DEBUG ) {
 			return;
@@ -219,9 +230,10 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * @param  string $key the key under which data was cached
 	 * @return mixed       the cached data or null
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function get_sw_cache( $key )
+	protected function get_sw_cache( $key )
 	{
 		if ( WP_DEBUG ) {
 			return null;

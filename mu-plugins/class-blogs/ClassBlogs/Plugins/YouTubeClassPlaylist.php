@@ -3,8 +3,9 @@
 /**
  * A widget that displays the most recent additions to the YouTube class playlist
  *
+ * @package ClassBlogs_Plugins
+ * @subpackage YouTubeClassPlaylistWidget
  * @access private
- * @package Class Blogs
  * @since 0.1
  */
 class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_SidebarWidget
@@ -113,7 +114,8 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
  * This also provides a main-blog-only plugin that displays the most recent
  * additions to the class playlist.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
+ * @subpackage YouTubeClassPlaylist
  * @since 0.1
  */
 class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlugin
@@ -633,6 +635,9 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @param  string $video_id the YouTube video ID
 	 * @return string           the URL of the video's full-size thumbnail
+	 *
+	 * @access private
+	 * @since 0.1
 	 */
 	private function _get_large_thumbnail_url( $video_id )
 	{
@@ -929,6 +934,9 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @param  string $id a possible YouTube video ID
 	 * @return bool       whether the ID appears to be valid
+	 *
+	 * @access private
+	 * @since 0.1
 	 */
 	public function _validate_video_ids( $id )
 	{
@@ -1091,6 +1099,9 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 * Makes a connection to the Google accounts servers
 	 *
 	 * @return object a connection to a Google accounts server
+	 *
+	 * @access private
+	 * @since 0.1
 	 */
 	private function _make_google_accounts_connection()
 	{
@@ -1512,9 +1523,10 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	/**
 	 * Configures the admin interface for the plugin
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function enable_admin_page( $admin )
+	protected function enable_admin_page( $admin )
 	{
 		$admin->add_admin_page( $this->get_uid(), __( 'YouTube Class Playlist', 'classblogs' ), array( $this, '_admin_page' ) );
 	}

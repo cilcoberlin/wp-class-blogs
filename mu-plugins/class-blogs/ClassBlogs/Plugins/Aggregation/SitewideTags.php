@@ -3,8 +3,9 @@
 /**
  * A widget that shows a sitewide tag cloud
  *
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage SitewideTagsWidget
  * @access private
- * @package Class Blogs
  * @since 0.1
  */
 class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plugins_SidebarWidget
@@ -115,7 +116,8 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
  * This provides a widget available on the main blog only that displays a tag
  * cloud built from the tags used on all blogs that are part of the class blog.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage SitewideTags
  * @since 0.1
  */
 class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Aggregation_SitewidePlugin
@@ -246,14 +248,140 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 *
 	 * @return string the URL for the tag-list page
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function get_tag_page_url()
+	private function _get_tag_page_url()
 	{
 		switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
 		$url = get_permalink( $this->get_option( 'tag_page_id' ) );
 		restore_current_blog();
 		return $url;
+	}
+
+		/**
+	 * Makes WordPress treat a sitewide tag page as a tag archive
+	 *
+	 * This sets internal flags used by WordPress to make it think that it is
+	 * on a tag archive page and replaces the page content with a list of posts
+	 * that use the currently set tag.
+	 *
+	 * @param  array $posts the current posts associated with the page
+	 * @return array        all posts using the current tag
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _fake_tag_archive_page( $posts )
+	{
+
+		global $wp_query;
+
+		// Make the current page appear to be a tag archive to WordPress
+		$wp_query->is_archive = true;
+		$wp_query->is_page    = false;
+		$wp_query->is_tag	  = true;
+
+		// Further convince the page that it is a tag archive by providing
+		// providing dummy data that a tag archive expects
+		$wp_query->query_vars['tag_id'] = 1;
+		$wp_query->tax_query = (object) array( 'queries' => array() );
+
+		// Provide values for data expected by a tag page
+		$wp_query->queried_object = (object) array(
+			'name'    => $this->_current_tag['name'],
+			'slug'    => $this->_current_tag['slug'],
+			'term_id' => 0
+		);
+
+		// Use the tagged posts and prevent ID conflicts
+		$tagged_posts = $this->get_tagged_posts( $this->_current_tag['slug'] );
+		$this->prevent_sitewide_post_id_conflicts( $tagged_posts );
+		return $tagged_posts;
+	}
+
+	/**
+	 * Sets the correct title for a sitewide tags archive page
+	 *
+	 * @param  object $tag the current tag
+	 * @return string      the current tag's name
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _set_tag_title( $tag )
+	{
+		return $this->_current_tag['name'];
+	}
+
+	/**
+	 * Set the sitewide tag page title to reflect the name of the current tag
+	 *
+	 * @param  string $title     the current page's title
+	 * @param  string $separator the title separator character
+	 * @return string            the page title for the current tag
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _set_page_title( $title, $separator=":" )
+	{
+		return sprintf( ' %s %s ', $this->_current_tag['name'], $separator );
+	}
+
+		/**
+	 * Calculate the maximum and minimum sitewide tag usage counts
+	 *
+	 * The counts are returned in an array with a 'max' and 'min' key.
+	 *
+	 * @return array the max and min counts
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _get_tag_counts()
+	{
+		// Use cached information if possible
+		$cached = $this->get_sw_cache( 'tag_counts' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
+		//  Get the max and min tag usage counts
+		$counts = array();
+		foreach ( $this->get_sitewide_tags() as $tag  ) {
+			$counts[] = $tag['count'];
+		}
+		if ( count( $counts ) ) {
+			 $tag_min = min( $counts );
+			 $tag_max = max( $counts );
+		} else {
+			$tag_min = $tag_max = 0;
+		}
+		$max_min = array(
+			'max' => $tag_max,
+			'min' => $tag_min );
+		$this->set_sw_cache( 'tag_counts', $max_min );
+		return $max_min;
+	}
+
+	/**
+	 * Gets the cached value of the max or min tag usage
+	 *
+	 * @param  string $key the cached count key
+	 * @return int         the tag usage count
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _get_usage_count( $key )
+	{
+		$counts = $this->_get_tag_counts();
+		if ( array_key_exists( $key, $counts ) ) {
+			return (int) $counts[$key];
+		} else {
+			return 0;
+		}
 	}
 
 	/**
@@ -267,7 +395,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	public function get_tag_url( $slug )
 	{
 		if ( ! property_exists( $this, '_tag_page_url' ) ) {
-			$this->_tag_page_url = $this->get_tag_page_url();
+			$this->_tag_page_url = $this->_get_tag_page_url();
 		}
 		return sprintf( '%s?%s=%s',
 			$this->_tag_page_url,
@@ -318,42 +446,6 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Calculate the maximum and minimum sitewide tag usage counts
-	 *
-	 * The counts are returned in an array with a 'max' and 'min' key.
-	 *
-	 * @return array the max and min counts
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _get_tag_counts()
-	{
-		// Use cached information if possible
-		$cached = $this->get_sw_cache( 'tag_counts' );
-		if ( $cached !== null ) {
-			return $cached;
-		}
-
-		//  Get the max and min tag usage counts
-		$counts = array();
-		foreach ( $this->get_sitewide_tags() as $tag  ) {
-			$counts[] = $tag['count'];
-		}
-		if ( count( $counts ) ) {
-			 $tag_min = min( $counts );
-			 $tag_max = max( $counts );
-		} else {
-			$tag_min = $tag_max = 0;
-		}
-		$max_min = array(
-			'max' => $tag_max,
-			'min' => $tag_min );
-		$this->set_sw_cache( 'tag_counts', $max_min );
-		return $max_min;
-	}
-
-	/**
 	 * Returns the lowest usage count of the sitewide tags
 	 *
 	 * @return int the usage count of the least-used tag
@@ -378,25 +470,6 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Gets the cached value of the max or min tag usage
-	 *
-	 * @param  string $key the cached count key
-	 * @return int         the tag usage count
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _get_usage_count( $key )
-	{
-		$counts = $this->_get_tag_counts();
-		if ( array_key_exists( $key, $counts ) ) {
-			return (int) $counts[$key];
-		} else {
-			return 0;
-		}
-	}
-
-	/**
 	 * Returns an array of tags for use by the sitewide tag cloud widget
 	 *
 	 * If the usage count of any tag is less than the given threshold, that
@@ -411,6 +484,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 *
 	 * @param  int   $threshold the minimum usage count required for a tag
 	 * @return array            the list of tags, ordered alphabetically
+	 *
+	 * @since 0.1
 	 */
 	public function get_tags_for_tag_cloud( $threshold )
 	{
@@ -434,47 +509,6 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Makes WordPress treat a sitewide tag page as a tag archive
-	 *
-	 * This sets internal flags used by WordPress to make it think that it is
-	 * on a tag archive page and replaces the page content with a list of posts
-	 * that use the currently set tag.
-	 *
-	 * @param  array $posts the current posts associated with the page
-	 * @return array        all posts using the current tag
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _fake_tag_archive_page( $posts )
-	{
-
-		global $wp_query;
-
-		// Make the current page appear to be a tag archive to WordPress
-		$wp_query->is_archive = true;
-		$wp_query->is_page    = false;
-		$wp_query->is_tag	  = true;
-
-		// Further convince the page that it is a tag archive by providing
-		// providing dummy data that a tag archive expects
-		$wp_query->query_vars['tag_id'] = 1;
-		$wp_query->tax_query = (object) array( 'queries' => array() );
-
-		// Provide values for data expected by a tag page
-		$wp_query->queried_object = (object) array(
-			'name'    => $this->_current_tag['name'],
-			'slug'    => $this->_current_tag['slug'],
-			'term_id' => 0
-		);
-
-		// Use the tagged posts and prevent ID conflicts
-		$tagged_posts = $this->get_tagged_posts( $this->_current_tag['slug'] );
-		$this->prevent_sitewide_post_id_conflicts( $tagged_posts );
-		return $tagged_posts;
-	}
-
-	/**
 	 * Returns all sitewide posts that use the given tag slug
 	 *
 	 * @param  string $slug the tag of the slug
@@ -492,35 +526,6 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 			WHERE t.slug = %s AND t.term_id = tu.uses_tag AND tu.post_id = p.ID AND tu.cb_sw_blog_id = p.cb_sw_blog_id
 			ORDER BY post_date DESC ",
 			$slug ) );
-	}
-
-	/**
-	 * Sets the correct title for a sitewide tags archive page
-	 *
-	 * @param  object $tag the current tag
-	 * @return string      the current tag's name
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _set_tag_title( $tag )
-	{
-		return $this->_current_tag['name'];
-	}
-
-	/**
-	 * Set the sitewide tag page title to reflect the name of the current tag
-	 *
-	 * @param  string $title     the current page's title
-	 * @param  string $separator the title separator character
-	 * @return string            the page title for the current tag
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _set_page_title( $title, $separator=":" )
-	{
-		return sprintf( ' %s %s ', $this->_current_tag['name'], $separator );
 	}
 }
 

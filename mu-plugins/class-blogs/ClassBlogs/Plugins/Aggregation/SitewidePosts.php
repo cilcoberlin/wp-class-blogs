@@ -3,8 +3,9 @@
 /**
  * A widget that shows a list of recent sitewide posts
  *
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage SitewidePostsWidget
  * @access private
- * @package Class Blogs
  * @since 0.1
  */
 class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plugins_SidebarWidget
@@ -146,7 +147,8 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
  * and also provides a user with the ability to display sitewide posts on the
  * front page of the main blog.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage SitewidePosts
  * @since 0.1
  */
 class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Aggregation_SitewidePlugin
@@ -210,9 +212,9 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		// Enable the admin menu and the sidebar widget if on the admin side,
 		// and enable the root blog hooks if posts are to be shown on the root blog
 		if ( ! is_admin() && $this->get_option( 'root_show_posts' ) ) {
-			add_action( 'pre_get_posts', array( $this, 'initialize_root_blog_hooks' ) );
+			add_action( 'pre_get_posts', array( $this, '_initialize_root_blog_hooks' ) );
 		}
-		add_action( 'widgets_init', array( $this, 'enable_widget' ) );
+		add_action( 'widgets_init', array( $this, '_enable_widget' ) );
 	}
 
 	/**
@@ -223,9 +225,10 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 * it is given a value of false, the root blog will never be populated with
 	 * the sitewide post data.
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function initialize_root_blog_hooks()
+	public function _initialize_root_blog_hooks()
 	{
 
 		// Allow external code to prevent the main page of the root blog from
@@ -326,35 +329,222 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Returns the a post's tag list with each tag pointing to the sitewide tags page
-	 *
-	 * This makes it so that each tag shown with a post will go to the sitewide
-	 * tags page showing usage of the tag across the site, instead of just on the
-	 * blog on which the post was made.
-	 *
-	 * @param  string $tags   the markup for the current tag list
-	 * @param  string $before a string coming before the tag list
-	 * @param  string $sep    the separator used to space the tags
-	 * @param  string $after  a string coming after the tag list
-	 * @return string         markup for the sitewide tag list
+	 * Sorts a list of posts by user by the published date of the first post
 	 *
 	 * @access private
 	 * @since 0.1
 	 */
-	public function _show_sitewide_tag_list( $tags, $before = "", $sep = ', ', $after = "" )
+	public function _sort_posts_by_user_by_date( $a, $b ) {
+		return strcasecmp(
+			$this->_get_first_post_published_date( $b->posts ),
+			$this->_get_first_post_published_date( $a->posts ) );
+	}
+
+	/**
+	 * Returns the creation date of the first post in a list of posts
+	 *
+	 * @param  array  $posts a list of posts
+	 * @return string        the creation date of the first post
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _get_first_post_published_date( $posts ) {
+		if ( count( $posts ) ) {
+			return $posts[0]->post_date;
+		} else {
+			return '0';
+		}
+	}
+
+	/**
+	 * Enables the sidebar widget for showing recent sitewide posts
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	public function _enable_widget()
+	{
+		$this->register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewidePostsWidget' );
+	}
+
+	/**
+	 * Configures the plugin's admin pages
+	 *
+	 * @access protected
+	 * @since 0.2
+	 */
+	protected function enable_admin_page( $admin )
+	{
+		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Post Options', 'classblogs' ), array( $this, '_options_admin_page' ) );
+		$admin->add_admin_page( $this->get_uid(), __( 'Student Posts', 'classblogs' ), array( $this, '_posts_admin_page' ) );
+	}
+
+	/**
+	 * Handles the admin page logic for the sitewide posts plugin
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	public function _options_admin_page()
 	{
 
-		global $post;
-		$new_tags = array();
+		if ( $_POST ) {
 
-		//  Display the link to the sitewide usage page for each used tag
-		foreach ( $this->getTagsForPost( $post->ID, $post->cb_sw_blog_id ) as $tag ) {
-			$new_tags[] = sprintf( '<a href="%s">%s</a>',
-				esc_url( ClassBlogs_Plugins_Aggregation_SitewideTags::get_tag_page_url( $tag->slug ) ),
-				esc_html( $tag->name ) );
+			check_admin_referer( $this->get_uid() );
+
+			$options = $this->get_options();
+			$options['root_excerpt_words']     = absint( ClassBlogs_Utils::sanitize_user_input( $_POST['root_excerpt_words'] ) );
+			$options['root_show_posts']        = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_show_posts' );
+			$options['root_strip_formatting']  = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_strip_formatting' );
+			$options['root_use_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_use_excerpt' );
+			$this->update_options( $options );
+
+			ClassBlogs_Admin::show_admin_message( __( 'Your sitewide post options have been updated', 'classblogs' ) );
+		}
+	?>
+		<div class="wrap">
+
+			<h2><?php _e( 'Sitewide Post Options', 'classblogs' ); ?></h2>
+
+			<p>
+				<?php _e( 'This page allows you to control options that will affect the display of sitewide posts on the home page of the root blog.', 'classblogs' ); ?>
+			</p>
+
+			<form method="post" action="">
+
+					<table class="form-table">
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Show Sitewide Posts On Root Blog', 'classblogs' ); ?></th>
+							<td>
+								<input type="checkbox" name="root_show_posts" id="root-show-posts" <?php echo $this->option_to_selected_attribute( 'root_show_posts' ); ?> />
+								<label for="root-show-posts"><?php _e( 'Enabled', 'classblogs' ); ?></label>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Remove Post Formatting', 'classblogs' ); ?></th>
+							<td>
+								<input type="checkbox" name="root_strip_formatting" id="root-strip-formatting" <?php echo $this->option_to_selected_attribute( 'root_strip_formatting' ); ?> />
+								<label for="root-strip-formatting"><?php _e( 'Enabled', 'classblogs' ); ?></label>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Only Show Post Excerpt', 'classblogs' ); ?></th>
+							<td>
+								<input type="checkbox" name="root_use_excerpt" id="root-use-excerpt" <?php echo $this->option_to_selected_attribute( 'root_use_excerpt' ); ?> />
+								<label for="root-use-excerpt"><?php _e( 'Enabled', 'classblogs' ) ?></label><br /><br />
+								<input type="text" name="root_excerpt_words" id="root-excerpt-words" value="<?php echo esc_attr( $this->get_option( 'root_excerpt_words' ) ); ?>" size="4" /><br />
+								<label for="root-excerpt-words"><?php _e( 'Excerpt length (in words)', 'classblogs' ); ?></label>
+							</td>
+						</tr>
+					</table>
+
+				<?php wp_nonce_field( $this->get_uid() ); ?>
+				<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Sitewide Post Options', 'classblogs' ); ?>" /></p>
+			</form>
+		</div>
+	<?php
+	}
+
+	/**
+	 * Shows a professor a list of student posts
+	 *
+	 * @uses ClassBlogs_Plugins_StudentBlogList
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	public function _posts_admin_page()
+	{
+
+		// Create a lookup table for student names and blogs keyed by user ID
+		$students = array();
+		$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
+		foreach ( $student_blogs->get_student_blogs() as $blog ) {
+			$user_data = get_userdata( $blog->user_id );
+			$students[$blog->user_id] = array(
+				'blog_url' => $blog->url,
+				'name' => sprintf( '%s %s', $user_data->first_name, $user_data->last_name ) );
 		}
 
-		return $before . join( $sep, $new_tags ) . $after;
+		// Paginate the data, restricting the data set to student-only posts
+		$student_posts = array();
+		foreach ( $this->get_sitewide_posts() as $post ) {
+			if ( array_key_exists( $post->post_author, $students ) ) {
+				$student_posts[] = $post;
+			}
+		}
+		$paginator = new ClassBlogs_Paginator( $student_posts, self::POSTS_PER_ADMIN_PAGE );
+		$current_page = ( array_key_exists( 'paged', $_GET ) ) ? absint( $_GET['paged'] ) : 1;
+?>
+		<div class="wrap">
+
+			<h2><?php _e( 'Student Posts', 'classblogs' );  ?></h2>
+
+			<p>
+				<?php _e( 'This page allows you to view all of the posts that your students have published.', 'classblogs' );  ?>
+			</p>
+
+			<?php $paginator->show_admin_page_links( $current_page ); ?>
+
+			<table class="widefat" id="cb-sw-student-posts-list">
+
+				<thead>
+					<tr>
+						<th class="student"><?php _e( 'Student', 'classblogs' ); ?></th>
+						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
+						<th class="excerpt"><?php _e( 'Excerpt', 'classblogs' ); ?></th>
+						<th class="posted"><?php _e( 'Posted', 'classblogs' ); ?></th>
+					</tr>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<th class="student"><?php _e( 'Student', 'classblogs' ); ?></th>
+						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
+						<th class="excerpt"><?php _e( 'Excerpt', 'classblogs' ); ?></th>
+						<th class="posted"><?php _e( 'Posted', 'classblogs' ); ?></th>
+					</tr>
+				</tfoot>
+
+				<tbody>
+					<?php foreach ( $paginator->get_items_for_page( $current_page ) as $post ): ?>
+						<tr>
+							<td class="student">
+								<strong>
+									<?php
+										echo get_avatar( $post->post_author, 32 ) . ' ';
+										printf( '<a href="%s">%s</a>',
+											$students[$post->post_author]['blog_url'],
+											$students[$post->post_author]['name'] );
+									?>
+								</strong>
+							</td>
+							<td class="post">
+								<strong>
+									<?php
+										printf( '<a href="%s">%s</a>',
+											get_blog_permalink( $post->cb_sw_blog_id, $post->ID ),
+											$post->post_title );
+									?>
+								</strong>
+							</td>
+							<td class="excerpt"><?php echo ClassBlogs_Utils::make_post_excerpt( $post->post_content, 25 ); ?></td>
+							<td class="posted">
+								<?php
+									echo mysql2date(
+										get_option( 'date_format' ),
+										$post->post_date );
+								?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+
+			</table>
+
+		</div>
+<?php
 	}
 
 	/**
@@ -512,192 +702,6 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Enables the sidebar widget for showing recent sitewide posts
-	 *
-	 * @since 0.1
-	 */
-	public function enable_widget()
-	{
-		$this->register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewidePostsWidget' );
-	}
-
-	/**
-	 * Configures the plugin's admin pages
-	 *
-	 * @since 0.1
-	 */
-	public function enable_admin_page( $admin )
-	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Post Options', 'classblogs' ), array( $this, 'options_admin_page' ) );
-		$admin->add_admin_page( $this->get_uid(), __( 'Student Posts', 'classblogs' ), array( $this, 'posts_admin_page' ) );
-	}
-
-	/**
-	 * Handles the admin page logic for the sitewide posts plugin
-	 *
-	 * @since 0.1
-	 */
-	public function options_admin_page()
-	{
-
-		if ( $_POST ) {
-
-			check_admin_referer( $this->get_uid() );
-
-			$options = $this->get_options();
-			$options['root_excerpt_words']     = absint( ClassBlogs_Utils::sanitize_user_input( $_POST['root_excerpt_words'] ) );
-			$options['root_show_posts']        = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_show_posts' );
-			$options['root_strip_formatting']  = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_strip_formatting' );
-			$options['root_use_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $_POST, 'root_use_excerpt' );
-			$this->update_options( $options );
-
-			ClassBlogs_Admin::show_admin_message( __( 'Your sitewide post options have been updated', 'classblogs' ) );
-		}
-	?>
-		<div class="wrap">
-
-			<h2><?php _e( 'Sitewide Post Options', 'classblogs' ); ?></h2>
-
-			<p>
-				<?php _e( 'This page allows you to control options that will affect the display of sitewide posts on the home page of the root blog.', 'classblogs' ); ?>
-			</p>
-
-			<form method="post" action="">
-
-					<table class="form-table">
-						<tr valign="top">
-							<th scope="row"><?php _e( 'Show Sitewide Posts On Root Blog', 'classblogs' ); ?></th>
-							<td>
-								<input type="checkbox" name="root_show_posts" id="root-show-posts" <?php echo $this->option_to_selected_attribute( 'root_show_posts' ); ?> />
-								<label for="root-show-posts"><?php _e( 'Enabled', 'classblogs' ); ?></label>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th scope="row"><?php _e( 'Remove Post Formatting', 'classblogs' ); ?></th>
-							<td>
-								<input type="checkbox" name="root_strip_formatting" id="root-strip-formatting" <?php echo $this->option_to_selected_attribute( 'root_strip_formatting' ); ?> />
-								<label for="root-strip-formatting"><?php _e( 'Enabled', 'classblogs' ); ?></label>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th scope="row"><?php _e( 'Only Show Post Excerpt', 'classblogs' ); ?></th>
-							<td>
-								<input type="checkbox" name="root_use_excerpt" id="root-use-excerpt" <?php echo $this->option_to_selected_attribute( 'root_use_excerpt' ); ?> />
-								<label for="root-use-excerpt"><?php _e( 'Enabled', 'classblogs' ) ?></label><br /><br />
-								<input type="text" name="root_excerpt_words" id="root-excerpt-words" value="<?php echo esc_attr( $this->get_option( 'root_excerpt_words' ) ); ?>" size="4" /><br />
-								<label for="root-excerpt-words"><?php _e( 'Excerpt length (in words)', 'classblogs' ); ?></label>
-							</td>
-						</tr>
-					</table>
-
-				<?php wp_nonce_field( $this->get_uid() ); ?>
-				<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Sitewide Post Options', 'classblogs' ); ?>" /></p>
-			</form>
-		</div>
-	<?php
-	}
-
-	/**
-	 * Shows a professor a list of student posts
-	 *
-	 * @uses ClassBlogs_Plugins_StudentBlogList
-	 *
-	 * @since 0.1
-	 */
-	public function posts_admin_page()
-	{
-
-		// Create a lookup table for student names and blogs keyed by user ID
-		$students = array();
-		$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
-		foreach ( $student_blogs->get_student_blogs() as $blog ) {
-			$user_data = get_userdata( $blog->user_id );
-			$students[$blog->user_id] = array(
-				'blog_url' => $blog->url,
-				'name' => sprintf( '%s %s', $user_data->first_name, $user_data->last_name ) );
-		}
-
-		// Paginate the data, restricting the data set to student-only posts
-		$student_posts = array();
-		foreach ( $this->get_sitewide_posts() as $post ) {
-			if ( array_key_exists( $post->post_author, $students ) ) {
-				$student_posts[] = $post;
-			}
-		}
-		$paginator = new ClassBlogs_Paginator( $student_posts, self::POSTS_PER_ADMIN_PAGE );
-		$current_page = ( array_key_exists( 'paged', $_GET ) ) ? absint( $_GET['paged'] ) : 1;
-?>
-		<div class="wrap">
-
-			<h2><?php _e( 'Student Posts', 'classblogs' );  ?></h2>
-
-			<p>
-				<?php _e( 'This page allows you to view all of the posts that your students have published.', 'classblogs' );  ?>
-			</p>
-
-			<?php $paginator->show_admin_page_links( $current_page ); ?>
-
-			<table class="widefat" id="cb-sw-student-posts-list">
-
-				<thead>
-					<tr>
-						<th class="student"><?php _e( 'Student', 'classblogs' ); ?></th>
-						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
-						<th class="excerpt"><?php _e( 'Excerpt', 'classblogs' ); ?></th>
-						<th class="posted"><?php _e( 'Posted', 'classblogs' ); ?></th>
-					</tr>
-				</thead>
-
-				<tfoot>
-					<tr>
-						<th class="student"><?php _e( 'Student', 'classblogs' ); ?></th>
-						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
-						<th class="excerpt"><?php _e( 'Excerpt', 'classblogs' ); ?></th>
-						<th class="posted"><?php _e( 'Posted', 'classblogs' ); ?></th>
-					</tr>
-				</tfoot>
-
-				<tbody>
-					<?php foreach ( $paginator->get_items_for_page( $current_page ) as $post ): ?>
-						<tr>
-							<td class="student">
-								<strong>
-									<?php
-										echo get_avatar( $post->post_author, 32 ) . ' ';
-										printf( '<a href="%s">%s</a>',
-											$students[$post->post_author]['blog_url'],
-											$students[$post->post_author]['name'] );
-									?>
-								</strong>
-							</td>
-							<td class="post">
-								<strong>
-									<?php
-										printf( '<a href="%s">%s</a>',
-											get_blog_permalink( $post->cb_sw_blog_id, $post->ID ),
-											$post->post_title );
-									?>
-								</strong>
-							</td>
-							<td class="excerpt"><?php echo ClassBlogs_Utils::make_post_excerpt( $post->post_content, 25 ); ?></td>
-							<td class="posted">
-								<?php
-									echo mysql2date(
-										get_option( 'date_format' ),
-										$post->post_date );
-								?>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-				</tbody>
-
-			</table>
-
-		</div>
-<?php
-	}
-
-	/**
 	 * Provides a list of posts made by each user of the blog
 	 *
 	 * The returned list of posts is in descending order by the published date
@@ -744,35 +748,6 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		$values = array_values( $by_user );
 		$this->set_sw_cache( 'by_user', $values );
 		return $values;
-	}
-
-	/**
-	 * Sorts a list of posts by user by the published date of the first post
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _sort_posts_by_user_by_date( $a, $b ) {
-		return strcasecmp(
-			$this->_get_first_post_published_date( $b->posts ),
-			$this->_get_first_post_published_date( $a->posts ) );
-	}
-
-	/**
-	 * Returns the creation date of the first post in a list of posts
-	 *
-	 * @param  array  $posts a list of posts
-	 * @return string        the creation date of the first post
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _get_first_post_published_date( $posts ) {
-		if ( count( $posts ) ) {
-			return $posts[0]->post_date;
-		} else {
-			return '0';
-		}
 	}
 }
 

@@ -4,6 +4,7 @@
  * Shared settings used by the class blogs plugin suite
  *
  * @package ClassBlogs
+ * @subpackage Settings
  * @since 0.1
  */
 class ClassBlogs_Settings
@@ -112,7 +113,6 @@ class ClassBlogs_Settings
 	{
 		return 1;
 	}
-
 }
 
 ?>

@@ -6,7 +6,7 @@
  * This adds a link to sign the student up for a gravatar to their account
  * creation email.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
  * @subpackage GravatarSignup
  * @since 0.1
  */
@@ -19,7 +19,7 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	 * @access private
 	 * @var string
 	 */
-	const _GRAVATAR_SIGNUP_URL = "http://en.gravatar.com/site/signup/";
+	const _GRAVATAR_SIGNUP_URL = 'http://en.gravatar.com/site/signup/';
 
 	/**
 	 * Registers the necessary plugin hooks with WordPress
@@ -43,8 +43,8 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	 * @param  object $meta
 	 * @return string           the new-user email with a Gravatar signup link
 	 *
-	 * @since 0.1
 	 * @access private
+	 * @since 0.1
 	 */
 	public function _update_new_user_email( $email, $user_id, $password, $meta )
 	{
@@ -62,8 +62,8 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	* @param  object $meta
 	* @return string           the new-blog email with a Gravatar signup link
 	*
-	* @since 0.1
 	* @access private
+	* @since 0.1
 	*/
 	public function _update_new_blog_email( $email, $blog_id, $user_id, $password, $title, $meta )
 	{
@@ -80,8 +80,8 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	 * @param  string $message the text of a welcome email sent to a user
 	 * @return string          the message with a Gravatar signup link added
 	 *
-	 * @since 0.1
 	 * @access private
+	 * @since 0.1
 	 */
 	private function _add_gravatar_signup_link_to_message( $user_id, $message )
 	{
@@ -107,8 +107,8 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	 * @param  object $user an instance of a WordPress user
 	 * @return string       the URL at which the user can sign up for a Gravatar
 	 *
-	 * @since 0.1
 	 * @access private
+	 * @since 0.1
 	 */
 	private function _get_gravatar_signup_url( $user )
 	{

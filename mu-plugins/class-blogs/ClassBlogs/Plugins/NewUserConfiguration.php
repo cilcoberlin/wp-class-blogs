@@ -6,7 +6,7 @@
  * This primarily attempts to create a sensible first and last name for a user
  * from their email address.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
  * @subpackage NewUserConfigurationPlugin
  * @since 0.1
  */
@@ -30,7 +30,7 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 		parent::__construct();
 
 		// Update a user's info when they are added
-		add_action( 'user_register', array( $this, 'update_user_info' ) );
+		add_action( 'user_register', array( $this, '_update_user_info' ) );
 	}
 
 	/**
@@ -38,9 +38,10 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @param int $user_id the database ID of the newly created user
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function update_user_info( $user_id )
+	public function _update_user_info( $user_id )
 	{
 		$this->_update_user_names( $user_id );
 	}
@@ -67,7 +68,7 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 		if ( ! empty( $user_data ) ) {
 
 			// Build the user's name from their email address
-			$name_parts = $this->get_name_parts_from_email( $user_data->user_email );
+			$name_parts = $this->_get_name_parts_from_email( $user_data->user_email );
 			$first_name = $name_parts['first'];
 			$last_name  = $name_parts['last'];
 			$full_name  = "$first_name $last_name";
@@ -109,9 +110,10 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 	 *                       first name in the 'first' key and a string of the
 	 *                       user's last name in the 'last' key
 	 *
+	 * @access private
 	 * @since 0.1
 	 */
-	public function get_name_parts_from_email( $email )
+	private function _get_name_parts_from_email( $email )
 	{
 		// Get the parts of the user's name from their email address,
 		// counting any period-separated strings as name parts

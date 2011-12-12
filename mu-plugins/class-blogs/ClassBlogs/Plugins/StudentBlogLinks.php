@@ -8,7 +8,8 @@
  * appear on every student blog as the first widget in the first widgetized
  * area of the theme in use.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
+ * @subpackage StudentBlogLinks
  * @since 0.1
  */
 class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
@@ -59,24 +60,25 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 		// student blogs in the network
 		$links = $this->get_option( 'links' );
 		if ( ! is_admin() && ! empty( $links ) ) {
-			add_action( 'init', array( $this, "register_sidebar_widget" ) );
-			add_filter( 'sidebars_widgets', array( $this, 'add_sidebar_widget' ) );
+			add_action( 'init', array( $this, '_register_sidebar_widget' ) );
+			add_filter( 'sidebars_widgets', array( $this, '_add_sidebar_widget' ) );
 		}
 	}
 
 	/**
 	 * Register the link list sidebar widget if not on the root blog
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function register_sidebar_widget()
+	public function _register_sidebar_widget()
 	{
 		if ( ! ClassBlogs_Utils::is_root_blog() ) {
 			$uid = $this->get_uid();
 			wp_register_sidebar_widget(
 				$uid,
 				$this->get_option( 'title' ),
-				array( $this, 'render_link_list' ),
+				array( $this, '_render_link_list' ),
 				array( 'classname' => $uid ) );
 		}
 	}
@@ -86,9 +88,10 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @return array a list of the default widgets
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function get_default_widget_list()
+	private function _get_default_widget_list()
 	{
 		return array( $this->get_uid(), ClassBlogs_Settings::META_WIDGET_ID );
 	}
@@ -102,9 +105,10 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @param array $sidebars a list of sidebars and their registered widgets
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function add_sidebar_widget( $sidebars )
+	public function _add_sidebar_widget( $sidebars )
 	{
 
 		// Remove a possible inactive widgets key for purposes of testing
@@ -117,7 +121,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 		// If no sidebars have been declared, add a single sidebar the list
 		// containing the meta widget and the link list
 		if ( empty( $active_sidebars ) ) {
-			$sidebars[] = $this->get_default_widget_list();
+			$sidebars[] = $this->_get_default_widget_list();
 		}
 
 		// If there is one or more active sidebars, try to add our widget to
@@ -153,9 +157,10 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @param array $params a hash of parameters for rendering the sidebar
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function render_link_list( $params )
+	public function _render_link_list( $params )
 	{
 		echo $params['before_widget'] . $params['before_title'] . esc_html( $this->get_option( 'title' ) ) . $params['after_title'] . '<ul>';
 
@@ -177,11 +182,12 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	/**
 	 * Adds an admin page for the plugin to the class blogs admin menu
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function enable_admin_page( $admin )
+	protected function enable_admin_page( $admin )
 	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Student Blog Links', 'classblogs' ), array( $this, 'admin_page' ) );
+		$admin->add_admin_page( $this->get_uid(), __( 'Student Blog Links', 'classblogs' ), array( $this, '_admin_page' ) );
 	}
 
 	/**
@@ -194,9 +200,10 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	 * @param  array $post the admin form's POST data
 	 * @return array       an ordered list of the user's links
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function parse_link_list( $post )
+	private function _parse_link_list( $post )
 	{
 
 		$links = array();
@@ -227,9 +234,10 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	/**
 	 * Handles the admin page for the plugin
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function admin_page() {
+	public function _admin_page() {
 
 		// Update the plugin options
 		if ( $_POST ) {
@@ -237,7 +245,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 			check_admin_referer( $this->get_uid() );
 
 			$this->update_option( 'title', ClassBlogs_Utils::sanitize_user_input( $_POST['sidebar_title'] ) );
-			$this->update_option( 'links', $this->parse_link_list( $_POST ) );
+			$this->update_option( 'links', $this->_parse_link_list( $_POST ) );
 
 			ClassBlogs_Admin::show_admin_message( __( 'Your links have been updated.', 'classblogs' ) );
 		}

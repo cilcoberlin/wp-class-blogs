@@ -4,6 +4,7 @@
  * A schema manager for plugin database tables
  *
  * @package ClassBlogs
+ * @subpackage Schema
  * @since 0.2
  */
 class ClassBlogs_Schema
@@ -135,6 +136,7 @@ class ClassBlogs_Schema
 	 * @param  string $table the name of a table
 	 * @return array         a list of the column names in order
 	 *
+	 * @since 0.2
 	 */
 	public static function get_table_column_names( $table )
 	{

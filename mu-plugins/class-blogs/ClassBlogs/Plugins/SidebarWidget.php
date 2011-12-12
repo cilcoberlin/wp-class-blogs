@@ -3,7 +3,8 @@
 /**
  * A base class for any sidebar widgets used in the class blogs suite
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
+ * @subpackage SidebarWidget
  * @since 0.1
  */
 abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget

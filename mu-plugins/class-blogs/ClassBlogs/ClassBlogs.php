@@ -3,7 +3,7 @@
 /**
  * A high-level class for namespacing class blogs data
  *
- * @package Class Blogs
+ * @package ClassBlogs
  * @since 0.1
  */
 class ClassBlogs {
@@ -30,9 +30,7 @@ class ClassBlogs {
 	 *
 	 * @param int $page_id the ID of a plugin page
 	 *
-	 * @access private
 	 * @since 0.1
-	 *
 	 */
 	public static function register_plugin_page( $page_id )
 	{
@@ -118,7 +116,7 @@ class ClassBlogs {
 	 * @param  string $name the name with which the plugin was registered
 	 * @return object       the plugin instance or null
 	 *
-	 *  @since 0.1
+	 * @since 0.1
 	 */
 	public static function get_plugin( $name )
 	{

@@ -3,8 +3,9 @@
 /**
  * A widget that displays a list of recent sitewide comments
  *
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage SitewideCommentsWidget
  * @access private
- * @package Class Blogs
  * @since 0.1
  */
 class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_Plugins_SidebarWidget
@@ -156,7 +157,8 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
  * This provides a main-blog-only widget that can display a list of recent
  * sitewide comments.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage SitewideComments
  * @since 0.1
  */
 class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins_Aggregation_SitewidePlugin
@@ -194,140 +196,17 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	function __construct()
 	{
 		parent::__construct();
-		add_action( 'admin_menu',   array( $this, 'add_student_comment_list' ) );
-		add_action( 'widgets_init', array( $this, 'enable_widget' ) );
-	}
-
-	/**
-	 * Returns a list of all sitewide comments
-	 *
-	 * If desired, this function can be passed a boolean indicating whether or
-	 * not to return only approved comments, which is the action performed when
-	 * `$approved_only` is true.  By default, this value is true.
-	 *
-	 * @param  bool  $approved_only only return approved comments
-	 * @return array                all sitewide comments
-	 *
-	 * @since 0.1
-	 */
-	public function get_sitewide_comments( $approved_only=true )
-	{
-		// Set a proper cache key based upon which sort of comments are allowed
-		$cache_key = 'comments_';
-		$cache_key .= ( $approved_only ) ? 'approved' : 'all';
-
-		// Return the cached comments if possible
-		$cached = $this->get_sw_cache( $cache_key );
-		if ( $cached !== null ) {
-			return $cached;
-		}
-
-		$approved_filter = "";
-		if ( $approved_only ) {
-			$approved_filter = "AND c.comment_approved = '1'";
-		}
-
-		global $wpdb;
-		$comments = $wpdb->get_results( "
-			SELECT c.*, p.post_title
-			FROM {$this->sw_tables->comments} AS c, {$this->sw_tables->posts} AS p
-			WHERE p.ID = c.comment_post_ID AND c.cb_sw_blog_id = p.cb_sw_blog_id $approved_filter
-			ORDER BY c.comment_date DESC" );
-
-		// Even if all comments are allowed, don't display spam comments
-		if ( ! $approved_only ) {
-			global $blog_id;
-			$current_blog_id = $blog_id;
-			$no_spam = array();
-			foreach ( $comments as $comment ) {
-				switch_to_blog( $comment->cb_sw_blog_id );
-				if ( wp_get_comment_status( $comment->comment_ID ) != 'spam' ) {
-					$no_spam[] = $comment;
-				}
-			}
-			ClassBlogs::restore_blog( $current_blog_id );
-			$comments = $no_spam;
-		}
-
-		$this->set_sw_cache( $cache_key, $comments );
-		return $comments;
-	}
-
-	/**
-	 * Gets a list of recent comments formatted for display in a sidebar widget
-	 *
-	 * The array of returned comments contains custom object instances with the
-	 * following properties that can be used by the sidebar:
-	 *
-	 *      author_name - the display name of the comment's author
-	 *      content     - the content of the comment
-	 *      meta        - a string describing the comment's meta, constructed from
-	 *                    the meta formatting string passed to this method
-	 *      permalink   - the permalink URL for the comment
-	 *      post_title  - the name of the post on which the comment was made
-	 *
-	 * @param  int    $max_comments          the maximum number of comments to return
-	 * @param  int    $max_comments_per_blog the most comments allowed per blog
-	 * @param  string $meta_format           the formatting string for the comment meta
-	 * @return array                         an array of formatted comments
-	 *
-	 * @since 0.1
-	 */
-	public function get_comments_for_sidebar( $max_comments, $max_comments_per_blog, $meta_format )
-	{
-
-		// Use cached values if possible
-		$cached = $this->get_sw_cache( 'sidebar' );
-		if ( $cached !== null ) {
-			return $cached;
-		}
-
-		$comments = array();
-		$raw_comments = $this->limit_sitewide_resources(
-			$this->get_sitewide_comments(),
-			$max_comments,
-			$max_comments_per_blog );
-
-		foreach ( $raw_comments as $comment ) {
-
-			// Create a string for the comment metadata
-			$meta = "";
-			if ( $meta_format ) {
-				$blog = sprintf( '<a href="%s">%s</a>',
-					get_blogaddress_by_id( $comment->cb_sw_blog_id ),
-					get_blog_option( $comment->cb_sw_blog_id, 'blogname' ) );
-				$meta = ClassBlogs_Utils::format_user_string(
-					$meta_format,
-					array(
-						'blog' => $blog,
-						'date' => mysql2date( get_option( 'date_format' ), $comment->comment_date ),
-						'time' => mysql2date( get_option( 'time_format' ), $comment->comment_date ) ),
-					'cb-sitewide-comment' );
-			}
-
-			// Build the permalink to the comment using the post URL and an anchor
-			$permalink = sprintf( '%s#comment-%d',
-				get_blog_permalink( $comment->cb_sw_blog_id, $comment->comment_post_ID ),
-				$comment->comment_ID );
-
-			$comments[] = (object) array(
-				'author_name' => $comment->comment_author,
-				'content'     => $comment->comment_content,
-				'meta'        => $meta,
-				'permalink'   => $permalink,
-				'post_title'  => $comment->post_title );
-		}
-
-		$this->set_sw_cache( 'sidebar', $comments );
-		return $comments;
+		add_action( 'admin_menu',   array( $this, '_add_student_comment_list' ) );
+		add_action( 'widgets_init', array( $this, '_enable_widget' ) );
 	}
 
 	/**
 	 * Enables the recent sitewide comments sidebar widget
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function enable_widget()
+	public function _enable_widget()
 	{
 		$this->register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget' );
 	}
@@ -335,11 +214,12 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	/**
 	 * Configures the plugin's admin page
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function enable_admin_page( $admin )
+	protected function enable_admin_page( $admin )
 	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Student Comments', 'classblogs' ), array( $this, 'admin_page' ) );
+		$admin->add_admin_page( $this->get_uid(), __( 'Student Comments', 'classblogs' ), array( $this, '_admin_page' ) );
 	}
 
 	/**
@@ -347,9 +227,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 *
 	 * @uses ClassBlogs_Plugins_StudentBlogList
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function admin_page()
+	public function _admin_page()
 	{
 		global $blog_id;
 		$current_blog_id = $blog_id;
@@ -487,9 +368,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	/**
 	 * Renders the student-only page showing all comments that they have left
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function student_admin_page()
+	public function _student_admin_page()
 	{
 		global $blog_id;
 		$current_blog_id = $blog_id;
@@ -620,9 +502,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 * Adds a link to a student admin page that lets them view all comments
 	 * that they have left on other students' blogs
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function add_student_comment_list()
+	public function _add_student_comment_list()
 	{
 		if ( is_admin() && ! ClassBlogs_Utils::is_root_blog() ) {
 			add_comments_page(
@@ -630,7 +513,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				__('My Comments'),
 				'manage_options',
 				$this->get_uid() . '-my-comments',
-				array( $this, 'student_admin_page' ) );
+				array( $this, '_student_admin_page' ) );
 		}
 	}
 
@@ -726,6 +609,130 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 			$user_id,
 			$start_dt->format( 'YmdHis' ),
 			$end_dt->format( 'YmdHis' ) ) );
+	}
+
+	/**
+	 * Returns a list of all sitewide comments
+	 *
+	 * If desired, this function can be passed a boolean indicating whether or
+	 * not to return only approved comments, which is the action performed when
+	 * `$approved_only` is true.  By default, this value is true.
+	 *
+	 * @param  bool  $approved_only only return approved comments
+	 * @return array                all sitewide comments
+	 *
+	 * @since 0.1
+	 */
+	public function get_sitewide_comments( $approved_only=true )
+	{
+		// Set a proper cache key based upon which sort of comments are allowed
+		$cache_key = 'comments_';
+		$cache_key .= ( $approved_only ) ? 'approved' : 'all';
+
+		// Return the cached comments if possible
+		$cached = $this->get_sw_cache( $cache_key );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
+		$approved_filter = "";
+		if ( $approved_only ) {
+			$approved_filter = "AND c.comment_approved = '1'";
+		}
+
+		global $wpdb;
+		$comments = $wpdb->get_results( "
+			SELECT c.*, p.post_title
+			FROM {$this->sw_tables->comments} AS c, {$this->sw_tables->posts} AS p
+			WHERE p.ID = c.comment_post_ID AND c.cb_sw_blog_id = p.cb_sw_blog_id $approved_filter
+			ORDER BY c.comment_date DESC" );
+
+		// Even if all comments are allowed, don't display spam comments
+		if ( ! $approved_only ) {
+			global $blog_id;
+			$current_blog_id = $blog_id;
+			$no_spam = array();
+			foreach ( $comments as $comment ) {
+				switch_to_blog( $comment->cb_sw_blog_id );
+				if ( wp_get_comment_status( $comment->comment_ID ) != 'spam' ) {
+					$no_spam[] = $comment;
+				}
+			}
+			ClassBlogs::restore_blog( $current_blog_id );
+			$comments = $no_spam;
+		}
+
+		$this->set_sw_cache( $cache_key, $comments );
+		return $comments;
+	}
+
+	/**
+	 * Gets a list of recent comments formatted for display in a sidebar widget
+	 *
+	 * The array of returned comments contains custom object instances with the
+	 * following properties that can be used by the sidebar:
+	 *
+	 *      author_name - the display name of the comment's author
+	 *      content     - the content of the comment
+	 *      meta        - a string describing the comment's meta, constructed from
+	 *                    the meta formatting string passed to this method
+	 *      permalink   - the permalink URL for the comment
+	 *      post_title  - the name of the post on which the comment was made
+	 *
+	 * @param  int    $max_comments          the maximum number of comments to return
+	 * @param  int    $max_comments_per_blog the most comments allowed per blog
+	 * @param  string $meta_format           the formatting string for the comment meta
+	 * @return array                         an array of formatted comments
+	 *
+	 * @since 0.1
+	 */
+	public function get_comments_for_sidebar( $max_comments, $max_comments_per_blog, $meta_format )
+	{
+
+		// Use cached values if possible
+		$cached = $this->get_sw_cache( 'sidebar' );
+		if ( $cached !== null ) {
+			return $cached;
+		}
+
+		$comments = array();
+		$raw_comments = $this->limit_sitewide_resources(
+			$this->get_sitewide_comments(),
+			$max_comments,
+			$max_comments_per_blog );
+
+		foreach ( $raw_comments as $comment ) {
+
+			// Create a string for the comment metadata
+			$meta = "";
+			if ( $meta_format ) {
+				$blog = sprintf( '<a href="%s">%s</a>',
+					get_blogaddress_by_id( $comment->cb_sw_blog_id ),
+					get_blog_option( $comment->cb_sw_blog_id, 'blogname' ) );
+				$meta = ClassBlogs_Utils::format_user_string(
+					$meta_format,
+					array(
+						'blog' => $blog,
+						'date' => mysql2date( get_option( 'date_format' ), $comment->comment_date ),
+						'time' => mysql2date( get_option( 'time_format' ), $comment->comment_date ) ),
+					'cb-sitewide-comment' );
+			}
+
+			// Build the permalink to the comment using the post URL and an anchor
+			$permalink = sprintf( '%s#comment-%d',
+				get_blog_permalink( $comment->cb_sw_blog_id, $comment->comment_post_ID ),
+				$comment->comment_ID );
+
+			$comments[] = (object) array(
+				'author_name' => $comment->comment_author,
+				'content'     => $comment->comment_content,
+				'meta'        => $meta,
+				'permalink'   => $permalink,
+				'post_title'  => $comment->post_title );
+		}
+
+		$this->set_sw_cache( 'sidebar', $comments );
+		return $comments;
 	}
 }
 

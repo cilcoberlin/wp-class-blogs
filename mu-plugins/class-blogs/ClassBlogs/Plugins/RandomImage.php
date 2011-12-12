@@ -3,8 +3,9 @@
 /**
  * A widget that displays a random image with a caption
  *
+ * @package ClassBlogs_Plugins
+ * @subpackage RandomImageWidget
  * @access private
- * @package Class Blogs
  * @since 0.1
  */
 class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWidget
@@ -108,7 +109,8 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
  * a random image chosen from all the blogs on the site and shows the blog on
  * which the image was used.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
+ * @subpackage RandomImage
  * @since 0.1
  */
 class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
@@ -130,6 +132,38 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	public function _enable_widget()
 	{
 		$this->register_root_only_widget( '_ClassBlogs_Plugins_RandomImageWidget' );
+	}
+
+	/**
+	 * Find the ID of the first post that uses the given image
+	 *
+	 * @param  int    $blog_id the ID of the blog on which the image was uploaded
+	 * @param  string $url     the absolute URL of the image
+	 * @return int             the ID of the first post that uses the image
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	private function _find_first_post_to_use_image( $blog_id, $url )
+	{
+		global $wpdb;
+		$post_id = null;
+
+		// Search for the first post that references the image
+		switch_to_blog( $blog_id );
+		$post_search = $wpdb->prepare( "
+			SELECT ID FROM $wpdb->posts
+			WHERE post_status='publish'
+			AND post_content LIKE '%%" . like_escape( $url ) . "%%'
+			ORDER BY post_date
+			LIMIT 1" );
+		$post = $wpdb->get_row( $post_search );
+		if ( ! empty( $post ) ) {
+			$post_id = $post->ID;
+		}
+		restore_current_blog();
+
+		return $post_id;
 	}
 
 	/**
@@ -195,35 +229,6 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 		}
 
 		return $image;
-	}
-
-	/**
-	 * Find the ID of the first post that uses the given image
-	 *
-	 * @param  int    $blog_id the ID of the blog on which the image was uploaded
-	 * @param  string $url     the absolute URL of the image
-	 * @return int             the ID of the first post that uses the image
-	 */
-	private function _find_first_post_to_use_image( $blog_id, $url )
-	{
-		global $wpdb;
-		$post_id = null;
-
-		// Search for the first post that references the image
-		switch_to_blog( $blog_id );
-		$post_search = $wpdb->prepare( "
-			SELECT ID FROM $wpdb->posts
-			WHERE post_status='publish'
-			AND post_content LIKE '%%" . like_escape( $url ) . "%%'
-			ORDER BY post_date
-			LIMIT 1" );
-		$post = $wpdb->get_row( $post_search );
-		if ( ! empty( $post ) ) {
-			$post_id = $post->ID;
-		}
-		restore_current_blog();
-
-		return $post_id;
 	}
 }
 

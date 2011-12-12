@@ -10,9 +10,8 @@
  * It also provides each student with a dashboard widget that displays their
  * word counts for the current week and the previous one.
  *
- * @package Class Blogs
- * @uses ClassBlogs_Plugins_Aggregation_SitewideComments to get weekly comments
- * @uses ClassBlogs_Plugins_Aggregation_SitewidePosts to get weekly posts
+ * @package ClassBlogs_Plugins
+ * @subpackage WordCounter
  * @since 0.1
  */
 class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
@@ -39,13 +38,19 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 
 	/**
 	 * The numerical representation of Monday when using PHP's `date` function.
+	 *
+	 * @access private
+	 * @var int
 	 */
-	const MONDAY = 1;
+	const _MONDAY = 1;
 
 	/**
 	 * The numerical representation of Sunday when using PHP's `date` function.
+	 *
+	 * @access private
+	 * @var int
 	 */
-	const SUNDAY = 0;
+	const _SUNDAY = 0;
 
 	/**
 	 * Registers WordPress hooks to enable the word counter
@@ -129,8 +134,8 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	{
 		// Figure out the date bounds for the week containing the given date,
 		// with the week starting on Monday and ending on Sunday
-		$start_date = $this->_find_weekday_near_date( self::MONDAY, $date, '-1 day' );
-		$end_date = $this->_find_weekday_near_date( self::SUNDAY, $date, '+1 day' );
+		$start_date = $this->_find_weekday_near_date( self::_MONDAY, $date, '-1 day' );
+		$end_date = $this->_find_weekday_near_date( self::_SUNDAY, $date, '+1 day' );
 
 		return $this->_get_word_count_for_student( $student_id, $start_date, $end_date );
 	}
@@ -140,14 +145,15 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * to view the page and we have access to the sitewide functionality of
 	 * the class blogs suite.
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function enable_admin_page( $admin )
+	protected function enable_admin_page( $admin )
 	{
 		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
 		$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
 		if ( ! empty( $sitewide_posts ) && ! empty( $sitewide_comments ) ) {
-			$admin->add_admin_page( $this->get_uid(), __( 'Word Counts', 'classblogs' ), array( $this, 'admin_page' ) );
+			$admin->add_admin_page( $this->get_uid(), __( 'Word Counts', 'classblogs' ), array( $this, '_admin_page' ) );
 		}
 	}
 
@@ -155,9 +161,9 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * Handles the logic to display the admin page for the plugin
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public function admin_page()
+	public function _admin_page()
 	{
 
 		// Update the plugin options
@@ -324,8 +330,8 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 		// forward until we hit another Monday
 		$start_date = new DateTime( min( $oldest_post->post_date, $newest_comment->comment_date ) );
 		$end_date = new DateTime( max( $newest_post->post_date, $newest_comment->comment_date ) );
-		$start_date = $this->_find_weekday_near_date( self::MONDAY, $start_date, '-1 day' );
-		$end_date = $this->_find_weekday_near_date( self::MONDAY, $end_date, '+1 day' );
+		$start_date = $this->_find_weekday_near_date( self::_MONDAY, $start_date, '-1 day' );
+		$end_date = $this->_find_weekday_near_date( self::_MONDAY, $end_date, '+1 day' );
 		if ( $start_date > $end_date ) {
 			return $by_week;
 		}

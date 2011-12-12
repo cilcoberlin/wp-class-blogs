@@ -7,6 +7,7 @@
  * of items to show per page.
  *
  * @package ClassBlogs
+ * @subpackage Paginator
  * @since 0.1
  */
 class ClassBlogs_Paginator

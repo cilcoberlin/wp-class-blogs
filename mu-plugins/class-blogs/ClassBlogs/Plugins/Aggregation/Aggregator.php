@@ -7,7 +7,8 @@
  * comment and tag data on all blogs on the site.  Whenever changes are detected,
  * the sitewide tables updated to match the changed data.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins_Aggregation
+ * @subpackage Aggregator
  * @since 0.1
  */
 class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BasePlugin
@@ -485,7 +486,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	 * @param  string $source      the name of the source table
 	 * @param  string $destination the name of the destination table
 	 * @param  string $where       an optional WHERE clause to limit the data
-	 * @param  mixed               multiple additional params used for string
+	 * @param  mixed  $v,...       multiple optional params used for string
 	 *                             substitution in the WHERE clause
 	 * @return bool                whether or not the copy succeeded
 	 *
@@ -664,9 +665,10 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	/**
 	 * Enables the admin interface for the sitewide aggregation features
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function enable_admin_page( $admin )
+	protected function enable_admin_page( $admin )
 	{
 		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Data Options', 'classblogs' ), array( $this, '_admin_page' ) );
 	}

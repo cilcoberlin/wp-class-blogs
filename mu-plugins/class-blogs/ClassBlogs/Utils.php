@@ -4,6 +4,7 @@
  * Utility functions used by the class blogs plugin suite
  *
  * @package ClassBlogs
+ * @subpackage Utils
  * @since 0.1
  */
 class ClassBlogs_Utils
@@ -73,6 +74,8 @@ class ClassBlogs_Utils
 	 *
 	 * @param  string $input text of the user's input in a form field
 	 * @return string        the sanitized version of the input
+	 *
+	 * @since 0.1
 	 */
 	public static function sanitize_user_input( $input )
 	{
@@ -183,7 +186,7 @@ class ClassBlogs_Utils
 	 */
 	public static function get_plugin_js_url()
 	{
-		return self::_get_plugin_media_url( ClassBlogs_Settings::MEDIA_JS_DIR_NAME );;
+		return self::_get_plugin_media_url( ClassBlogs_Settings::MEDIA_JS_DIR_NAME );
 	}
 
 	/**
@@ -261,7 +264,6 @@ class ClassBlogs_Utils
 		}
 		return $url;
 	}
-
 }
 
 ?>

@@ -1,6 +1,15 @@
 <?php
 
-// Load core, utilities and settings
+/**
+ * A loader that imports each component of the class blogs suite.  This first
+ * imports all of the core class-blogs files and then pulls in the files
+ * associated with each individual plugin in the suite.
+ *
+ * @package ClassBlogs
+ * @since 0.1
+ */
+
+// Load core class-blogs modules
 $core = array(
 	'ClassBlogs',
 	'Paginator',
@@ -42,10 +51,9 @@ foreach ( $plugins as $plugin ) {
 }
 
 /**
- * Performs global class-blogs plugin initialization actions
+ * Performs initialization actions for the entire class blogs suite
  *
  * @access private
- * @package Class Blogs
  * @since 0.1
  */
 function _classblogs_init()

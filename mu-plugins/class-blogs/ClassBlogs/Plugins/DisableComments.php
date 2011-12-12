@@ -6,7 +6,8 @@
  * This provides an admin menu option that allows a user to disable
  * commenting on all blogs that are part of the class blog.
  *
- * @package Class Blogs
+ * @package ClassBlogs_Plugins
+ * @subpackage DisableComments
  * @since 0.1
  */
 class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
@@ -71,19 +72,21 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 	/**
 	 * Configures the plugin's admin page
 	 *
-	 * @since 0.1
+	 * @access protected
+	 * @since 0.2
 	 */
-	public function enable_admin_page( $admin )
+	protected function enable_admin_page( $admin )
 	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Disable Commenting', 'classblogs' ), array( $this, 'admin_page' ) );
+		$admin->add_admin_page( $this->get_uid(), __( 'Disable Commenting', 'classblogs' ), array( $this, '_admin_page' ) );
 	}
 
 	/**
 	 * Handles the admin page logic for the sitewide posts plugin
 	 *
-	 * @since 0.1
+	 * @access private
+	 * @since 0.2
 	 */
-	public function admin_page()
+	public function _admin_page()
 	{
 
 		// Change the state of sitewide commenting if switching
