@@ -15,11 +15,9 @@ $core = array(
 	'Paginator',
 	'Settings',
 	'Schema',
-	'Utils'
+	'Utils',
+	'Admin'
 );
-if ( is_admin() ) {
-	$core[] = 'Admin';
-}
 foreach ( $core as $file ) {
 	require_once( 'ClassBlogs/' . $file . '.php' );
 }
