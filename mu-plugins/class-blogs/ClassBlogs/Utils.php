@@ -11,13 +11,6 @@ class ClassBlogs_Utils
 {
 
 	/**
-	 * The database ID of the root blog
-	 *
-	 * @var int
-	 */
-	const ROOT_BLOG_ID = 1;
-
-	/**
 	 * Returns true if the current page is on the root blog
 	 *
 	 * @return bool whether or not the page is on the root blog
@@ -27,7 +20,7 @@ class ClassBlogs_Utils
 	public static function is_root_blog()
 	{
 		global $blog_id;
-		return self::ROOT_BLOG_ID == $blog_id;
+		return ClassBlogs_Settings::get_root_blog_id() == $blog_id;
 	}
 
 	/**
@@ -58,7 +51,7 @@ class ClassBlogs_Utils
 		$ids = array();
 
 		// Add any users who are not admins on the root blog to the list
-		switch_to_blog( self::ROOT_BLOG_ID );
+		switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
 		foreach ( $wpdb->get_results( "SELECT ID FROM $wpdb->users" ) as $user ) {
 			if ( ! user_can( $user->ID, 'administrator' ) ) {
 				$ids[] = $user->ID;
