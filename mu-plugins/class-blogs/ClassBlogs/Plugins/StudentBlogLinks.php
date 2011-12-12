@@ -275,6 +275,13 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 
 				<h3><?php _e( 'Links', 'classblogs' ); ?></h3>
 					<table class="form-table" id="student-blog-links">
+						<tfoot>
+							<th scope="row">
+								<a href="#add-link" class="add-link"><?php _e( 'Add another link', 'classblogs' ); ?></a>
+							</th>
+							<td></td>
+						</tfoot>
+						<tbody>
 						<?php
 							$link_count = max( count( $this->get_option( 'links' ) ), 1 );
 							for ( $i = 0; $i < $link_count; $i++ ) {
@@ -298,9 +305,9 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 						<?php
 							}
 						?>
+						</tbody>
 					</table>
 
-				<p><a href="#add-link" id="add-student-blog-link"><?php _e( 'Add another link', 'classblogs' ); ?></a></p>
 				<?php wp_nonce_field( $this->get_uid() ); ?>
 				<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Student Blog Links Options', 'classblogs' ); ?>" /></p>
 			</form>
