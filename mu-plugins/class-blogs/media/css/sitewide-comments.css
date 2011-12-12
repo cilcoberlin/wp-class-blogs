@@ -1,4 +1,9 @@
 
+/*
+ * The page shown to a professor on the admin side of the root blog that lists
+ * all student comments made on any blog that is part of the site
+ */
+
 /* Stack the date and time in comment list tables */
 .cb-sw-comments-table .posted .date {
 	display: block;

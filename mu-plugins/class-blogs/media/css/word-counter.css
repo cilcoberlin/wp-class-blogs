@@ -1,6 +1,7 @@
 
 /*
- * Styles used on the student-blog dashboard widget
+ * The dashboard panel that is displayed to any students listing the number of
+ * words that they have typed this week and the last
  */
 
 /* Have the current and previous week counts be next to each other. */
@@ -54,9 +55,11 @@
 }
 
 /*
- * Styles used on the professor's word-count viewing page
+ * The page displayed to a professor on the admin side of the root blog that
+ * show a table of the word counts produced by each student broken down by week
  */
 
+/* Set the page instructions off from the word-count table. */
 #student-word-counts-instructions {
 	border-bottom: 1px solid #ccc;
 	margin-bottom: 1.5em;
@@ -69,21 +72,19 @@
 	width: 100%;
 }
 
+/* Apply basic grid styling to the word-count table. */
 #student-word-counts {
 	border-collapse: collapse;
 	width: 100%;
 }
-
 #student-word-counts th,
 #student-word-counts td {
 	padding: 0.375em 0.375em;
 	text-align: left;
 }
-
 #student-word-counts thead th {
 	border-bottom: 2px solid #ccc;
 }
-
 #student-word-counts tbody td,
 #student-word-counts tbody th,
 #student-word-counts tfoot th,
@@ -91,7 +92,6 @@
 	border: 1px solid #ccc;
 	min-width: 6em;
 }
-
 #student-word-counts tbody th,
 #student-word-counts tfoot th {
 	border-left: none;
@@ -101,7 +101,6 @@
 #student-word-counts tfoot tr td:last-child {
 	border-right: none;
 }
-
 #student-word-counts tfoot td,
 #student-word-counts tfoot th {
 	background: #ffc;
@@ -130,7 +129,4 @@
 /* Zebra stripe the columns */
 #student-word-counts tbody td.odd {
 	background: #eee;
-}
-#student-word-counts tbody td.even {
-
 }
