@@ -368,6 +368,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		'access_token'         => "",
 		'access_token_secret'  => "",
 		'account_linked'       => false,
+		'playlist_full'        => false,
 		'playlist_page_id'     => null,
 		'request_token'        => "",
 		'request_token_secret' => "",
@@ -1153,7 +1154,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 
 		// Build the query params
 		$params = array(
-			'oauth_callback'     => $admin->get_page_url( $this->get_uid() ),
+			'oauth_callback'     => $admin->get_admin_page_url( $this->get_uid() ),
 			'scope'              => self::_GDATA_SCOPE,
 			'xoauth_displayname' => 'YouTube Class Playlist'
 		);
