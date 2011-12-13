@@ -575,7 +575,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	public function get_newest_comment()
 	{
 		global $wpdb;
-		return $wpdb->get_row( $wpdb->prepare( "SELECT comment_date FROM {$this->sw_tables->comments} ORDER BY comment_date DESC LIMIT 1" ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->sw_tables->comments} ORDER BY comment_date DESC LIMIT 1" ) );
 	}
 
 	/**
@@ -588,7 +588,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	public function get_oldest_comment()
 	{
 		global $wpdb;
-		return $wpdb->get_row( $wpdb->prepare( "SELECT comment_date FROM {$this->sw_tables->comments} ORDER BY comment_date LIMIT 1" ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->sw_tables->comments} ORDER BY comment_date LIMIT 1" ) );
 	}
 
 	/**

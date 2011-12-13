@@ -601,7 +601,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	public function get_newest_post()
 	{
 		global $wpdb;
-		return $wpdb->get_row( $wpdb->prepare( "SELECT post_date FROM {$this->sw_tables->posts} ORDER BY post_date DESC LIMIT 1" ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->sw_tables->posts} ORDER BY post_date DESC LIMIT 1" ) );
 	}
 
 	/**
@@ -614,7 +614,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	public function get_oldest_post()
 	{
 		global $wpdb;
-		return $wpdb->get_row( $wpdb->prepare( "SELECT post_date FROM {$this->sw_tables->posts} ORDER BY post_date LIMIT 1" ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->sw_tables->posts} ORDER BY post_date LIMIT 1" ) );
 	}
 
 	/**
