@@ -152,6 +152,9 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * to view the page and we have access to the sitewide functionality of
 	 * the class blogs suite.
 	 *
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewidePosts to see if we can get sitewide data
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewideComments to see if we can get sitewide data
+	 *
 	 * @access protected
 	 * @since 0.2
 	 */
@@ -310,6 +313,9 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @return array the student word counts by week
 	 *
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewidePosts to get the oldest and newest sitewide post
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewideComments to get the oldest and newest sitewide comment
+	 *
 	 * @access private
 	 * @since 0.1
 	 */
@@ -407,6 +413,9 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 * @param  object $start_dt   a DateTime of the start date
 	 * @param  object $end_dt     a DateTime of the end date
 	 * @return int                the number of words produced by the student
+	 *
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewidePosts to get all sitewide posts
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewideComments to get all sitewide comments
 	 *
 	 * @access private
 	 * @since 0.1

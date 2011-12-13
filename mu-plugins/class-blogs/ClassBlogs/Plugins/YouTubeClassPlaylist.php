@@ -38,6 +38,8 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 
 	/**
 	 * Displays the class playlist widget.
+	 *
+	 * @uses ClassBlogs_Plugins_YouTubeClassPlaylist to get recent playlist videos
 	 */
 	public function widget( $args, $instance )
 	{

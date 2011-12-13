@@ -35,6 +35,8 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 
 	/**
 	 * Displays the student-blogs widget.
+	 *
+	 * @uses ClassBlogs_Plugins_StudentBlogList to get all student blogs
 	 */
 	public function widget( $args, $instance )
 	{

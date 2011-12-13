@@ -40,6 +40,8 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 
 	/**
 	 * Displays the random-image widget.
+	 *
+	 * @uses ClassBlogs_Plugins_RandomImage to get a random image to display
 	 */
 	public function widget( $args, $instance )
 	{

@@ -40,6 +40,8 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 
 	/**
 	 * Displays the sitewide tag cloud widget.
+	 *
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewideTags to get all sitewide tags
 	 */
 	public function widget( $args, $instance )
 	{

@@ -53,6 +53,8 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 
 	/**
 	 * Displays the sitewide comments widget.
+	 *
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewideComments to get all sitewide comments
 	 */
 	public function widget( $args, $instance )
 	{
@@ -266,7 +268,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	/**
 	 * Shows a professor a list of all student comments.
 	 *
-	 * @uses ClassBlogs_Plugins_StudentBlogList
+	 * @uses ClassBlogs_Plugins_StudentBlogList to get student blog URLs
 	 *
 	 * @access private
 	 * @since 0.2

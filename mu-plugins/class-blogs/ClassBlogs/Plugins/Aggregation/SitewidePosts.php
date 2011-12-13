@@ -52,6 +52,8 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 
 	/**
 	 * Displays the sitewide posts widget.
+	 *
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewidePosts to get all sitewide posts
 	 */
 	public function widget( $args, $instance )
 	{
@@ -484,7 +486,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	/**
 	 * Shows a professor a list of student posts.
 	 *
-	 * @uses ClassBlogs_Plugins_StudentBlogList
+	 * @uses ClassBlogs_Plugins_StudentBlogList to get student blog URLs
 	 *
 	 * @access private
 	 * @since 0.2
