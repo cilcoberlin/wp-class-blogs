@@ -84,7 +84,50 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	}
 
 	/**
-	 * Sets the correct blog if a sitewide post is being displayed
+	 * Filters sitewide data that involves a user ID and a datetime by these fields.
+	 *
+	 * This mainly applies to sitewide data that closely resembles core WordPress
+	 * data, such as the comments and posts, both of which contain information
+	 * about the originating user and a creation datetime.
+	 *
+	 * @param  string $table      the name of the table on which to make a query
+	 * @param  string $id_field   the name of the field that stores a user ID
+	 * @param  int    $user_id    the ID of the user who created the content
+	 * @param  string $date_field the optional name of the field that holds datetime information
+	 * @param  object $start_dt   an optional DateTime after which to find data
+	 * @param  object $end_dt     an optional DateTime before which to find data
+	 * @return array              a list of database results
+	 *
+	 * @access protected
+	 * @since 0.2
+	 */
+	protected function filter_sitewide_resources( $table, $id_field, $user_id, $date_field=null, $start_dt=null, $end_dt=null )
+	{
+		global $wpdb;
+
+		// Build our base query by user ID and add in any optional parameters
+		// required to make the datetime search work properly
+		$query = "SELECT * FROM $table WHERE $id_field=%d";
+		$params = array( $user_id );
+		if ( $date_field ) {
+			if ( $start_dt ) {
+				$query .= " AND $date_field >= %s";
+				$params[] = $start_dt->format( 'YmdHis' );
+			}
+			if ( $end_dt ) {
+				$query .= " AND $date_field <= %s";
+				$params[] = $end_dt->format( 'YmdHis' );
+			}
+		}
+		array_unshift( $params, $query );
+
+		// Get the filtered posts using our assembled query
+		return $wpdb->get_results( call_user_func_array(
+			array( $wpdb, 'prepare') , $params ) );
+	}
+
+	/**
+	 * Sets the correct blog if a sitewide post is being displayed.
 	 *
 	 * If the current post has an attribute indicating which blog it was made on,
 	 * it means that it is a sitewide post, and the blog that it exists on should

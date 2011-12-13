@@ -595,20 +595,18 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 * Returns a subset of the sitewide comments, filtered by user and date.
 	 *
 	 * @param  int    $user_id  the ID of the desired comment author
-	 * @param  object $start_dt a DateTime instance after which to retrieve comments
-	 * @param  object $end_dt   a DateTime instance before which to retrieve comments
+	 * @param  object $start_dt an optional DateTime after which to retrieve comments
+	 * @param  object $end_dt   an optional DateTime before which to retrieve comments
 	 * @return array            a list of the comments matching the given filters
 	 *
 	 * @since 0.1
 	 */
-	public function filter_comments( $user_id, $start_dt, $end_dt )
+	public function filter_comments( $user_id, $start_dt=null, $end_dt=null )
 	{
-		global $wpdb;
-		return $wpdb->get_results( $wpdb->prepare(
-			"SELECT * FROM {$this->sw_tables->comments} WHERE user_id=%s AND comment_date >= %s AND comment_date <= %s",
-			$user_id,
-			$start_dt->format( 'YmdHis' ),
-			$end_dt->format( 'YmdHis' ) ) );
+		return $this->filter_sitewide_resources(
+			$this->sw_tables->comments,
+			'user_id', $user_id,
+			'comment_date', $start_dt, $end_dt );
 	}
 
 	/**
