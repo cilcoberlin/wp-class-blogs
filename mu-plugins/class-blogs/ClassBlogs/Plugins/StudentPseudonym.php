@@ -1,11 +1,13 @@
 <?php
 
 /**
- * The student pseudonym plugin
+ * A plugin that allows a student to blog using a pseudonym.
  *
  * This provides an admin page available to any students that allows them to
  * change their blog URL, their username and their display name in order to
- * blog under a pen name.
+ * blog under a pen name.  If they choose to change their username, their blog's
+ * URL is also updated to match the change, provided that it doesn't conflict
+ * with an existing user or blog.
  *
  * @package ClassBlogs_Plugins
  * @subpackage StudentPseudonym
@@ -13,7 +15,7 @@
  */
 class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 {
-	/** Registers hooks to add the student pseudonym admin page */
+	/** Registers hooks to add the student pseudonym admin page. */
 	public function __construct()
 	{
 		parent::__construct();
@@ -25,9 +27,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Adds the word-counter admin page if the user has sufficient privileges
-	 * to view the page and we have access to the sitewide functionality of
-	 * the class blogs suite.
+	 * Adds the pseudonym admin page.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -43,7 +43,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Handles the logic to display the admin page for the plugin
+	 * Handles the logic to display the pseudonym admin page to a student.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -161,7 +161,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Verifies that the username is validate and doesn't conflict with other blogs
+	 * Verifies that the username is valid and doesn't conflict with other blogs.
 	 *
 	 * @param  string $username the new username to use as a pseudonym
 	 * @return bool             whether or not the username is valid
@@ -193,7 +193,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Applies the student's chosen pseudonym
+	 * Applies the student's chosen pseudonym.
 	 *
 	 * This updates the student's user and blog information, then attempts to
 	 * update any references to the old URL, such as those used by media embedded

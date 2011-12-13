@@ -1,15 +1,28 @@
 <?php
 
 /**
- * A class to handle shared administrative class blogs functions
+ * A class to handle shared administrative class blogs functions.
  *
- * This mainly provides an interface that lets plugins that are part of
- * the class blogs suite add an admin submenu, using the add_admin_page()
- * method.
+ * This mainly provides an interface that allows class-blogs plugins to add one
+ * or more menu items to the class-blogs admin group.  This also provides
+ * a few helpers to display common notifications on any admin pages.
  *
  * To access the admin interface, you will need to get a reference to an
- * instance of it by calling the ClassBlogs_Admin::get_admin() static method.
+ * instance of it by calling the `ClassBlogs_Admin::get_admin()` static method.
  * Trying to create an instance using the constructor will not work.
+ *
+ * An example of a plugin using this to register and manage a page is as follows:
+ *
+ *     $admin = ClassBlogs_Admin::get_admin();
+ *     $admin->add_admin_page(
+ *         'page-id',
+ *         'My Admin Page',
+ *         'admin_page_view'
+ *     );
+ *     echo 'Visit the admin page at ' . $admin->get_admin_page_url( 'page_id' );
+ *
+ *     $admin->show_admin_message( 'You did something right on the admin page' );
+ *     $admin->show_admin_error( 'You did something wrong on the admin page' );
  *
  * @package ClassBlogs
  * @subpackage Admin
@@ -19,7 +32,7 @@ class ClassBlogs_Admin
 {
 
 	/**
-	 * The ID used for the class blogs admin menu
+	 * The ID used for the class blogs admin menu.
 	 *
 	 * @access private
 	 * @var string
@@ -27,7 +40,7 @@ class ClassBlogs_Admin
 	const _MENU_ID = "class-blogs";
 
 	/**
-	 * The capability required for a user to see the admin menu
+	 * The capability required for a user to see the admin menu.
 	 *
 	 * @access private
 	 * @var string
@@ -35,7 +48,7 @@ class ClassBlogs_Admin
 	const _MENU_CAPABILITY = "manage_options";
 
 	/**
-	 * An instance of the class, used to keep it a singleton
+	 * An instance of the class, used to keep it a singleton.
 	 *
 	 * @access private
 	 * @var object
@@ -43,7 +56,7 @@ class ClassBlogs_Admin
 	private static $_instance;
 
 	/**
-	 * A mapping of plugin UIDs to their admin page IDs
+	 * A mapping of plugin UIDs to their admin page IDs.
 	 *
 	 * @access private
 	 * @var array
@@ -51,7 +64,7 @@ class ClassBlogs_Admin
 	private $_page_ids;
 
 	/**
-	 * Registers admin hooks
+	 * Registers admin hooks.
 	 *
 	 * @access private
 	 */
@@ -61,47 +74,8 @@ class ClassBlogs_Admin
 	}
 
 	/**
-	 * Return an instance of the admin class, instantiating one if it doesn't exist
-	 *
-	 * @return object an instance of a ClassBlogs_Admin class
-	 *
-	 * @since 0.1
-	 */
-	public static function get_admin()
-	{
-		if ( ! isset(self::$_instance ) ) {
-			self::$_instance = new ClassBlogs_Admin();
-		}
-		return self::$_instance;
-	}
-
-	/**
-	 * Prints markup for an admin notification message
-	 *
-	 * @param string $message the text of the message to display
-	 *
-	 * @since 0.2
-	 */
-	public static function show_admin_message( $message )
-	{
-		echo sprintf( '<div id="message" class="updated fade"><p>%s</p></div>', $message );
-	}
-
-	/**
-	 * Prints markup for an admin error message
-	 *
-	 * @param string $message the text of the error to display
-	 *
-	 * @since 0.2
-	 */
-	public static function show_admin_error( $error )
-	{
-		echo sprintf( '<div id="message" class="error fade"><p>%s</p></div>', $error );
-	}
-
-	/**
 	 * Creates the base class blogs admin menu that is available to any admin
-	 * user with administrative rights on the root blog who is on the admin side
+	 * user with administrative rights on the root blog who is on the admin side.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -119,7 +93,7 @@ class ClassBlogs_Admin
 	}
 
 	/**
-	 * Handles the display of the class blogs base admin page
+	 * Handles the display of the class blogs base admin page.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -187,7 +161,22 @@ class ClassBlogs_Admin
 	}
 
 	/**
-	 * Adds a new page to the class blogs admin group
+	 * Return an instance of the admin class, instantiating one if it doesn't exist.
+	 *
+	 * @return object an instance of a ClassBlogs_Admin class
+	 *
+	 * @since 0.1
+	 */
+	public static function get_admin()
+	{
+		if ( ! isset(self::$_instance ) ) {
+			self::$_instance = new ClassBlogs_Admin();
+		}
+		return self::$_instance;
+	}
+
+	/**
+	 * Adds a new page to the class blogs admin group.
 	 *
 	 * @param  string $uid   the calling plugin's unique identifier
 	 * @param  string $title the title of the admin page
@@ -211,7 +200,7 @@ class ClassBlogs_Admin
 	}
 
 	/**
-	 * Returns the URL for the admin page registered with the given UID
+	 * Returns the URL for the admin page registered with the given UID.
 	 *
 	 * @param  string $uid the calling plugin's unique identifier
 	 * @return string      the admin page's URL
@@ -224,6 +213,30 @@ class ClassBlogs_Admin
 			get_admin_url(),
 			$this->_page_ids[ $uid ]
 		);
+	}
+
+	/**
+	 * Prints markup for an admin notification message.
+	 *
+	 * @param string $message the text of the message to display
+	 *
+	 * @since 0.2
+	 */
+	public static function show_admin_message( $message )
+	{
+		echo sprintf( '<div id="message" class="updated fade"><p>%s</p></div>', $message );
+	}
+
+	/**
+	 * Prints markup for an admin error message.
+	 *
+	 * @param string $message the text of the error to display
+	 *
+	 * @since 0.2
+	 */
+	public static function show_admin_error( $error )
+	{
+		echo sprintf( '<div id="message" class="error fade"><p>%s</p></div>', $error );
 	}
 }
 

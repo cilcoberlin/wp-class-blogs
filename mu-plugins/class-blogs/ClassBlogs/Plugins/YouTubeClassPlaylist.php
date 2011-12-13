@@ -1,7 +1,10 @@
 <?php
 
 /**
- * A widget that displays the most recent additions to the YouTube class playlist
+ * A widget that displays the most recent additions to the YouTube class playlist.
+ *
+ * This widget can be configured to adjust the maximum number of videos displayed
+ * in the playlist.
  *
  * @package ClassBlogs_Plugins
  * @subpackage YouTubeClassPlaylistWidget
@@ -12,7 +15,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 {
 
 	/**
-	 * Default options for the class playlist widget
+	 * Default options for the class playlist widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -23,7 +26,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 	);
 
 	/**
-	 * Creates the class playlist widget
+	 * Creates the class playlist widget.
 	 */
 	public function __construct()
 	{
@@ -34,7 +37,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 	}
 
 	/**
-	 * Displays the class playlist widget
+	 * Displays the class playlist widget.
 	 */
 	public function widget( $args, $instance )
 	{
@@ -75,7 +78,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 	}
 
 	/**
-	 * Updates the class playlist widget
+	 * Updates the class playlist widget.
 	 */
 	public function update( $new, $old )
 	{
@@ -86,7 +89,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 	}
 
 	/**
-	 * Handles the admin logic for the class playlist widget
+	 * Handles the admin logic for the class playlist widget.
 	 */
 	public function form( $instance )
 	{
@@ -105,14 +108,30 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 }
 
 /**
- * The YouTube class playlist plugin
+ * A plugin that allows a YouTube playlist to be associated with the blog, making
+ * any YouTube videos embedded on any blogs on the site be added to the playlist.
  *
- * This plugin allows a user to link the class blog with a YouTube playlist.
- * Once the playlist is linked, any YouTube videos embedded on any blogs on the
- * site are added to the playlist.
+ * This plugin displays information about the playlist in two different ways.
+ * First, it provides a widget available on the root blog that shows the most
+ * recent additions to the playlist.  Second, it allows a user to view a list
+ * of all videos in the playlist and the posts that reference them.
  *
- * This also provides a main-blog-only plugin that displays the most recent
- * additions to the class playlist.
+ * In order for a playlist to be associated with a blog, a professor must go
+ * to the admin page for this plugin under the class-blogs admin menu group and
+ * click on the link to authorize their account.  Once they log in to YouTube and
+ * grant this plugin access to their account, they can select a playlist.
+ *
+ * This plugin also provides a simple interface to get information about the
+ * YouTube class playlist, which is demonstrated below:
+ *
+ *     // A post using 2 embedded YouTube videos is created, and the remote
+ *     // playlist is synced with the local one.
+ *     $plugin = ClassBlogs::get_plugin( 'youtube_class_playlist' );
+ *
+ *     assert( count( $plugin->get_playlist_videos() ) === 1 );
+ *
+ *     echo "The YouTube playlist can be viewed on YouTube at " . $plugin->get_youtube_playlist_page_url() . "\n";
+ *     echo "The local playlist page be viewed at " . $plugin->get_local_playlist_page_url() . "\n";
  *
  * @package ClassBlogs_Plugins
  * @subpackage YouTubeClassPlaylist
@@ -122,7 +141,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 {
 
 	/**
-	 * The developer key used to allow this plugin API access
+	 * The developer key used to allow this plugin API access.
 	 *
 	 * @access private
 	 * @var string
@@ -130,7 +149,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _GDATA_API_KEY = "AI39si5pRSIGylGT-Bh-BOJZ3LTU6QyWHw3D6mj3LE4fZDViHMGqYIEWEVzPf88owlcjD4A-JVu7IYOiF_kEF0ZuGzF6A4vCfw";
 
 	/**
-	 * The base URL for any Google data requests to YouTube
+	 * The base URL for any Google data requests to YouTube.
 	 *
 	 * @access private
 	 * @var string
@@ -138,7 +157,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _GDATA_REQUEST_BASE = 'https://gdata.youtube.com';
 
 	/**
-	 * The base URL for viewing a YouTube playlist created by a user
+	 * The base URL for viewing a YouTube playlist created by a user.
 	 *
 	 * @access private
 	 * @var string
@@ -146,7 +165,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _YOUTUBE_PLAYLIST_PAGE_TEMPLATE = 'http://www.youtube.com/playlist?p=%s';
 
 	/**
-	* The URL for viewing a full-size thumbnail of a YouTube video
+	* The URL for viewing a full-size thumbnail of a YouTube video.
 	*
 	* @access private
 	* @var string
@@ -154,7 +173,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _YOUTUBE_FULL_SIZE_THUMBNAIL_URL_TEMPLATE = 'http://img.youtube.com/vi/%s/0.jpg';
 
 	/**
-	 * The base URL for any playlist API requests
+	 * The base URL for any playlist API requests.
 	 *
 	 * @access private
 	 * @var string
@@ -162,7 +181,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _PLAYLIST_API_BASE = '/feeds/api/playlists/';
 
 	/**
-	 * The URL from which a user's information can be obtained
+	 * The URL from which a user's information can be obtained.
 	 *
 	 * @access private
 	 * @var string
@@ -170,7 +189,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _USER_INFO_URL = '/feeds/api/users/default';
 
 	/**
-	 * The base URL for any user playlist API requests
+	 * The base URL for any user playlist API requests.
 	 *
 	 * @access private
 	 * @var string
@@ -178,7 +197,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _USER_PLAYLISTS_URL = '/feeds/api/users/default/playlists?v=2';
 
 	/**
-	 * The expected length of a YouTube video ID
+	 * The expected length of a YouTube video ID.
 	 *
 	 * @access private
 	 * @var int
@@ -186,7 +205,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _YOUTUBE_VIDEO_ID_LENGTH = 11;
 
 	/**
-	 * The maximum number of results returned by a YouTube API call
+	 * The maximum number of results returned by a YouTube API call.
 	 *
 	 * @access private
 	 * @var int
@@ -194,7 +213,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _YOUTUBE_API_MAX_RESULTS = 50;
 
 	/**
-	 * The maximum number of entries that can be in a playlist
+	 * The maximum number of entries that can be in a playlist.
 	 *
 	 * @access private
 	 * @var int
@@ -202,7 +221,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _PLAYLIST_MAX_ENTRIES = 200;
 
 	/**
-	 * The version of the GData API used by this plugin
+	 * The version of the GData API used by this plugin.
 	 *
 	 * @access private
 	 * @var int
@@ -210,7 +229,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _GDATA_API_VERSION = 2;
 
 	/**
-	 * The base URL for any Google accounts requests
+	 * The base URL for any Google accounts requests.
 	 *
 	 * @access private
 	 * @var string
@@ -218,7 +237,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _GOOGLE_ACCOUNTS_BASE_URL = 'https://www.google.com';
 
 	/**
-	 * The relative URL at which an OAuth request token can be obtained
+	 * The relative URL at which an OAuth request token can be obtained.
 	 *
 	 * @access private
 	 * @var string
@@ -226,7 +245,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _OAUTH_GET_REQUEST_TOKEN_URL = '/accounts/OAuthGetRequestToken';
 
 	/**
-	 * The relative URL at which an OAuth authorization token can be authorized
+	 * The relative URL at which an OAuth authorization token can be authorized.
 	 *
 	 * @access private
 	 * @var string
@@ -234,7 +253,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _OAUTH_AUTHORIZE_TOKEN_URL = '/accounts/OAuthAuthorizeToken';
 
 	/**
-	 * The relative URL at which an OAuth access token can be obtained
+	 * The relative URL at which an OAuth access token can be obtained.
 	 *
 	 * @access private
 	 * @var string
@@ -242,7 +261,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _OAUTH_GET_ACCESS_TOKEN_URL = '/accounts/OAuthGetAccessToken';
 
 	/**
-	 * The version of OAuth in use
+	 * The version of OAuth in use.
 	 *
 	 * @access private
 	 * @var string
@@ -250,7 +269,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _OAUTH_VERSION = '1.0';
 
 	/**
-	 * The consumer key used to identify the plugin through OAuth
+	 * The consumer key used to identify the plugin through OAuth.
 	 *
 	 * @access private
 	 * @var string
@@ -258,7 +277,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _OAUTH_CONSUMER_KEY = 'anonymous';
 
 	/**
-	 * The secret key used to generate the OAuth signature
+	 * The secret key used to generate the OAuth signature.
 	 *
 	 * @access private
 	 * @var string
@@ -266,7 +285,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _OAUTH_CONSUMER_SECRET = 'anonymous';
 
 	/**
-	 * The scope of any AuthSub requests made by this plugin
+	 * The scope of any AuthSub requests made by this plugin.
 	 *
 	 * @access private
 	 * @var string
@@ -274,7 +293,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _GDATA_SCOPE = 'https://gdata.youtube.com';
 
 	/**
-	 * The number of seconds that counts as a short timeout
+	 * The number of seconds that counts as a short timeout.
 	 *
 	 * @access private
 	 * @var int
@@ -282,7 +301,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _SHORT_TIMEOUT = 7;
 
 	/**
-	 * The number of seconds that counts as a long timeout
+	 * The number of seconds that counts as a long timeout.
 	 *
 	 * @access private
 	 * @var int
@@ -290,7 +309,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _LONG_TIMEOUT = 20;
 
 	/**
-	 * The length in seconds to cache the playlist locally
+	 * The length in seconds to cache the playlist locally.
 	 *
 	 * @access private
 	 * @var int
@@ -298,7 +317,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _PLAYLIST_CACHE_LENGTH = 300;
 
 	/**
-	 * The prefix for any tables created by this plugin
+	 * The prefix for any tables created by this plugin.
 	 *
 	 * @access private
 	 * @var string
@@ -306,7 +325,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _TABLE_PREFIX = 'yt_';
 
 	/**
-	 * The base name for the videos table
+	 * The base name for the videos table.
 	 *
 	 * @access private
 	 * @var string
@@ -314,7 +333,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _VIDEOS_TABLE = 'videos';
 
 	/**
-	 * The base name for the video usage table
+	 * The base name for the video usage table.
 	 *
 	 * @access private
 	 * @var string
@@ -322,15 +341,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _VIDEO_USAGE_TABLE = 'video_usage';
 
 	/**
-	 * The base name for the playlist table
-	 *
-	 * @access private
-	 * @var string
-	 */
-	const _PLAYLIST_TABLE = 'playlist';
-
-	/**
-	 * The default name of the playlist page
+	 * The default name of the playlist page.
 	 *
 	 * @access private
 	 * @var string
@@ -338,7 +349,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	const _PLAYLIST_PAGE_DEFAULT_NAME = 'Our YouTube Class Playlist';
 
 	/**
-	 * A template for the body payload used to add a video to a playlist
+	 * A template for the body payload used to add a video to a playlist.
 	 *
 	 * @access private
 	 * @var string
@@ -349,20 +360,21 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 		</entry>';
 
 	/**
-	 * A list of functions used to extract videos from post content
+	 * A list of functions used to extract YouTube video IDs from post content.
 	 *
 	 * @access private
 	 * @var array
 	 */
 	private static $_video_searchers = array(
-		'_find_videos_by_link'
+		'_find_videos_by_url'
 	);
 
 	/**
-	 * Default options for the plugin
+	 * Default options for the plugin.
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.1
 	 */
 	protected $default_options = array(
 		'access_token'         => "",
@@ -378,10 +390,11 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	);
 
 	/**
-	 * A mapping of publicly accessible table short names to base names
+	 * A mapping of publicly accessible table short names to base names.
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private static $_table_map = array(
 		'videos'      => self::_VIDEOS_TABLE,
@@ -389,7 +402,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	);
 
 	/**
-	 * Get the schema used for the local playlist table
+	 * Gets the schema used for the videos table.
 	 *
 	 * @return ClassBlogs_Schema an instance of the videos schema
 	 *
@@ -412,7 +425,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Get the schema used for the video usage table
+	 * Gets the schema used for the video usage table.
 	 *
 	 * @return ClassBlogs_Schema an instance of the video usage schema
 	 *
@@ -437,9 +450,9 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * The names of tables used by the plugin
+	 * The names of the tables used by the plugin.
 	 *
-	 * Available properties are as follows:
+	 * The table names available are as follows:
 	 *
 	 *     videos      - a table containing a record of each video on the site
 	 *     video_usage - a table mapping videos to posts
@@ -450,7 +463,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	public $tables;
 
 	/**
-	 * Registers the necessary WordPress hooks to make the playlist work
+	 * Registers the necessary WordPress hooks to make the playlist work.
 	 */
 	public function __construct() {
 
@@ -475,7 +488,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns true if the user has registered a valid YouTube account and playlist
+	 * Returns true if the user has associated a valid YouTube account and a
+	 * playlist with the current class blog.
 	 *
 	 * @return bool whether or not the plugin can be used
 	 *
@@ -488,7 +502,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns an object whose properties are the names of tables used by this plugin
+	 * Returns an object whose properties are the names of tables used by this plugin.
 	 *
 	 * @return object the tables used by this plugin
 	 *
@@ -505,7 +519,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Creates tables used by the plugin
+	 * Creates tables used by the plugin.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -526,7 +540,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Ensures that the page used for showing the class playlist archive exists
+	 * Ensures that the page used for showing the list of all videos in the
+	 * playlist and their per-blog usage exists.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -543,7 +558,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Enables the class playlist recent videos widgets
+	 * Enables the recent playlist videos widgets.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -554,7 +569,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Enables the display of the local playlist page if the user is on the right page
+	 * Enables the display of the video-listing page if the user is on
+	 * the correct page.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -568,7 +584,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	* Enqueues the JavaScript needed for displaying the playlist page.
+	* Enqueues the JavaScript needed for displaying the videos page.
 	*
 	* @access private
 	* @since 0.1
@@ -585,7 +601,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns markup for the local playlist page
+	 * Returns markup for the local videos page.
 	 *
 	 * @param  string $content the current content of the page
 	 * @return string          markup for the local playlist page
@@ -632,7 +648,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Gets the URL to view the full-size video thumbnail
+	 * Gets the URL of the full-size thumbnail of a YouTube video.
 	 *
 	 * @param  string $video_id the YouTube video ID
 	 * @return string           the URL of the video's full-size thumbnail
@@ -646,7 +662,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Clears the playlist cache
+	 * Clears the playlist cache.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -657,7 +673,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Updates the YouTube playlist with the videos found in the just-saved post
+	 * Updates the YouTube playlist with the videos found in the just-saved post.
 	 *
 	 * @param int $post_id the ID of the just-saved post
 	 *
@@ -707,7 +723,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Updates the YouTube playlist by removing videos that were embedded in a post
+	 * Updates the YouTube playlist by removing videos that were embedded in a
+	 * post that is about to be deleted.
 	 *
 	 * @param int $post_id The ID of the just-deleted post
 	 *
@@ -733,7 +750,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Adds a record of the YouTube video being used by the given post
+	 * Adds a local record of the YouTube video being used by the given post.
 	 *
 	 * @param  int $youtube_id the ID of an embedded YouTube video
 	 * @param  int $post_id    the ID of the post using the video
@@ -774,7 +791,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Removes a record of the YouTube video being used by the given post
+	 * Removes the local record of the YouTube video being used by the given post.
 	 *
 	 * @param  int $youtube_id the YouTube ID of an embedded YouTube video
 	 * @param  int $post_id    the ID of the post no longer using the video
@@ -814,7 +831,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Custom diff function for comparing playlist arrays
+	 * Custom diff function for comparing playlist arrays.
 	 *
 	 * @param  array $a the base array
 	 * @param  array $b the array to compare against
@@ -842,7 +859,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Syncs the remote YouTube playlist with the local playlist
+	 * Syncs the remote YouTube playlist with the local playlist.
 	 *
 	 * This calculates the differences between the local record of video usage,
 	 * which is viewed as authoritative, and the remote YouTube playlist, which
@@ -927,7 +944,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Checks whether or not the given ID appears to be a valid YouTube video ID
+	 * Checks whether or not the given ID appears to be a valid YouTube video ID.
 	 *
 	 * A valid ID will be any string made up of 11 characters chosen from the
 	 * set [A-Za-z0-9_-].  This is not guaranteed to be a valid video ID, but
@@ -945,7 +962,10 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Searches for embedded YouTube video IDs in the post's content
+	 * Searches for embedded YouTube video IDs in the post's content.
+	 *
+	 * This cycles through the list of video-ID search functions defined by
+	 * this plugin and condenses each one's results into a final ID list.
 	 *
 	 * @param  string $content the plaintext content of a post
 	 * @return array           a list of found YouTube video IDs
@@ -976,7 +996,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Searches for YouTube videos by looking for any links to YouTube videos
+	 * Searches for YouTube videos by looking for any URLs pointing to YouTube
+	 * and checking them for a valid video ID.
 	 *
 	 * @param  string $text the plaintext content of a post
 	 * @return array        a list of YouTube video IDs used in the post
@@ -984,7 +1005,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 * @access private
 	 * @since 0.1
 	 */
-	public function _find_videos_by_link( $text )
+	public function _find_videos_by_url( $text )
 	{
 
 		// Assemble a list of all YouTube URLs in the post content
@@ -1005,7 +1026,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns a YouTube video from a URL that may reference an embedded video
+	 * Returns a YouTube video from a URL that may reference an embedded video.
 	 *
 	 * @param  string $url a URL that might reference an embedded YouTube video
 	 * @return string      a YouTube video ID, or a blank string
@@ -1047,7 +1068,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Makes a GData request and returns its body content as an XML document
+	 * Makes a GData request and returns its body content as an XML document.
 	 *
 	 * @param  string $url     the relative YouTube GData URL to request
 	 * @param  string $method  an optional string specifying the HTTP method to use
@@ -1097,7 +1118,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Makes a connection to the Google accounts servers
+	 * Makes a connection to the Google accounts servers.
 	 *
 	 * @return object a connection to a Google accounts server
 	 *
@@ -1110,7 +1131,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * A convenience function for making a connection to a remote server
+	 * A convenience function for making a connection to a remote server.
 	 *
 	 * @param  string $server  the URL of the remote server
 	 * @param  int    $timeout the timeout in seconds to use when connecting
@@ -1129,7 +1150,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Closes a connection to a remote server
+	 * Closes a connection to a remote server.
 	 *
 	 * @param object $conn an open connection to a remote server
 	 *
@@ -1142,7 +1163,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Gets information on the token and secret key for an OAuth request token
+	 * Gets information on the token and secret key for an OAuth request token.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -1181,7 +1202,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns a link that allows the user to start the OAuth authentication process
+	 * Returns a link that allows the user to start the OAuth authentication process.
 	 *
 	 * @return string the OAuth authentication URL
 	 *
@@ -1197,7 +1218,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Adds any OAuth parameters to the connection's headers in-place
+	 * Adds any OAuth parameters to the connection's headers in-place.
 	 *
 	 * @param  object $conn   a connection to a server
 	 * @param  array  $params a list of parameters
@@ -1217,7 +1238,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns a GET queryvar string of any non-OAuth params
+	 * Returns a GET queryvar string of any non-OAuth params.
 	 *
 	 * @param  array $params query parameters for an HTTP request
 	 * @return string        a GET query string
@@ -1241,7 +1262,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Adds OAuth request params common to all OAuth requests in-place
+	 * Adds OAuth request params common to all OAuth requests in-place.
 	 *
 	 * @param array $params the current parameters to be sent
 	 *
@@ -1257,7 +1278,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Adds OAuth signature parameters in-place to the given list of parameters
+	 * Adds OAuth signature parameters in-place to the given list of parameters.
 	 *
 	 * @param string $url          the URL being requested
 	 * @param array  $params       the current OAuth parameters
@@ -1310,7 +1331,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Gets an OAuth access token allowing access to the user's YouTube account
+	 * Gets an OAuth access token allowing access to the user's YouTube account.
 	 *
 	 * @param string $verifier the OAuth verification code
 	 *
@@ -1349,7 +1370,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Links the user's account if they have yet to be linked but have a valid token
+	 * Links the user's account if they have yet to be linked but have a valid token.
 	 *
 	 * This makes a request to YouTube with the token that the user has.  If a
 	 * valid response is received, the user is marked as having a linked account,
@@ -1383,7 +1404,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns a list of all playlists associated with the current user's account
+	 * Returns a list of all playlists associated with the current user's account.
 	 *
 	 * The returned array of playlists will be sorted alphabetically by the
 	 * playlist title, and each element will contain an object with the
@@ -1427,7 +1448,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Reads the response made given to an HTTP connection
+	 * Reads the response made given to an HTTP connection.
 	 *
 	 * The returned response will be an object with the following properties:
 	 *
@@ -1498,7 +1519,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Interprets an HTTP response as an XML document
+	 * Interprets an HTTP response as an XML document.
 	 *
 	 * @param  object $conn a connection that has received a response
 	 * @return object       a DOMDocument instance of the response
@@ -1522,7 +1543,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Configures the admin interface for the plugin
+	 * Configures the admin interface for the plugin.
 	 *
 	 * @access protected
 	 * @since 0.2
@@ -1533,7 +1554,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Handles the admin page for the plugin
+	 * Handles the admin page for the plugin.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -1676,9 +1697,9 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns the value of the requested tag name, which must be unique
+	 * Returns the value of the requested XML tag name, which must be unique.
 	 *
-	 * @param  object $dom a DOMDocument instance
+	 * @param  object $dom an XML DOM document instance
 	 * @param  string $tag the name of the tag
 	 * @return mixed       the tag's value
 	 *
@@ -1691,7 +1712,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Gets the namespace URL for the given namespace
+	 * Gets the namespace URL for the given namespace.
 	 *
 	 * @param  object $dom       an XML DOM document instance
 	 * @param  string $namespace the name of the namespace to find
@@ -1712,7 +1733,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns a GData-style date as a standard PHP date
+	 * Returns a GData-style date as a standard PHP date.
 	 *
 	 * Credit for this function goes to Eric D. Hough from his TubePress plugin
 	 *
@@ -1734,7 +1755,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Gets information on all videos that are part of the class's YouTube class
+	 * Gets information on all videos that are part of the class's YouTube class.
 	 *
 	 * The returned array is in the same order as the actual YouTube playlist.
 	 * Each entry in the array will be an object with the following properties:
@@ -1864,7 +1885,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns a list of recently added videos for use in the sidebar widget
+	 * Returns a list of recently added videos for use in the sidebar widget.
 	 *
 	 * @param  int   $limit the optional maximum number of videos to return
 	 * @return array        a list of recently added videos
@@ -1882,7 +1903,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns the URL for viewing the class playlist page on YouTube
+	 * Returns the URL for viewing the class playlist page on YouTube.
 	 *
 	 * @return string the YouTube URL for the class playlist page
 	 *
@@ -1896,7 +1917,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns the URL for viewing the local class playlist page
+	 * Returns the URL for viewing the local class playlist page.
 	 *
 	 * @return string the URL of the local class playlist page
 	 *

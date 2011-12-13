@@ -1,7 +1,13 @@
 <?php
 
 /**
- * A widget that displays a list of recent sitewide comments
+ * A widget that displays a list of recent sitewide comments.
+ *
+ * A user can change what information about each comment is shown using a simple
+ * string that can contain placeholder variables chosen from a list.  An excerpt
+ * of the comment can also be displayed, and the total number of comments, as
+ * well as the maximum number of comments shown from each blog, can also be
+ * controlled via the widget's admin panel.
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage SitewideCommentsWidget
@@ -12,7 +18,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 {
 
 	/**
-	 * The length of the comment excerpt in words
+	 * The length of the comment excerpt in words.
 	 *
 	 * @access private
 	 * @var int
@@ -21,7 +27,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	const _EXCERPT_LENGTH_WORDS = 15;
 
 	/**
-	 * Default options for the sitewide comments widget
+	 * Default options for the sitewide comments widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -35,16 +41,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	);
 
 	/**
-	 * A container for comment totals by student
-	 *
-	 * @access private
-	 * @var array
-	 * @since 0.1
-	 */
-	private $_comment_totals_by_student;
-
-	/**
-	 * Creates the sitewide comments widget
+	 * Creates the sitewide comments widget.
 	 */
 	public function __construct()
 	{
@@ -55,7 +52,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	}
 
 	/**
-	 * Displays the sitewide comments widget
+	 * Displays the sitewide comments widget.
 	 */
 	public function widget( $args, $instance )
 	{
@@ -96,7 +93,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	}
 
 	/**
-	 * Updates the sitewide comments widget
+	 * Updates the sitewide comments widget.
 	 */
 	public function update( $new, $old )
 	{
@@ -110,7 +107,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	}
 
 	/**
-	 * Handles the admin logic for the sitewide comments widget
+	 * Handles the admin logic for the sitewide comments widget.
 	 */
 	public function form( $instance )
 	{
@@ -152,10 +149,40 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 }
 
 /**
- * The sitewide comments plugin
+ * A plugin that displays data on all of the comments left on any blogs on the site.
  *
- * This provides a main-blog-only widget that can display a list of recent
- * sitewide comments.
+ * Sitewide comment data can be shown to any visitors of the blog through a
+ * widget that can only appear on the root blog that shows a list of recent
+ * comments.  Furthermore, a list of all student comments can be viewed by a
+ * professor on the main blog via an admin page that is part of the class-blogs
+ * menu group.  Lastly, any students viewing the admin page of their blog are
+ * able to see a list of comments that they have left on other blogs on the
+ * site through a link available under the comments admin menu group.
+ *
+ * In addition to these WordPress functions, this plugin provides a few
+ * programmatic features that can be used to get direct access to the sitewide
+ * comment data.  An example of this is as follows:
+ *
+ *     // A user with a user ID of 2 leaves three comments on a blog, with ten
+ *     // minutes passing between each comment.  Five minutes later, another
+ *     // user with a user ID of 3 leaves four comments on another blog, with
+ *     // ten minutes passing between each comment.
+ *     $sw_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
+ *
+ *     $all = $sw_comments->get_sitewide_comments();
+ *     assert( count( $all ) === 7 );
+ *
+ *     $filtered = $sw_comments->filter_comments( 2 );
+ *     assert( count( $filtered ) === 3 );
+ *
+ *     assert( $sw_comments->get_total_comments_for_student( 2 ) === 3 );
+ *     assert( $sw_comments->get_total_comments_for_student( 3 ) === 4 );
+ *
+ *     $newest = $sw_comments->get_newest_comment();
+ *     $oldest = $sw_comments->get_oldest_comment();
+ *     assert( $newest->comment_date > $oldest->comment_date );
+ *     assert( $oldest->user_id === 2 );
+ *     assert( $newest->user_id === 3 );
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage SitewideComments
@@ -165,7 +192,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 {
 
 	/**
-	 * Cached sitewide comments
+	 * Cached sitewide comments.
 	 *
 	 * @access private
 	 * @var array
@@ -173,7 +200,19 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	private $_sitewide_comments;
 
 	/**
-	 * Admin media files
+	 * A container for comment totals by student.
+	 *
+	 * This is used to restrict the number of comments returned if a limit
+	 * is imposed on the number of comments allowed per blog.
+	 *
+	 * @access private
+	 * @var array
+	 * @since 0.1
+	 */
+	private $_comment_totals_by_student;
+
+	/**
+	 * Admin media files.
 	 *
 	 * @access protected
 	 * @var array
@@ -183,7 +222,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	);
 
 	/**
-	 * The number of comments to show per page on the professor's admin page
+	 * The number of comments to show per page on the professor's admin page.
 	 *
 	 * @var int
 	 * @since 0.1
@@ -191,7 +230,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	const COMMENTS_PER_ADMIN_PAGE = 20;
 
 	/**
-	 * Enable the recent comments sidebar widget
+	 * Enable the recent comments sidebar widget and the student comment list.
 	 */
 	function __construct()
 	{
@@ -201,7 +240,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Enables the recent sitewide comments sidebar widget
+	 * Enables the recent sitewide comments sidebar widget.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -212,7 +251,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Configures the plugin's admin page
+	 * Configures the plugin's professor-only admin page.
 	 *
 	 * @access protected
 	 * @since 0.2
@@ -223,7 +262,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Shows a professor a list of student comments
+	 * Shows a professor a list of all student comments.
 	 *
 	 * @uses ClassBlogs_Plugins_StudentBlogList
 	 *
@@ -366,7 +405,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Renders the student-only page showing all comments that they have left
+	 * Renders the student-only page showing all a list of all comments that
+	 * they have left on other blogs on the site.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -499,8 +539,9 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Adds a link to a student admin page that lets them view all comments
-	 * that they have left on other students' blogs
+	 * Adds a link that will appear in the comments admin menu group on the
+	 * admin side of a student's blog that allows them to view all comments
+	 * that they have left on other students' blogs.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -518,7 +559,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Calculates the total number of comments left by each student
+	 * Calculates the total number of comments left by each student.
 	 *
 	 * @return array a list of totals for student, keyed by user ID
 	 *
@@ -546,7 +587,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Gets the total number of comments left by a student
+	 * Gets the total number of comments left by a student.
 	 *
 	 * @param  int    $user_id the user ID of a student
 	 * @return string          the total number of comments left by the student
@@ -610,7 +651,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Returns a list of all sitewide comments
+	 * Returns a list of all sitewide comments.
 	 *
 	 * If desired, this function can be passed a boolean indicating whether or
 	 * not to return only approved comments, which is the action performed when
@@ -665,7 +706,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Gets a list of recent comments formatted for display in a sidebar widget
+	 * Gets a list of recent comments formatted for display in a sidebar widget.
 	 *
 	 * The array of returned comments contains custom object instances with the
 	 * following properties that can be used by the sidebar:

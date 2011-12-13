@@ -1,7 +1,13 @@
 <?php
 
 /**
- * An abstract base calss for a plugin that deals with sitewide data
+ * The base class for any plugin that deals with sitewide data.
+ *
+ * This provides descended classes with a few utility methods to manipulate
+ * sitewide data, a set of methods that are used to properly inject sitewide
+ * data into the normal WordPress loop, some methods that allow for easy
+ * management of cached sitewide data, and a list of the names of the tables
+ * used to track sitewide data.
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage SitewidePlugin
@@ -11,7 +17,7 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 {
 
 	/**
-	 * The names of the sitewide tables
+	 * The names of the sitewide tables.
 	 *
 	 * @access protected
 	 * @var object
@@ -20,7 +26,14 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	protected $sw_tables;
 
 	/**
-	 * A container for actual posts made on the root blog
+	 * A container for actual posts made on the root blog.
+	 *
+	 * This is used as part of the logic that injects the sitewide post data
+	 * into WordPress loop.  The basic idea is that the sitewide data is injected
+	 * when the loop start, at which point a copy of the actual posts that would
+	 * appear on the page is made.  When the loop is finished, these posts are
+	 * restored, which allows other components of the page, such as widgets
+	 * or navigation, to display properly.
 	 *
 	 * @access protected
 	 * @var array
@@ -29,7 +42,7 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	protected $root_blog_posts;
 
 	/**
-	 * Resolve the sitewide table names on startup
+	 * Resolve the sitewide table names on startup.
 	 */
 	public function __construct()
 	{
@@ -38,7 +51,7 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	}
 
 	/**
-	 * Returns an array of sitewide resources limited globally and by blog
+	 * Returns an array of sitewide resources limited globally and by blog.
 	 *
 	 * This is a utility function to filter an existing array of sitewide
 	 * resources that indicate their provenance, filtering by both the total
@@ -158,11 +171,11 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	}
 
 	/**
-	 * Restores the root blog after the loop has ended
+	 * Restores the root blog after the loop has ended.
 	 *
 	 * This needs to be called to prevent the blog from thinking it is on the
-	 * blog on which the last sitewide post displayed was made, and that its
-	 * posts are all sitewide.
+	 * blog on which the last sitewide post displayed was made, which will result
+	 * in display and URL-resolution issues.
 	 *
 	 * @access protected
 	 * @since 0.2
@@ -232,9 +245,9 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	}
 
 	/**
-	 * Sets a value in the sitewide cache
+	 * Sets a value in the sitewide cache.
 	 *
-	 * Not that no cache value will be stored if WP_DEBUG is true.
+	 * Note that no cache value will be stored if `WP_DEBUG` is true.
 	 *
 	 * @param  string $key        the key under which to cache the data
 	 * @param  mixed  $value      the data to be cached
@@ -266,9 +279,9 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	}
 
 	/**
-	 * Retrieves a value from the sitewide cache
+	 * Retrieves a value from the sitewide cache.
 	 *
-	 * This will always return null if WP_DEBUG is true.
+	 * This will always return null if `WP_DEBUG` is true.
 	 *
 	 * @param  string $key the key under which data was cached
 	 * @return mixed       the cached data or null

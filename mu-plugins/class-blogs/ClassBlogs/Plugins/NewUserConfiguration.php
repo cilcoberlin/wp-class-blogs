@@ -1,10 +1,17 @@
 <?php
 
 /**
- * The new-user configuration plugin
+ * A plugin that performs post-creation configuration on new user accounts.
  *
- * This primarily attempts to create a sensible first and last name for a user
- * from their email address.
+ * The main purpose of this plugin is to set the user's first and last name
+ * by taking a guess as to what these values may be based on their email address.
+ * If the user provides an email address that appears to be in the form of
+ * first.last@example.com, they will have 'First' set as their first name and
+ * 'Last' set as their last name.  Anything else will result in their first name
+ * being set to the first letter of their email address and the rest of the
+ * non-domain letters used as their last name.  For example, an email address
+ * of flast@example.com would make for a first name of 'F.' and a last name
+ * of 'Last'.
  *
  * @package ClassBlogs_Plugins
  * @subpackage NewUserConfigurationPlugin
@@ -14,15 +21,16 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 {
 
 	/**
-	 * A regular expression representing valid name-part separators
+	 * A regular expression representing valid name-part separators.
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _NAME_PARTS_SEPARATORS = '/[\._]/';
 
 	/**
-	 * Registers the necessary plugin hooks with WordPress
+	 * Registers the necessary plugin hooks with WordPress.
 	 */
 	public function __construct()
 	{
@@ -34,7 +42,7 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Updates the user's information once they have been added to WordPress
+	 * Updates the user's information once they have been added to WordPress.
 	 *
 	 * @param int $user_id the database ID of the newly created user
 	 *
@@ -47,7 +55,7 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Updates a user's first and last name, nickname and display name
+	 * Updates a user's first and last name, nickname and display name.
 	 *
 	 * This tries to intelligently create a first and last name for a newly
 	 * added user based upon their email address, and then create a full name
@@ -87,7 +95,7 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Gets a user's first and last name from an email address
+	 * Gets a user's first and last name from an email address.
 	 *
 	 * This looks for what appear to be parts of a name, which are assumed to
 	 * be separated by either a period or an underscore.  Hyphens are assumed
@@ -139,7 +147,7 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Titlecases a user's first or last name
+	 * Titlecases a user's first or last name.
 	 *
 	 * This applies a standard titlecase filter to the given name, and attempts
 	 * to titlecase each part of a multi-part name.  For example, if this
@@ -161,13 +169,13 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Titlecases parts of names as found by a name part regex
+	 * Titlecases parts of names as found by a name part regex.
 	 *
 	 * This is the callback function used to titlecase name parts found by the
-	 * _titlecase_name function.  When given a name of "first", it returns "First".
+	 * `_titlecase_name` function.  When given a name of "first", it returns "First".
 	 *
 	 * @param  array $name_matches a matches array as returned by a
-	 *                             preg_replace_callback function, with the
+	 *                             `preg_replace_callback` function, with the
 	 *                             array containing strings
 	 * @return string              a titlecased version of the matched string
 	 *

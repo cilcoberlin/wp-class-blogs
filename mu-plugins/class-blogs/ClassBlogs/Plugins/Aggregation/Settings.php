@@ -1,7 +1,11 @@
 <?php
 
 /**
- * Settings for the class blogs aggregation plugins
+ * Settings for the class blogs aggregation plugins.
+ *
+ * These settings mainly provide information on the names of the tables used
+ * by the sitewide plugins to track sitewide data.  There are also a few
+ * constants that define relatively certain values used by WordPress.
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage Settings
@@ -11,7 +15,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 {
 
 	/**
-	 * The prefix to use for all sitewide tables
+	 * The prefix to use for all sitewide tables.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -19,7 +23,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	const TABLE_PREFIX = 'cb_sw_';
 
 	/**
-	 * The title of the default first post
+	 * The title of the default first post present on any newly created blog.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -27,7 +31,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	const FIRST_POST_TITLE = 'Hello world!';
 
 	/**
-	 * The name of the author of the first default comment
+	 * The name of the author of the first default comment on any new blog.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -35,7 +39,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	const FIRST_COMMENT_AUTHOR = 'Mr WordPress';
 
 	/**
-	 * The name used to identify a tag in the taxonomy used by WordPress
+	 * The name used to identify a tag in the WordPress's taxonomy.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -43,7 +47,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	const TAG_TAXONOMY_NAME = 'post_tag';
 
 	/**
-	 * The name of the option used to store any sitewide cache keys
+	 * The name of the option used to store any sitewide cache keys.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -51,7 +55,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	const CACHE_KEY_OPTION_NAME = 'cb_sw_cache_keys';
 
 	/**
-	 * The available short names for the sitewide tables
+	 * The available short names for the sitewide tables.
 	 *
 	 * @access private
 	 * @var array
@@ -64,7 +68,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	);
 
 	/**
-	 * Returns the full name of the table used for the given short name
+	 * Returns the full name of the table used for the given short name.
 	 *
 	 * @param  string $table the short name for the table
 	 * @return string        the full database name of the table, or an empty
@@ -81,7 +85,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	}
 
 	/**
-	 * Returns a mapping of short table names to their full names
+	 * Returns a mapping of short table names to their full names.
 	 *
 	 * The available short tables names, as well as their function, are as below:
 	 *

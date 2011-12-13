@@ -1,7 +1,11 @@
 <?php
 
 /**
- * Utility functions used by the class blogs plugin suite
+ * Utility functions used by the class blogs plugin suite.
+ *
+ * These utility functions include helper functions to manage blog and student
+ * IDs, shared formatting and HTML-parsing functions, and functions to get
+ * URLs for media and WordPress pages.
  *
  * @package ClassBlogs
  * @subpackage Utils
@@ -11,7 +15,7 @@ class ClassBlogs_Utils
 {
 
 	/**
-	 * Returns true if the current page is on the root blog
+	 * Returns true if the current page is on the root blog.
 	 *
 	 * @return bool whether or not the page is on the root blog
 	 *
@@ -63,7 +67,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Sanitizes any input coming from a user
+	 * Sanitizes any input coming from a user.
 	 *
 	 * @param  string $input text of the user's input in a form field
 	 * @return string        the sanitized version of the input
@@ -76,7 +80,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Returns the boolean equivalent of the given checkbox value
+	 * Returns the boolean equivalent of the given checkbox value.
 	 *
 	 * Since checkboxes that have been checked are represented in the POST data
 	 * as 'on', any value other than that will evaluate to false.
@@ -92,7 +96,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Creates a plain-text excerpt for the post's content
+	 * Creates a plain-text excerpt for the post's content.
 	 *
 	 * The excerpt returned will have all shortcodes and HTML markup stripped
 	 * out, and will be at most the number of words requested, with words
@@ -120,7 +124,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Returns a user-generated formatting string with the variables replaced
+	 * Returns a user-generated formatting string with the variables replaced.
 	 *
 	 * This is used to process any user-created string containing variables of
 	 * the form %variable_name% ('%' is the default sigil), which is often used
@@ -150,7 +154,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Returns the URL to the class blogs media directory
+	 * Returns the URL to the class blogs media directory.
 	 *
 	 * This takes an argument of the name of the media-type directory to add on
 	 * to the path, such as a 'css' or 'js' directory.
@@ -171,7 +175,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Returns the URL to the class blogs JavaScript directory
+	 * Returns the URL to the class blogs JavaScript directory.
 	 *
 	 * @return string the URL of the class blogs JavaScript directory
 	 *
@@ -183,7 +187,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Returns the URL to the class blogs CSS directory
+	 * Returns the URL to the class blogs CSS directory.
 	 *
 	 * @return string the URL of the class blogs CSS directory
 	 *
@@ -195,7 +199,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Returns the name for a table used as part of the class blogs suite
+	 * Returns the name for a table used as part of the class blogs suite.
 	 *
 	 * This simply appends the class blogs prefix to the given table name
 	 *
@@ -229,7 +233,7 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Gets the full URL of the current page, including the query string
+	 * Gets the full URL of the current page, including the query string.
 	 *
 	 * @return string the absolute URL of the current page
 	 *

@@ -1,7 +1,33 @@
 <?php
 
 /**
- * A schema manager for plugin database tables
+ * A schema manager for plugin database tables.
+ *
+ * This is used to provide a very light level of abstraction for the database
+ * tables used by certain plugins.  Using a lightweight DSL, any plugin can
+ * define schemata for the tables that they use.  The plugin can then use the
+ * `apply_to_table` method of the schema to actually create a table.  If a table
+ * already exists with the name given, the database table will be modified to
+ * match the schema as closely as WordPress is capable of doing.
+ *
+ * For example, to create a table named 'test' with two columns, the first a
+ * primary-key field named 'pk' and the other a character field that cannot be
+ * null named 'text', which is also used in an index, this code could be used:
+ *
+ *     $schema = new ClassBlogs_Schema(
+ *         array(
+ *             array( 'pk',   'bigint(20) not null auto increment' ),
+ *             array( 'text', 'varchar(255) not null' )
+ *         ),
+ *         'pk',
+ *         array(
+ *             array( 'text', 'text' )
+ *         )
+ *     );
+ *     $schema->apply_to_table( 'test' );
+ *
+ * The details of the syntax used when declaring a schema can be found by
+ * consulting the documentation for the constructor for the schema class.
  *
  * @package ClassBlogs
  * @subpackage Schema
@@ -11,7 +37,7 @@ class ClassBlogs_Schema
 {
 
 	/**
-	 * Create a new schema manager
+	 * Create a new schema manager.
 	 *
 	 * The arguments to this class must be formatted in a particular way.  The
 	 * first $columns argument needs to be an array containing other arrays
@@ -60,7 +86,7 @@ class ClassBlogs_Schema
 
 	/**
 	 * Create a table from the current schema, or modify an existing one of the
-	 * same name to match the current schema
+	 * same name to match the current schema.
 	 *
 	 * If this operation does not result in any modifications to the given table
 	 * name, then `false` is returned.  If a table was created or modified to
@@ -115,7 +141,7 @@ class ClassBlogs_Schema
 	}
 
 	/**
-	 * Return the names of the columns in current schema in order
+	 * Return the names of the columns in current schema in order.
 	 *
 	 * @return array a list of the column names
 	 *
@@ -131,7 +157,7 @@ class ClassBlogs_Schema
 	}
 
 	/**
-	 * Return the names of the columns in the given table in order
+	 * Return the names of the columns in the given table in order.
 	 *
 	 * @param  string $table the name of a table
 	 * @return array         a list of the column names in order

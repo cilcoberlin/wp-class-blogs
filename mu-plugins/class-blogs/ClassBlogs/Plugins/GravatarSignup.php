@@ -1,10 +1,8 @@
 <?php
 
 /**
- * The gravatar signup plugin
- *
- * This adds a link to sign the student up for a gravatar to their account
- * creation email.
+ * A plugin that adds a link to the bottom of the account-activation email that
+ * will allow a user to create a gravatar associated with their email address.
  *
  * @package ClassBlogs_Plugins
  * @subpackage GravatarSignup
@@ -14,15 +12,16 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 {
 
 	/**
-	 * The URL at which a user can sign up for a Gravatar account
+	 * The URL at which a user can sign up for a Gravatar account.
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _GRAVATAR_SIGNUP_URL = 'http://en.gravatar.com/site/signup/';
 
 	/**
-	 * Registers the necessary plugin hooks with WordPress
+	 * Registers the necessary plugin hooks with WordPress.
 	 */
 	public function __construct()
 	{
@@ -35,7 +34,7 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Updates the contents of a new-user welcome email
+	 * Updates the contents of a new-user welcome email.
 	 *
 	 * @param  string $email    the text of the welcome email
 	 * @param  int    $user_id  the database ID of the newly created user
@@ -52,7 +51,7 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	* Updates the contents of a new-blog welcome email
+	* Updates the contents of a new-blog welcome email.
 	*
 	* @param  string $email    the text of the welcome email
 	* @param  int    $blog_id  the database ID of the newly created blog
@@ -71,7 +70,7 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Adds the gravatar signup link to a welcome message
+	 * Adds the gravatar signup link to a welcome message.
 	 *
 	 * The added link will appear, along with a message, at the very bottom
 	 * of the welcome email.
@@ -102,7 +101,7 @@ class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns the URL at which the given user can sign up for a gravatar
+	 * Returns the URL at which the given user can sign up for a gravatar.
 	 *
 	 * @param  object $user an instance of a WordPress user
 	 * @return string       the URL at which the user can sign up for a Gravatar

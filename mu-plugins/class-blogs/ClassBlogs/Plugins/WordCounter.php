@@ -1,11 +1,14 @@
 <?php
 
 /**
- * The word-counter plugin
+ * A plugin that tracks the number of words produced each week by students.
  *
  * This provides an admin page available to any admins on the root blog that
  * displays the number of words written by each student over a period of time,
- * drawn from the content of their posts and comments.
+ * drawn from the content of their posts and comments.  The professor is able
+ * to set a weekly minimum word count, which influences the display of the
+ * word counts shown on the admin page, with word counts falling below the
+ * minimum shown differently than those that exceed it.
  *
  * It also provides each student with a dashboard widget that displays their
  * word counts for the current week and the previous one.
@@ -17,7 +20,7 @@
 class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 {
 	/**
-	 * The default options for the plugin
+	 * The default options for the plugin.
 	 *
 	 * @access protected
 	 * @var array
@@ -27,7 +30,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	);
 
 	/**
-	 * Admin media files
+	 * Admin media files.
 	 *
 	 * @access protected
 	 * @var array
@@ -53,7 +56,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	const _SUNDAY = 0;
 
 	/**
-	 * Registers WordPress hooks to enable the word counter
+	 * Registers WordPress hooks to enable the word counter.
 	 */
 	function __construct() {
 		parent::__construct();
@@ -158,7 +161,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Handles the logic to display the admin page for the plugin
+	 * Handles the logic to display the admin page for the plugin.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -292,7 +295,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Gets weekly word counts for all students that are part of a class
+	 * Gets weekly word counts for all students that are part of a class.
 	 *
 	 * This returns an array ordered by the week in which the posts and comments
 	 * that provide the word counts were made.  Each entry in the array has a
@@ -394,7 +397,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Calculates the number of words produced by a student in the given date window
+	 * Calculates the number of words produced by a student in the given date window.
 	 *
 	 * @param  int    $user_id    the ID of the user
 	 * @param  object $start_dt   a DateTime of the start date

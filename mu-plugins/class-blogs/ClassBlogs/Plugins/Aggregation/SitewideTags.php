@@ -1,7 +1,10 @@
 <?php
 
 /**
- * A widget that shows a sitewide tag cloud
+ * A widget that shows a tag cloud built from all of the tags used on the site.
+ *
+ * The tag cloud, as with the core WordPress tag cloud, can be configured to
+ * only display tags that are used more than an arbitrary number of times.
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage SitewideTagsWidget
@@ -12,7 +15,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 {
 
 	/**
-	 * Default options for the sitewide tag cloud widget
+	 * Default options for the sitewide tag cloud widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -25,7 +28,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 	);
 
 	/**
-	 * Creates the sitewide tag cloud widget
+	 * Creates the sitewide tag cloud widget.
 	 */
 	public function __construct()
 	{
@@ -36,7 +39,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 	}
 
 	/**
-	 * Displays the sitewide tag cloud widget
+	 * Displays the sitewide tag cloud widget.
 	 */
 	public function widget( $args, $instance )
 	{
@@ -70,7 +73,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 	}
 
 	/**
-	 * Updates the sitewide tag cloud widget
+	 * Updates the sitewide tag cloud widget.
 	 */
 	public function update( $new, $old )
 	{
@@ -83,7 +86,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 	}
 
 	/**
-	 * Handles the admin logic for the sitewide tag cloud widget
+	 * Handles the admin logic for the sitewide tag cloud widget.
 	 */
 	public function form( $instance )
 	{
@@ -111,10 +114,32 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 }
 
 /**
- * The sitewide tags plugin
+ * A plugin that displays information on the tags used on any blog on the site.
  *
  * This provides a widget available on the main blog only that displays a tag
- * cloud built from the tags used on all blogs that are part of the class blog.
+ * cloud built from the tags used on all blogs on the site.  Clicking on any
+ * one of these tags will take a user to a page showing all posts from across
+ * the site that use the clicked-on tag.
+ *
+ * This plugin also provides a basic interface to the sitewide tag data.  An
+ * example of accessing this data through this plugin is as follows:
+ *
+ *    // The tags 'one' and 'two' are used on a post on blog 1.  The tags
+ *    // 'two' and 'three' are used on a post on blog 2.
+ *    $sw_tags = ClassBlogs::get_plugin( 'sitewide_tags' );
+ *
+ *    assert( $sw_tags->get_min_usage_count() === 1 );
+ *    assert( $sw_tags->get_max_usage_count() === 2 );
+ *
+ *    $all = $sw_tags->get_sitewide_tags();
+ *    assert( $all['one']['count'] === 1 );
+ *    assert( $all['two']['count'] === 2 );
+ *    assert( count( $all ) === 3 );
+ *
+ *    $tagged = $sw_tags->get_tagged_posts( 'two' );
+ *    assert( count( $tagged ) === 2 );
+ *
+ *    echo "Tag page for 'two' is " . $sw_tags->get_tag_page_url( 'two' );
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage SitewideTags
@@ -124,52 +149,57 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 {
 
 	/**
-	 * The name of the GET query variable that contains the name of a tag
+	 * The name of the GET query variable that contains the name of a tag.
 	 *
 	 * This is used to allow the sitewide tag usage page to display usage
-	 * for the tag specified in this query variable
+	 * for the tag specified in this query variable.
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _TAG_QUERY_VAR_NAME = 'tag';
 
 	/**
-	 * The default name for the tag list page
+	 * The default name for the tag list page.
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _TAG_PAGE_DEFAULT_NAME = 'Sitewide Tags';
 
 	/**
-	 * Default options for the plugin
+	 * Default options for the plugin.
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.1
 	 */
 	protected $default_options = array(
 		'tag_page_id' => null
 	);
 
 	/**
-	 * Cached sitewide tags
+	 * Cached sitewide tags.
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private $_sitewide_tags;
 
 	/**
-	 * Information on the tag displayed on a sitewide tags page
+	 * Information on the tag displayed on a sitewide tags page.
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private $_current_tag;
 
 	/**
-	 * Initialize the tag list
+	 * Initialize the tag list.
 	 */
 	function __construct()
 	{
@@ -182,7 +212,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Enables the tag list page if the the user is on that page and viewing a tag
+	 * Enables the tag list page if the the user is on that page and viewing a tag.
 	 *
 	 * This is called before the posts are obtained, and checks to see whether
 	 * the user is on the private page created by this plugin and whether the
@@ -216,7 +246,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Creates a page that is used to show all uses of a tag across the site
+	 * Creates a page that shows all uses of a given tag across the site.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -233,7 +263,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Enables the sitewide tag cloud sidebar widget
+	 * Enables the sitewide tag cloud sidebar widget.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -244,7 +274,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Returns the URL for the tag-list page
+	 * Returns the URL for the tag-list page.
 	 *
 	 * @return string the URL for the tag-list page
 	 *
@@ -259,8 +289,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 		return $url;
 	}
 
-		/**
-	 * Makes WordPress treat a sitewide tag page as a tag archive
+	/**
+	 * Makes WordPress treat a sitewide tag page as a tag archive.
 	 *
 	 * This sets internal flags used by WordPress to make it think that it is
 	 * on a tag archive page and replaces the page content with a list of posts
@@ -301,7 +331,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Sets the correct title for a sitewide tags archive page
+	 * Sets the correct title for a sitewide tags archive page.
 	 *
 	 * @param  object $tag the current tag
 	 * @return string      the current tag's name
@@ -315,7 +345,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Set the sitewide tag page title to reflect the name of the current tag
+	 * Set the sitewide tag page title to reflect the name of the current tag.
 	 *
 	 * @param  string $title     the current page's title
 	 * @param  string $separator the title separator character
@@ -329,10 +359,11 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 		return sprintf( ' %s %s ', $this->_current_tag['name'], $separator );
 	}
 
-		/**
-	 * Calculate the maximum and minimum sitewide tag usage counts
+	/**
+	 * Calculate the maximum and minimum sitewide tag usage counts.
 	 *
-	 * The counts are returned in an array with a 'max' and 'min' key.
+	 * The counts are returned in an array with a 'max' and 'min' key.  If no
+	 * tag usage was found across the site, these values will be 0.
 	 *
 	 * @return array the max and min counts
 	 *
@@ -366,7 +397,15 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Gets the cached value of the max or min tag usage
+	 * Gets the maximum or minimum tag usage count.
+	 *
+	 * This is a utility method that tries to get the key from the cache first.
+	 * If the cache is not built, it fetches the value, builds the cache and
+	 * then returns the requested key's value.
+	 *
+	 * Valid keys that can be passed to this function are 'max', for the maximum
+	 * count, or 'min' for the minimum.  Any other values will result in a 0
+	 * being returned.
 	 *
 	 * @param  string $key the cached count key
 	 * @return int         the tag usage count
@@ -385,7 +424,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Returns the URL for the page showing sitewide uses of the given tag
+	 * Returns the URL for the page showing a list of all posts on the site that
+	 * use the given tag.
 	 *
 	 * @param  string $slug the tag's slug
 	 * @return string       the URL of the tag-list page for the tag
@@ -404,7 +444,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Returns a list of the sitewide tags
+	 * Returns a list of the sitewide tags.
 	 *
 	 * The returned array is sorted alphabetically by the slug of each tag, and
 	 * each array element has a key of the tag slug and a value of an array
@@ -446,7 +486,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Returns the lowest usage count of the sitewide tags
+	 * Returns the lowest usage count of the sitewide tags.
 	 *
 	 * @return int the usage count of the least-used tag
 	 *
@@ -458,7 +498,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Returns the highest usage count of the sitewide tags
+	 * Returns the highest usage count of the sitewide tags.
 	 *
 	 * @return int the usage count of the most-used tag
 	 *
@@ -470,7 +510,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Returns an array of tags for use by the sitewide tag cloud widget
+	 * Returns an array of tags for use by the sitewide tag cloud widget.
 	 *
 	 * If the usage count of any tag is less than the given threshold, that
 	 * tag is excluded from the returned list.  Each tag in the returned array
@@ -509,7 +549,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Returns all sitewide posts that use the given tag slug
+	 * Returns all sitewide posts that use the given tag slug.
 	 *
 	 * @param  string $slug the tag of the slug
 	 * @return array        a list of posts using the given tag

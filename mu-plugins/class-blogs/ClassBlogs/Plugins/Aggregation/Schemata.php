@@ -1,7 +1,18 @@
 <?
 
 /**
- * Schemata for sitewide tables
+ * Schemata for tables used by the sitewide plugins.
+ *
+ * These schemata represent the tables that the sitewide plugins use to keep
+ * track of the sitewide data.  Some of the tables, such as the comments and
+ * posts table, are more or less identical to WordPress's core comments and posts
+ * tables, with the addition of a few ID fields and modified indexes.  Other
+ * tables, such as those used to keep track of sitewide tags, adhere less
+ * closely to the WordPress tables.
+ *
+ * Note that these objects simply represent the table structure.  The actual
+ * names of the tables to which these schemata are bound are set via the
+ * `ClassBlogs_Plugins_Aggregation_Settings` class.
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage Schemata

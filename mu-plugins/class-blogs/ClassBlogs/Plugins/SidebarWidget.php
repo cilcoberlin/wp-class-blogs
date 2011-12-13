@@ -1,7 +1,10 @@
 <?php
 
 /**
- * A base class for any sidebar widgets used in the class blogs suite
+ * A base class for any sidebar widgets used in the class-blogs suite.
+ *
+ * This provides a few basic methods to a descending widget, mainly to help
+ * with handling options and validating user input on the widget admin panel.
  *
  * @package ClassBlogs_Plugins
  * @subpackage SidebarWidget
@@ -11,7 +14,7 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 {
 
 	/**
-	 * The default options for the sidebar widget
+	 * The default options for the sidebar widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -19,7 +22,7 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 	protected $default_options = array();
 
 	/**
-	 * Initializes the widget
+	 * Initializes the widget.
 	 *
 	 * This is a convenience function wrapping the standard widget constructor.
 	 *
@@ -41,7 +44,7 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 	}
 
 	/**
-	 * Outputs markup to contain a sidebar widget
+	 * Outputs markup to open a sidebar widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -56,7 +59,7 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 	}
 
 	/**
-	 * Outputs markup to close a sidebar widget
+	 * Outputs markup to close a sidebar widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -67,10 +70,10 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 	}
 
 	/**
-	 * Returns the escaped value of the requested attribute for the given instance
+	 * Returns the escaped value of the requested attribute for the given instance.
 	 *
 	 * If the provided instance does not have the requested attribute, an
-	 * empty string is returned
+	 * empty string is returned.
 	 *
 	 * @param  object $instance a widget instance
 	 * @param  string $attr     the name of the instance attribute
@@ -85,9 +88,8 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 		return esc_attr( $value );
 	}
 
-
 	/**
-	 * Gives the instance default values if there are any and if the instance is null
+	 * Gives the instance default values if there are any and if the instance is null.
 	 *
 	 * @param  object $instance a widget instance
 	 * @return object           the possibly modified instance

@@ -1,7 +1,13 @@
 <?php
 
 /**
- * A widget that displays a random image with a caption
+ * A widget that displays an chosen randomly from all of the posts on the site.
+ *
+ * This image is displayed with a caption beneath that provides information on
+ * its provenance.  If the image is associated with a specific post, a link to
+ * that post is provided.  If the image is simply in the media library but not
+ * linked to an actual post, a link to the blog in whose media library the image
+ * exists is provided.
  *
  * @package ClassBlogs_Plugins
  * @subpackage RandomImageWidget
@@ -12,7 +18,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 {
 
 	/**
-	 * Default options for the random image widget
+	 * Default options for the random-image widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -22,7 +28,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 	);
 
 	/**
-	 * Creates the random image widget
+	 * Creates the random-image widget.
 	 */
 	public function __construct()
 	{
@@ -33,7 +39,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 	}
 
 	/**
-	 * Displays the random image widget
+	 * Displays the random-image widget.
 	 */
 	public function widget( $args, $instance )
 	{
@@ -79,7 +85,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 	}
 
 	/**
-	 * Updates the random image widget
+	 * Updates the random-image widget.
 	 */
 	public function update( $new, $old )
 	{
@@ -88,7 +94,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 	}
 
 	/**
-	 * Handles the admin logic for the random image widget
+	 * Handles the admin logic for the random-image widget.
 	 */
 	public function form( $instance )
 	{
@@ -103,11 +109,22 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 }
 
 /**
- * The random-image plugin
+ * A plugin that provides a widget, available only on the root blog, that
+ * displays an image randomly selected from the media libraries and posts of
+ * all blogs on the site.
  *
- * This plugin allows an admin on the root blog to add a widget that displays
- * a random image chosen from all the blogs on the site and shows the blog on
- * which the image was used.
+ * This also provides a simple interface to getting random images, an example
+ * of which is shown below:
+ *
+ *     // An image named 'example' is used in a post with an ID of 2 on a blog
+ *     // with an ID of 3.
+ *     $plugin = ClassBlogs::get_plugin( 'random_image' );
+ *
+ *     $image = $plugin->get_random_image();
+ *     assert( $image->title === 'example );
+ *     assert( $image->blog_id === 3 );
+ *     assert( $image->post_id === 2 );
+ *     echo "The image's URL is " . $image->url . "\n";
  *
  * @package ClassBlogs_Plugins
  * @subpackage RandomImage
@@ -116,7 +133,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 {
 	/**
-	 * Registers the random image sidebar widget
+	 * Registers the random-image sidebar widget.
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -124,7 +141,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Enables the random image sidebar widget
+	 * Enables the random-image sidebar widget.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -135,7 +152,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Find the ID of the first post that uses the given image
+	 * Finds the ID of the first post that uses the given image.
 	 *
 	 * @param  int    $blog_id the ID of the blog on which the image was uploaded
 	 * @param  string $url     the absolute URL of the image
@@ -167,7 +184,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns a random image from one of the blogs on the site
+	 * Returns a random image from one of the blogs on the site.
 	 *
 	 * The returned image object, if not null, will have the following properties:
 	 *
@@ -175,7 +192,12 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	 *     title   - the image's title
 	 *     url     - the absolute URL to the image
 	 *
-	 * @return object the random image, or null if none can be found
+	 * If the image is associated with a particular post, it will also have
+	 * the following properties on it:
+	 *
+	 *     post_id - the ID of the post that uses the image
+	 *
+	 * @return mixed the random image object, or null if none can be found
 	 *
 	 * @since 0.1
 	 */

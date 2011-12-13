@@ -1,7 +1,92 @@
 <?php
 
 /**
- * Base class for any plugin that is part of the class blogs suite
+ * The base class for any plugin that is part of the class-blogs suite.
+ *
+ * This mainly provides descended classes with a framework to manage plugin
+ * options, cached values, plugin identifiers and paths to static media files.
+ *
+ * In addition to these helper methods, this class also provides a lightweight
+ * framework for handling common plugin actions.  Plugins may provide a value
+ * for the `$default_options` attribute that provide their default options, and
+ * they can also provide a value for `$admin_media` attribute, which holds
+ * information on any CSS or JavaScript files used by their admin pages.  Lastly,
+ * a plugin can define an `enable_admin_page` method that can run code to register
+ * and enable an admin page when the user is on the admin side of their blog.
+ *
+ * An example, showing how to create a new plugin and use the features provided
+ * by this base class, is as follows:
+ *
+ * class ClassBlogs_Plugins_Example extends ClassBlogs_Plugins_BasePlugin
+ * {
+ *     protected $default_options = array(
+ *         'counter'    => 0,
+ *         'is_example' => true
+ *     );
+ *
+ *     protected $admin_media = array(
+ *         'css' => array( 'styles.css' ),
+ *         'js'  => array( 'script.js' )
+ *     );
+ *
+ *     protected function enable_admin_page( $admin )
+ *     {
+ *         $admin->add_admin_page(
+ *             $this->get_uid(),
+ *             'Example Admin',
+ *             array( $this, 'admin_page' )
+ *         );
+ *     }
+ *
+ *     public function admin_page()
+ *     {
+ *         // Code to render an admin page goes here...
+ *     }
+ *
+ *     public function demonstrate()
+ *     {
+ *
+ *         echo "The plugin's unique identifier is: " . $this->get_uid() . "\n";
+ *
+ *         // A site is created with three class blogs on it, with IDs of 1, 2, and 3.
+ *         assert( count( $this->get_all_blog_ids() ) === 3 );
+ *
+ *         $options = $this->get_options();
+ *         assert( count( $options ) === 2 );
+ *         assert( $options['counter'] === 0 );
+ *         assert( $options['is_example'] === true );
+ *         assert( $this->get_option( 'counter' ) === $options['counter'] );
+ *         assert( $this->option_is_empty( 'empty' ) === true );
+ *
+ *         $this->update_option( 'counter', 1 );
+ *         assert( $this->get_option( 'counter' ) === 1 );
+ *         $options['counter'] = 2;
+ *         $this->update_options( $options );
+ *         assert( $this->get_option( 'counter' ) === 2 );
+ *
+ *         switch_to_blog( 1 );
+ *         assert( $this->get_cache( 'cached' ) === null );
+ *         $this->set_cache( 'cached', true );
+ *         assert( $this->get_cache( 'cached' ) === true );
+ *         switch_to_blog( 2 );
+ *         assert( $this->get_cache( 'cached' ) === null );
+ *         switch_to_blog( 1 );
+ *         $this->clear_cache( 'cached' );
+ *         assert( $this->get_cache( 'cached' ) === null );
+ *
+ *         switch_to_blog( 1 );
+ *         assert( $this->get_site_cache( 'cached' ) === null );
+ *         $this->set_site_cache( 'cached', true );
+ *         assert( $this->get_site_cache( 'cached' ) === true );
+ *         switch_to_blog( 2 );
+ *         assert( $this->get_site_cache( 'cached' ) === true );
+ *         $this->clear_site_cache( 'cached' );
+ *         assert( $this->get_site_cache( 'cached' ) === null );
+ *     }
+ * }
+ *
+ * $plugin = new ClassBlogs_Plugins_Example();
+ * $plugin->demonstrate();
  *
  * @package ClassBlogs_Plugins
  * @subpackage BasePlugin
@@ -11,7 +96,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 {
 
 	/**
-	 * The default options for the plugin
+	 * The default options for the plugin.
 	 *
 	 * @var array
 	 * @since 0.1
@@ -19,7 +104,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	protected $default_options = array();
 
 	/**
-	 * The internally stored options for the plugin
+	 * The internally stored options for the plugin.
 	 *
 	 * @access private
 	 * @var array
@@ -27,7 +112,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	private $_options;
 
 	/**
-	 * The admin CSS or JavaScript used by the plugin
+	 * The admin CSS or JavaScript used by the plugin.
 	 *
 	 * A plugin can add admin media by providing values for the `css` or `js`
 	 * keys of the array, which should be assigned to arrays of strings, where
@@ -45,7 +130,8 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	);
 
 	/**
-	 * Performs sanity checks and configuration when loaded
+	 * Initialize common admin options and provide a hook for plugins to
+	 * perform further configuration options.
 	 */
 	public function __construct()
 	{
@@ -58,7 +144,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Generates a pseudo-unique ID for the plugin
+	 * Generates a pseudo-unique ID for the plugin.
 	 *
 	 * This ID is automatically generated from a truncated and modified version
 	 * of the current plugin's classname.
@@ -74,7 +160,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns a list of all blog IDs on the site
+	 * Returns a list of all blog IDs on the site.
 	 *
 	 * @return array a list of all blog IDs on the site
 	 *
@@ -97,7 +183,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Gets the options for the current plugin
+	 * Gets the options for the current plugin.
 	 *
 	 * If no options are found for the plugin, options are set using the values
 	 * contained in the $default_options  variable.  If this variable is
@@ -118,7 +204,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Return the value of the requested plugin option
+	 * Return the value of the requested plugin option.
 	 *
 	 * @param  string $name the name of the plugin option
 	 * @return mixed        the value of the plugin option
@@ -139,7 +225,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns true if the given options's value is empty
+	 * Returns true if the given options's value is empty.
 	 *
 	 * This will be true if the option has a value that counts as empty, or
 	 * if the option is not set.
@@ -157,7 +243,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns an array containing all the current plugin options
+	 * Returns an array containing all the current plugin options.
 	 *
 	 * @return array a hash of the plugin's current options
 	 *
@@ -171,7 +257,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Updates the value of a single option
+	 * Updates the value of a single option.
 	 *
 	 * @param string $option the name of the plugin value to update
 	 * @param mixed  $value  the new value of the plugin option
@@ -187,7 +273,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Updates the options used by a plugin
+	 * Updates the options used by a plugin.
 	 *
 	 * @param array $options an array of the plugin's options
 	 *
@@ -201,7 +287,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Adds a value to the cache
+	 * Adds a value to the cache.
 	 *
 	 * This will never add a value to the cache if WP_DEBUG is true.
 	 *
@@ -235,7 +321,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Retrieves the requested cache value
+	 * Retrieves the requested cache value.
 	 *
 	 * If the cache value is not found, a null value is returned.  If WP_DEBUG
 	 * is true, this will always return null.
@@ -281,7 +367,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Clears a single cached value
+	 * Clears a single cached value.
 	 *
 	 * @param string $key the cache key to clear
 	 *
@@ -305,7 +391,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Generates the name of the cache key used to store data for the current plugin
+	 * Generates the name of the cache key used to store data for the current plugin.
 	 *
 	 * @param  string $key the base name of the cache key
 	 * @return string      the full name of the cache key
@@ -318,9 +404,9 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Registers a sidebar widget
+	 * Registers a sidebar widget.
 	 *
-	 * @param mixed  $widget the widget class
+	 * @param object $widget the widget class
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -331,7 +417,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Registers a sidebar widget that should only be available on the root blog
+	 * Registers a sidebar widget that should only be available on the root blog.
 	 *
 	 * This makes the widget only appear as a selection on the admin side if the
 	 * user is an admin on the root blog and the root blog is being edited, but
@@ -351,7 +437,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns true if the current user is an administrator on the root blog
+	 * Returns true if the current user is an administrator on the root blog.
 	 *
 	 * @return bool whether the current user is an admin on the root blog
 	 *
@@ -366,7 +452,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns markup to make a checkbox or select box selected if it is true
+	 * Returns markup to make a checkbox or select box selected if it is true.
 	 *
 	 * @param  string $option the name of the option
 	 * @return string         possible markup for a checked attribute
@@ -380,7 +466,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Creates a page for the plugin with the given name on the root blog
+	 * Creates a page for the plugin with the given name on the root blog.
 	 *
 	 * This makes a private page, so that it is not displayed by page-listing
 	 * function of WordPress.  However, there is logic behind the scenes that
@@ -432,7 +518,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Enables a possible admin page associated with a child plugin
+	 * Enables a possible admin page associated with a child plugin.
 	 *
 	 * This simply provides a shortcut for any child plugins to register an admin
 	 * page that is part of the class blogs menu group.  A child plugin can override
@@ -451,7 +537,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 
 	/**
 	 * Allows a child plugin to easily register an admin page visible to the
-	 * superuser and any users with admin rights on the root blog
+	 * superuser and any users with admin rights on the root blog.
 	 *
 	 * The child plugin that wishes to add a root admin page can override this
 	 * function with code that registers the admin page using the ClassBlogs_Admin

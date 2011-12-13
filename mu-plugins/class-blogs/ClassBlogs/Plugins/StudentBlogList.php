@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A widget that shows a list of all student blogs
+ * A widget that shows a list of links to every student blog on the site.
  *
  * @package ClassBlogs_Plugins
  * @subpackage StudentBlogListWidget
@@ -12,7 +12,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 {
 
 	/**
-	 * Default options for the student blogs widget
+	 * Default options for the student-blogs widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -23,7 +23,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 	);
 
 	/**
-	 * Creates the student blogs widget
+	 * Creates the student-blogs widget.
 	 */
 	public function __construct()
 	{
@@ -34,7 +34,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 	}
 
 	/**
-	 * Displays the student blogs widget
+	 * Displays the student-blogs widget.
 	 */
 	public function widget( $args, $instance )
 	{
@@ -55,7 +55,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 	}
 
 	/**
-	 * Updates the student blogs widget
+	 * Updates the student-blogs widget.
 	 */
 	public function update( $new, $old )
 	{
@@ -66,7 +66,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 	}
 
 	/**
-	 * Handles the admin logic for the student blogs widget
+	 * Handles the admin logic for the student-blogs widget.
 	 */
 	public function form( $instance )
 	{
@@ -99,11 +99,26 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 }
 
 /**
- * The student-blog list plugin
- *
- * This provides a widget available only on the main blog that displays
+ * A plugin that provides a widget, available only on the main blog, that displays
  * a list of student blogs.  A student blog in this case is any blog on which
  * a single user without admin privileges on the root blog has admin rights.
+ *
+ * This plugin also provides a programmatic interface to information about
+ * students and their blogs, which can be seen in the following example:
+ *
+ *     // A blog with an ID of 2 is created for a student with an ID of 3.  This
+ *     // blog is called 'Example' and is located at http://www.example.com.
+ *     $plugin = ClassBlogs::get_plugin( 'student_blogs' );
+ *
+ *     $blogs = $plugin->get_student_blogs();
+ *     assert( count( $blogs ) === 1 );
+ *     $blog = $blogs[0];
+ *     assert( $blog->blog_id === 2 );
+ *     assert( $blog->user_id === 3 );
+ *     assert( $blog->title === 'Example' );
+ *     assert( $blog->url === 'http://www.example.com' );
+ *
+ *     assert( $plugin->get_blog_url_for_student( 3 ) === $blog->url );
  *
  * @package ClassBlogs_Plugins
  * @subpackage StudentBlogList
@@ -112,7 +127,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Sideb
 class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 {
 	/**
-	 * A lookup table containing student blog URLs, keyed by user ID
+	 * A lookup table containing student blog URLs, keyed by user ID.
 	 *
 	 * @access private
 	 * @var array
@@ -121,7 +136,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	private $_blog_urls;
 
 	/**
-	 * Actions that should result in the blog list cache being cleared
+	 * Actions that should result in the blog list cache being cleared.
 	 *
 	 * @access private
 	 * @var array
@@ -133,7 +148,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	);
 
 	/**
-	 * Registers WordPress hooks to enable the student blog list widget
+	 * Registers WordPress hooks to enable the student blog list widget.
 	 */
 	function __construct() {
 		parent::__construct();
@@ -146,7 +161,11 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Clears the cache of student blogs
+	 * Clears the cache of student blogs.
+	 *
+	 * This is registered as a callback for any actions that could change the
+	 * display name of a blog, such as the user updating their personal information
+	 * or changing their blog's name.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -157,7 +176,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Formats the blog display name based upon the formatting string
+	 * Formats the blog display name based upon the formatting string.
 	 *
 	 * @param  string $format  the formatting string for the display name
 	 * @param  int    $user_id the ID of the student who owns the blog
@@ -192,7 +211,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Gets a list of student blogs on the current site
+	 * Gets a list of student blogs on the current site.
 	 *
 	 * A student blog in this sense is defined as any non-root blog that has a
 	 * single admin user on it that does not have admin rights on any other
@@ -243,7 +262,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Enables the sidebar widget and its controller
+	 * Enables the sidebar widget and its controller.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -254,7 +273,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Sorts the internal blog list by the display name of each blog
+	 * Sorts the internal blog list by the display name of each blog.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -265,11 +284,16 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns a list of information about each student blog
+	 * Returns a list of information about each student blog.
 	 *
-	 * Each element in the returned array will have a 'name' key containing the
-	 * display name of the blog and a 'url' key containing its URL.  The blogs
-	 * will be sorted by the last and then first name of the student owning it.
+	 * The blogs in the returned list will be sorted by the last and then
+	 * first name of the student owning it.  Each item in this list will be
+	 * an object with the following properties:
+	 *
+	 *     blog_id - the ID of the blog
+	 *     name    - the formatted display name of the blog
+	 *     user_id - the ID of the student who owns the blog
+	 *     url     - the URL of the blog
 	 *
 	 * @param  string $format the formatting string to use for the blog title
 	 * @return array          a list of information on all student blogs
@@ -301,7 +325,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns the address of the student's blog
+	 * Returns the URL of the given student's blog.
 	 *
 	 * @param  int    $user_id the user ID of the student
 	 * @return string          the address of their blog, or a blank string

@@ -1,7 +1,10 @@
 <?php
 
 /**
- * Shared settings used by the class blogs plugin suite
+ * Shared settings used by the class blogs plugin suite.
+ *
+ * These settings consist mainly of directory names and IDs used by the class
+ * blogs suite or WordPress itself.
  *
  * @package ClassBlogs
  * @subpackage Settings
@@ -11,7 +14,7 @@ class ClassBlogs_Settings
 {
 
 	/**
-	 * The current version of the class blogs suite
+	 * The current version of the class blogs suite.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -19,7 +22,7 @@ class ClassBlogs_Settings
 	const VERSION = "0.1";
 
 	/**
-	 * The default cache length, in seconds
+	 * The default cache length, in seconds.
 	 *
 	 * @var int
 	 * @since 0.1
@@ -27,7 +30,7 @@ class ClassBlogs_Settings
 	const DEFAULT_CACHE_LENGTH = 3600;
 
 	/**
-	 * The name of the directory containing the class blogs source
+	 * The name of the directory containing the class blogs source.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -35,7 +38,7 @@ class ClassBlogs_Settings
 	const SRC_DIR_NAME = 'class-blogs';
 
 	/**
-	 * The name of the directory containing static media files
+	 * The name of the directory containing static media files.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -43,7 +46,7 @@ class ClassBlogs_Settings
 	const MEDIA_DIR_NAME = 'media';
 
 	/**
-	 * The name fo the directory containing JavaScript files
+	 * The name fo the directory containing JavaScript files.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -51,7 +54,7 @@ class ClassBlogs_Settings
 	const MEDIA_JS_DIR_NAME = 'js';
 
 	/**
-	 * The name of the directory containing CSS files
+	 * The name of the directory containing CSS files.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -59,7 +62,7 @@ class ClassBlogs_Settings
 	const MEDIA_CSS_DIR_NAME = 'css';
 
 	/**
-	 * The ID WordPress uses for inactive widgets in a sidebar widget list
+	 * The ID WordPress uses for inactive widgets in a sidebar widget list.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -67,7 +70,7 @@ class ClassBlogs_Settings
 	const INACTIVE_WIDGETS_ID = 'wp_inactive_widgets';
 
 	/**
-	 * The ID WordPress uses for the meta sidebar widget
+	 * The ID WordPress uses for the meta sidebar widget.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -75,7 +78,7 @@ class ClassBlogs_Settings
 	const META_WIDGET_ID = 'meta-2';
 
 	/**
-	 * The ID WordPress uses for the search sidebar widget
+	 * The ID WordPress uses for the search sidebar widget.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -83,7 +86,7 @@ class ClassBlogs_Settings
 	const SEARCH_WIDGET_ID = 'search-2';
 
 	/**
-	 * The prefix used for all tables created by a class blogs plugin
+	 * The prefix used for all tables created by a class blogs plugin.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -91,7 +94,7 @@ class ClassBlogs_Settings
 	const TABLE_PREFIX = "cb_";
 
 	/**
-	 * Returns the ID of the root blog
+	 * Returns the ID of the root blog.
 	 *
 	 * @return int the ID of the root blog
 	 *
@@ -103,7 +106,7 @@ class ClassBlogs_Settings
 	}
 
 	/**
-	 * Returns the ID of the first admin user
+	 * Returns the ID of the first admin user.
 	 *
 	 * @return int the ID of the first admin user
 	 *

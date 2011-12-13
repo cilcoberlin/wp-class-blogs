@@ -1,11 +1,23 @@
 <?php
 
 /**
- * The class blogs sitewide post, comment and tag aggregator
+ * An aggregator that keeps track of any posts, comments and tags used on the site.
  *
- * This creates tables to hold sitewide data, and watches for updates to post,
- * comment and tag data on all blogs on the site.  Whenever changes are detected,
- * the sitewide tables updated to match the changed data.
+ * This aggregator first creates tables to hold sitewide data.  Once the tables
+ * exists, it watches for changes to post, comment and tag data on all blogs on
+ * the site.  Whenever changes are detected, the sitewide tables are updated to
+ * match the changed data.
+ *
+ * Whenever the tables are modified, a full sync of all sitewide data is performed.
+ * Depending on the size of the site, this can take a few seconds.  Once the
+ * initial sync has been done, however, a much faster diff-style synchronization
+ * is performed that only updates content that has changed.  If the sitewide
+ * content no longer seems to be in sync with the actual content on the site's
+ * blogs, an admin can manually resync the tables through the plugin's admin page.
+ *
+ * By default, every blog on the site is watched for changes.  However, using the
+ * plugin's admin page, certain blogs can be blacklisted, or a small group of
+ * blogs can be whitelisted, allowing fine control over which data is aggregated.
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage Aggregator
@@ -15,7 +27,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 {
 
 	/**
-	 * Default options for the aggregator
+	 * Default options for the aggregator.
 	 *
 	 * @access protected
 	 * @var array
@@ -27,7 +39,16 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	);
 
 	/**
-	 * The names of the sitewide tables
+	 * The names of the sitewide tables.
+	 *
+	 * This works similarly to WordPress's `$wpdb` global, with each table name
+	 * being available through a short term that is a property of the `$tables`
+	 * object.  The available table keys and their natures are as follows:
+	 *
+	 *     posts     - a master list of any published posts on any blog on the site
+	 *     comments  - a master list of all comments left on any blog on the site
+	 *     tags      - a list of all tags used across the site with usage counts
+	 *     tag_usage - a record of which posts are using which tags
 	 *
 	 * @var object
 	 * @since 0.1
@@ -35,7 +56,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	public $tables;
 
 	/**
-	 * Determines table names and conditionally registers WordPress hooks
+	 * Determines table names and conditionally registers WordPress hooks.
 	 */
 	public function __construct() {
 
@@ -51,7 +72,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Initializes the post and comment hooks required to aggregate data
+	 * Initializes the post and comment hooks required to aggregate data.
 	 *
 	 * This aggregator works by listening for new posts and comments.  Since
 	 * updating a new post will also update the tags used by that post, this
@@ -78,7 +99,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 
 	/**
 	 * Monitors updates to all post tables and updates the sitewide posts table
-	 * based on the status of the post
+	 * based on the status of the post.
 	 *
 	 * This does not actually perform any modifications to the sitewide posts
 	 * table, as such actions are delegated to various other functions that
@@ -118,7 +139,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 
 	/**
 	 * Monitors updates to all comments tables and updates the sitewide comments
-	 * table based on the status of the comment
+	 * table based on the status of the comment.
 	 *
 	 * This does not actually perform any modifications to the sitewide comments
 	 * table, as such actions are delegated to various other functions that
@@ -156,10 +177,10 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Adds or updates a record of a post to the sitewide posts table
+	 * Adds or updates a record of a post to the sitewide posts table.
 	 *
 	 * In addition to modifying the record for the post, this also tracks the
-	 * tags used by the post, updating those in the sitewide tags tables
+	 * tags used by the post, updating those in the sitewide tags tables.
 	 *
 	 * @param int $blog_id the ID of the blog on which the post was made
 	 * @param int $post_id the post's ID on its blog
@@ -251,9 +272,9 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Removes a record of a post from the sitewide posts table
+	 * Removes a record of a post from the sitewide posts table.
 	 *
-	 * This will also remove any record of tag usage associated with the post
+	 * This will also remove any record of tag usage associated with the post.
 	 *
 	 * @param int $blog_id the ID of the blog on which the post was made
 	 * @param int $post_id the post's ID on its blog
@@ -284,7 +305,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Creates or modifies a sitewide record of a comment left on a post
+	 * Creates or modifies a sitewide record of a comment left on a post.
 	 *
 	 * @param int $blog_id    the ID of the blog on which the comment was made
 	 * @param int $comment_id the ID of the comment on its blog
@@ -301,7 +322,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Deletes a record of a comment from the sitewide table
+	 * Deletes a record of a comment from the sitewide table.
 	 *
 	 * @param int $blog_id    the ID of the blog on which the comment was made
 	 * @param int $comment_id the ID of the comment on its blog
@@ -318,7 +339,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * A utility function to remove any sitewide tags whose usage count is zero
+	 * A utility function to remove any sitewide tags whose usage count is zero.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -331,7 +352,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Creates a copy of a WordPress object in the sitewide table
+	 * Creates a copy of a WordPress object in the sitewide table.
 	 *
 	 * This is used to abstract the logic for creating a copy of posts and
 	 * comments, which share a very similar structure.  If the given item
@@ -392,7 +413,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Create the tables needed to store sitewide data
+	 * Create the tables needed to store sitewide data.
 	 *
 	 * This simply applies the table schemata defined in Aggregation/Schemata.php to the
 	 * sitewide table names defined in Aggregation/Settings.php.
@@ -428,7 +449,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Returns a list of all blog IDs that whose data can be aggregated
+	 * Returns a list of all blog IDs that whose data can be aggregated.
 	 *
 	 * This takes an initial list of all blog IDs on the site and then removes
 	 * any IDs that appear in the exclusion list.
@@ -447,7 +468,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 
 	/**
 	 * Get a list of fields that should be copied from the source table to
-	 * the destination table
+	 * the destination table.
 	 *
 	 * This is used when copying data from tables such as the posts or comments
 	 * table, which have very similar sitewide equivalents.  This function
@@ -471,7 +492,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Copies data from the source table to the destination table
+	 * Copies data from the source table to the destination table.
 	 *
 	 * This is used to copy WordPress tables that have almost identical sitewide
 	 * tables created to store their contents, such as posts or comments.  This
@@ -532,7 +553,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Aggregates all sitewide posts, comments and tags into separate tables
+	 * Aggregates all sitewide posts, comments and tags into separate tables.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -628,7 +649,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Removes all data from the sitewide tables
+	 * Removes all data from the sitewide tables.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -642,7 +663,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Clears any cached sitewide data
+	 * Clears any cached sitewide data.
 	 *
 	 * This clears the values of any registered sitewide cache keys and clears
 	 * the registry of keys as well.
@@ -663,7 +684,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Enables the admin interface for the sitewide aggregation features
+	 * Enables the admin interface for the sitewide aggregation features.
 	 *
 	 * @access protected
 	 * @since 0.2
@@ -674,7 +695,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Returns an array of excluded blog IDs from the POST data
+	 * Returns an array of excluded blog IDs from the POST data.
 	 *
 	 * @param  array $post the POST data from the admin form
 	 * @return array       an array of blog IDs to exclude from aggregation
@@ -696,7 +717,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	}
 
 	/**
-	 * Handles the admin page logic for the plugin
+	 * Handles the admin page logic for the plugin.
 	 *
 	 * @access private
 	 * @since 0.1

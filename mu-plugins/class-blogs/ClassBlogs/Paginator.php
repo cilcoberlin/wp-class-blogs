@@ -1,10 +1,24 @@
 <?php
 
 /**
- * A paginator utility class
+ * A paginator utility class.
  *
- * This class takes an array of data to be paginated, and the maximum number
- * of items to show per page.
+ * This class provides an abstract interface for paginated data, and is used
+ * primarily by admin side of the class blogs plugins.  An example of using the
+ * paginator to paginate a short list of data, showing at most two items per
+ * page, is as follows:
+ *
+ *     $data = new array(1, 2, 3, 4, 5);
+ *     $paginator = new ClassBlogs_Paginator( $data, 2 );
+ *     assert( $paginator->get_total_pages() === 3 );
+ *     assert( $paginator->get_items_for_page( 2 ) == array( 3, 4 ) );
+ *     assert( $paginator->get_items_for_page( 5 ) == array() );
+ *
+ * Furthermore, if a paginator instance is used on admin page for a plugin,
+ * the following can be executed before a table listing the paginated data
+ * to display WordPress's admin paginating elements:
+ *
+ *     $paginator->show_admin_page_links();
  *
  * @package ClassBlogs
  * @subpackage Paginator
@@ -14,7 +28,10 @@ class ClassBlogs_Paginator
 {
 
 	/**
-	 * Create a new paginator
+	 * Create a new paginator.
+	 *
+	 * This class takes an array of data to be paginated, and the maximum number
+	 * of items to show per page.
 	 *
 	 * @param array $data           the data to be paginated
 	 * @param int   $items_per_page the number of items to show per page
@@ -46,7 +63,7 @@ class ClassBlogs_Paginator
 	}
 
 	/**
-	 * Gets the number of pages needed to show the paginated data set
+	 * Gets the number of pages needed to show the paginated data set.
 	 *
 	 * @return int the number of pages in the data set
 	 *
@@ -63,7 +80,7 @@ class ClassBlogs_Paginator
 	}
 
 	/**
-	 * Outputs markup for a list of links to use for paginating data
+	 * Outputs markup for a list of links to use for paginating data.
 	 *
 	 * This markup is intended to be displayed on the WordPress admin side, and
 	 * uses classes and styles that the admin styling is familiar with.
@@ -72,7 +89,7 @@ class ClassBlogs_Paginator
 	 *
 	 * @since 0.1
 	 */
-	public function show_admin_page_links( $current_page )
+	public function show_admin_page_links( $current_page=1 )
 	{
 		$current_page = absint( $current_page );
 		$total = $this->get_total_pages();
@@ -103,7 +120,7 @@ class ClassBlogs_Paginator
 	}
 
 	/**
-	 * Returns the escaped URL for viewing the given page of a paginated data set
+	 * Returns the escaped URL for the given page of a paginated data set.
 	 *
 	 * @param  int    $page the page number
 	 * @return string       the escaped URL of the page

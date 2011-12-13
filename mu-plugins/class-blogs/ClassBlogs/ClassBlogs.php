@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A high-level class for namespacing class blogs data
+ * A high-level class for namespacing class blogs data.
  *
  * @package ClassBlogs
  * @since 0.1
@@ -9,7 +9,7 @@
 class ClassBlogs {
 
 	/**
-	 * A repository of all active class blogs plugins
+	 * A repository of all active class blogs plugins.
 	 *
 	 * @access private
 	 * @var array
@@ -17,7 +17,7 @@ class ClassBlogs {
 	private static $_plugins = array();
 
 	/**
-	 * Executes actions common to all class blogs plugins
+	 * Executes actions common to all class blogs plugins.
 	 */
 	public function __construct()
 	{
@@ -26,7 +26,7 @@ class ClassBlogs {
 
 	/**
 	 * Add a plugin page's ID to the list of pages that need to be opened
-	 * if the page ID is not already in the registry
+	 * if the page ID is not already in the registry.
 	 *
 	 * @param int $page_id the ID of a plugin page
 	 *
@@ -42,7 +42,7 @@ class ClassBlogs {
 	}
 
 	/**
-	 * Open up any plugin pages if the plugin has created pseudo-private pages
+	 * Open up any plugin pages if the plugin has created pseudo-private pages.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -53,7 +53,7 @@ class ClassBlogs {
 	}
 
 	/**
-	 * Allows a non-admin user access to a private page
+	 * Allows a non-admin user access to a private page.
 	 *
 	 * This provides access only to the private pages created using the
 	 * create_plugin_page function, which creates a private page that should
@@ -88,7 +88,7 @@ class ClassBlogs {
 	}
 
 	/**
-	 * Registers a plugin with the class blogs suite
+	 * Registers a plugin with the class blogs suite.
 	 *
 	 * If the given name conflicts with an already registered plugin, a fatal
 	 * error is thrown.
@@ -109,7 +109,7 @@ class ClassBlogs {
 	}
 
 	/**
-	 * Returns a plugin instance registered under the given name
+	 * Returns a plugin instance registered under the given name.
 	 *
 	 * If no plugin is found matching the given name, a null value is returned.
 	 *
@@ -158,7 +158,7 @@ class ClassBlogs {
 	}
 
 	/**
-	 * Restores an arbitrary blog
+	 * Restores an arbitrary blog.
 	 *
 	 * This functions identically to `restore_current_blog`, but with the option
 	 * of passing a blog ID to restore to.  This switches to that blog, then

@@ -1,10 +1,12 @@
 <?php
 
 /**
- * The comment-disabling plugin
+ * A plugin that can disable commenting on every post across the entire site.
  *
- * This provides an admin menu option that allows a user to disable
- * commenting on all blogs that are part of the class blog.
+ * This provides an admin menu option available only to a professor on the admin
+ * side of the root blog that allows them to disable commenting on all blogs
+ * that are part of the class blog.  This is generally used at the end of the
+ * semester to put the blog into a very light lockdown mode.
  *
  * @package ClassBlogs_Plugins
  * @subpackage DisableComments
@@ -13,7 +15,7 @@
 class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 {
 	/**
-	 * Default options for the plugin
+	 * Default options for the plugin.
 	 *
 	 * @access protected
 	 * @var array
@@ -23,7 +25,7 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 	);
 
 	/**
-	 * Register hooks to preventing commenting
+	 * Register hooks to preventing commenting.
 	 */
 	function __construct() {
 		parent::__construct();
@@ -38,7 +40,7 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Makes comments always appear to be off for any item on the blog
+	 * Makes comments always appear to be off for any item on the blog.
 	 *
 	 * @param  bool $is_open whether the comment is open
 	 * @param  int  $post_id the ID of the post or page
@@ -53,7 +55,7 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Makes the comment status of any post always be closed
+	 * Makes the comment status of any post always be closed.
 	 *
 	 * @param  array $posts the current list of posts
 	 * @return array        the posts with their comment status set to closed
@@ -70,7 +72,7 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Configures the plugin's admin page
+	 * Configures the plugin's admin page.
 	 *
 	 * @access protected
 	 * @since 0.2
@@ -81,7 +83,7 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Handles the admin page logic for the sitewide posts plugin
+	 * Displays the plugin's admin page.
 	 *
 	 * @access private
 	 * @since 0.2

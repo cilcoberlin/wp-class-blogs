@@ -1,7 +1,8 @@
 <?php
 
 /**
- * The student-blog links plugin
+ * A plugin that allows a professor to make certain links always appear in
+ * the sidebar of any student blogs.
  *
  * This plugin provides an admin menu that allows a professor to
  * add unlimited links of their choosing to student blogs.  These links will
@@ -16,10 +17,11 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 {
 
 	/**
-	 * The default options for the plugin
+	 * The default options for the plugin.
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.1
 	 */
 	protected $default_options = array(
 		'links' => array(),
@@ -27,17 +29,18 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	);
 
 	/**
-	 * Admin media files
+	 * Admin media files.
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.2
 	 */
 	protected $admin_media = array(
 		'js' => array( 'student-blog-links.js' )
 	);
 
 	/**
-	 * Registers plugin hooks and sets default options
+	 * Registers plugin hooks and sets default options.
 	 */
 	function __construct()
 	{
@@ -66,7 +69,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Register the link list sidebar widget if not on the root blog
+	 * Register the link list sidebar widget if not on the root blog.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -84,7 +87,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns the default widget list used when a sidebar is empty
+	 * Returns the default widget list used when a sidebar is empty.
 	 *
 	 * @return array a list of the default widgets
 	 *
@@ -97,7 +100,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Adds the link-list widget to those registered by the user at display time
+	 * Adds the link-list widget to those registered by the user at display time.
 	 *
 	 * This allows the link-list widget to play well with WordPress, being able
 	 * to receive theme-appropriate parameters, but to not appear in a user's
@@ -153,7 +156,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Outputs markup for the the sidebar link-list widget
+	 * Outputs markup for the the sidebar link-list widget.
 	 *
 	 * @param array $params a hash of parameters for rendering the sidebar
 	 *
@@ -180,7 +183,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Adds an admin page for the plugin to the class blogs admin menu
+	 * Adds an admin page for the plugin to the class blogs admin menu.
 	 *
 	 * @access protected
 	 * @since 0.2
@@ -191,7 +194,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Parses the list of links added by a user on the admin side
+	 * Parses the list of links added by a user on the admin side.
 	 *
 	 * This is passed the POST data submitted by the user, and looks for any
 	 * keys referencing a link name or URL, using the numeric index of each
@@ -232,7 +235,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Handles the admin page for the plugin
+	 * Handles the admin page for the plugin.
 	 *
 	 * @access private
 	 * @since 0.2

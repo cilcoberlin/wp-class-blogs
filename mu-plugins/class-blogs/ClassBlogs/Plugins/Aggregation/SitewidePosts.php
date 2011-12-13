@@ -1,7 +1,12 @@
 <?php
 
 /**
- * A widget that shows a list of recent sitewide posts
+ * A widget that shows a list of recent sitewide posts.
+ *
+ * An admin user is able to control how the posts are displayed using a simple
+ * string template using placeholder variables chosen from a list.  The total
+ * number of posts displayed, as well as the maximum number of posts allowed
+ * per blog, can also be controlled via the widget's admin panel.
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage SitewidePostsWidget
@@ -12,7 +17,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 {
 
 	/**
-	 * The length of the content excerpt in words
+	 * The length of the content excerpt in words.
 	 *
 	 * @access private
 	 * @var int
@@ -21,7 +26,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	const _EXCERPT_LENGTH_WORDS = 15;
 
 	/**
-	 * Default options for the sitewide posts widget
+	 * Default options for the sitewide posts widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -35,7 +40,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	);
 
 	/**
-	 * Creates the sitewide posts widget
+	 * Creates the sitewide posts widget.
 	 */
 	public function __construct()
 	{
@@ -46,7 +51,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	}
 
 	/**
-	 * Displays the sitewide posts widget
+	 * Displays the sitewide posts widget.
 	 */
 	public function widget( $args, $instance )
 	{
@@ -83,7 +88,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	}
 
 	/**
-	 * Updates the sitewide posts widget
+	 * Updates the sitewide posts widget.
 	 */
 	public function update( $new, $old )
 	{
@@ -97,7 +102,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	}
 
 	/**
-	 * Handles the admin logic for the sitewide posts widget
+	 * Handles the admin logic for the sitewide posts widget.
 	 */
 	public function form( $instance )
 	{
@@ -141,11 +146,41 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 }
 
 /**
- * The sitewide posts plugin
+ * A plugin that displays data on all of the posts published on the site.
  *
- * This provides a main-blog-only widget that can show recent sitewide posts,
- * and also provides a user with the ability to display sitewide posts on the
- * front page of the main blog.
+ * This plugin provides two different ways of viewing this sitewide data.  The
+ * first is a widget that can only appear on the root blog that displays a list
+ * of recent posts.  The second is an admin page available to a professor via
+ * the class-blogs admin menu group that shows a list of all student posts.
+ *
+ * In addition to these WordPress-level functions, this plugin also provides
+ * basic programmatic access to the sitewide post data.  An example of using this
+ * plugin in this manner is as follows:
+ *
+ *     // A user with a user ID of 2 makes three posts on their blog, with ten
+ *     // minutes passing between each post.  Five minutes later, another
+ *     // user with a user ID of 3 makes four posts on their blog, with
+ *     // ten minutes passing between each post.
+ *     $sw_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
+ *
+ *     $all = $sw_posts->get_sitewide_posts();
+ *     assert( count( $all ) === 7 );
+ *
+ *     $filtered = $sw_posts->filter_posts( 2 );
+ *     assert( count( $filtered ) === 3 );
+ *
+ *     $newest = $sw_posts->get_newest_post();
+ *     $oldest = $sw_posts->get_oldest_post();
+ *     assert( $newest->post_date > $oldest->post_date );
+ *     assert( $oldest->user_id === 2 );
+ *     assert( $newest->user_id === 3 );
+ *
+ *     $by_user = $sw_posts->get_posts_by_user();
+ *     assert( count( $by_user ) === 2 );
+ *     assert( $by_user[0]->user_id === 3 );
+ *     assert( $by_user[1]->user_id === 2 );
+ *     assert( count( $by_user[0]->posts ) === 4 );
+ *     assert( count( $by_user[1]->posts ) === 3 );
  *
  * @package ClassBlogs_Plugins_Aggregation
  * @subpackage SitewidePosts
@@ -155,10 +190,11 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 {
 
 	/**
-	 * Default options for the sitewide posts plugin
+	 * Default options for the sitewide posts plugin.
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.1
 	 */
 	protected $default_options = array (
 		'root_excerpt_words'    => 50,
@@ -168,17 +204,18 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	);
 
 	/**
-	 * Admin media files
+	 * Admin media files.
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.2
 	 */
 	protected $admin_media = array(
 		'css' => array( 'sitewide-posts.css' )
 	);
 
 	/**
-	 * The number of posts to show per page on the professor's admin page
+	 * The number of posts to show per page on the professor's admin page.
 	 *
 	 * @var int
 	 * @since 0.1
@@ -186,23 +223,21 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	const POSTS_PER_ADMIN_PAGE = 20;
 
 	/**
-	 * A list of the URLs for any pages on the main blog
+	 * A list of the URLs for any pages on the main blog.
+	 *
+	 * This is used to prevent sitewide post data injected in the loop from
+	 * breaking the URLs in links to pages on the blog, which can occur when
+	 * the ID of a sitewide post from another blog is the same as that of a
+	 * page on the current blog.
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private $_page_urls;
 
 	/**
-	 * A list of unprocessed sitewide posts
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private $_sitewide_posts;
-
-	/**
-	 * Initialize WordPress hooks for the widget and the main page
+	 * Initialize WordPress hooks for the widget and the main page.
 	 */
 	public function __construct()
 	{
@@ -218,7 +253,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Initializes the hooks required to make the root blog show sitewide posts
+	 * Initializes the hooks required to make the root blog show sitewide posts.
 	 *
 	 * This functionality, if required, can be overridden by other code by
 	 * defining the constant CLASS_BLOGS_SHOW_SITEWIDE_POSTS_ON_FRONT_PAGE.  If
@@ -254,7 +289,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Replaces the actual posts of the root blog with the sitewide posts
+	 * Replaces the actual posts of the root blog with the sitewide posts.
 	 *
 	 * @param  array $actual_posts the posts made on the root blog
 	 * @return array               the sitewide posts
@@ -289,7 +324,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Uses the sitewide post's excerpt as its content
+	 * Uses the sitewide post's excerpt as its content.
 	 *
 	 * This is only called if the user has selected to show sitewide posts on
 	 * the main page and use their excerpts.
@@ -309,7 +344,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Uses the correct URL for any pages on the root blog
+	 * Uses the correct URL for any pages on the root blog.
 	 *
 	 * By replacing the normal posts with sitewide posts, errors can occur where
 	 * a page on the root blog's URL will be that of a post from another blog
@@ -329,7 +364,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Sorts a list of posts by user by the published date of the first post
+	 * Sorts a list of posts by user by the published date of the first post.
 	 *
 	 * @access private
 	 * @since 0.1
@@ -341,7 +376,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Returns the creation date of the first post in a list of posts
+	 * Returns the creation date of the first post in a list of posts.
 	 *
 	 * @param  array  $posts a list of posts
 	 * @return string        the creation date of the first post
@@ -358,7 +393,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Enables the sidebar widget for showing recent sitewide posts
+	 * Enables the sidebar widget for showing recent sitewide posts.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -369,7 +404,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Configures the plugin's admin pages
+	 * Configures the plugin's admin pages.
 	 *
 	 * @access protected
 	 * @since 0.2
@@ -381,7 +416,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Handles the admin page logic for the sitewide posts plugin
+	 * Handles the admin page logic for the sitewide posts plugin.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -447,7 +482,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Shows a professor a list of student posts
+	 * Shows a professor a list of student posts.
 	 *
 	 * @uses ClassBlogs_Plugins_StudentBlogList
 	 *
@@ -548,16 +583,17 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Returns an array of sitewide posts
+	 * Returns an array of sitewide posts.
 	 *
 	 * These posts returned are limited only by the options of the sitewide
 	 * aggregator, which can restrict which blogs populate the sitewide tables.
 	 * The returned posts are in descending order by their published date.
 	 *
 	 * Since the posts will be from multiple different blogs, certain values
-	 * are precomputed and added each post.  The values are as follows:
+	 * are precomputed and added to each post.  The values are as follows:
 	 *
 	 *     cb_sw_excerpt   - the post's excerpt
+	 *     cb_sw_from_blog - the ID of the blog on which the post was made
 	 *
 	 * @return array a list of sitewide posts
 	 *
@@ -636,7 +672,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Gets a list of recent posts formatted for display in a sidebar widget
+	 * Gets a list of recent posts formatted for display in a sidebar widget.
 	 *
 	 * The array of returned posts contains custom object instances with the
 	 * following properties that can be used by the sidebar:
@@ -700,12 +736,13 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Provides a list of posts made by each user of the blog
+	 * Provides a list of posts made by each user of the blog.
 	 *
-	 * The returned list of posts is in descending order by the published date
-	 * of the most recent post written by each user.
+	 * The returned list of posts is represented as an array containing objects.
+	 * The array is in descending order by the published date of the most recent
+	 * post written by each user.
 	 *
-	 * The returned post list contains objects with the following properties:
+	 * Each object in the returned list has the following properties:
 	 *
 	 *     posts       - an array of posts
 	 *     total_posts - the total number of posts made by the user

@@ -1,10 +1,12 @@
 <?php
 
 /**
- * The classmate comments plugin
+ * A plugin that automatically approves any comments left by a logged-in user
+ * with an account on any blog on the site.
  *
- * This automatically approves any comments left by a logged-in student on the
- * blog of another student in the class for which the class blog exists.
+ * This makes it so that any comments left by logged-in students will
+ * automatically appear on any other student's blog, which is done in the hopes
+ * of reducing confusion for those new to blogging.
  *
  * @package ClassBlogs_Plugins
  * @subpackage ClassmateComments
@@ -14,7 +16,7 @@ class ClassBlogs_Plugins_ClassmateComments extends ClassBlogs_Plugins_BasePlugin
 {
 
 	/**
-	 * Registers the auto-approval comment hook
+	 * Registers the auto-approval comment hook.
 	 */
 	public function __construct()
 	{
@@ -22,7 +24,7 @@ class ClassBlogs_Plugins_ClassmateComments extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Automatically approve any comments left by a classmate
+	 * Automatically approve any comments left by a classmate.
 	 *
 	 * @param int    $id      the database ID of the comment
 	 * @param object $comment the saved comment object
