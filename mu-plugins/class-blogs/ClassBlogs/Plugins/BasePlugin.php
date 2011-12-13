@@ -108,6 +108,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private $_options;
 

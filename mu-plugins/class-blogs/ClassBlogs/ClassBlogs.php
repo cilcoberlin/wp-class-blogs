@@ -13,6 +13,7 @@ class ClassBlogs {
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private static $_plugins = array();
 

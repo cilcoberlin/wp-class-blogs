@@ -36,6 +36,7 @@ class ClassBlogs_Admin
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _MENU_ID = "class-blogs";
 
@@ -44,6 +45,7 @@ class ClassBlogs_Admin
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _MENU_CAPABILITY = "manage_options";
 
@@ -52,6 +54,7 @@ class ClassBlogs_Admin
 	 *
 	 * @access private
 	 * @var object
+	 * @since 0.1
 	 */
 	private static $_instance;
 
@@ -60,6 +63,7 @@ class ClassBlogs_Admin
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private $_page_ids;
 

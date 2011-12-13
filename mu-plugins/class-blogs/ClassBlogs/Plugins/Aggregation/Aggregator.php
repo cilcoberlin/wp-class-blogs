@@ -31,6 +31,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.1
 	 */
 	protected $default_options = array(
 		'aggregation_enabled' => true,

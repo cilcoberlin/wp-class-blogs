@@ -19,6 +19,7 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.1
 	 */
 	protected $default_options = array(
 		'comments_disabled' => false

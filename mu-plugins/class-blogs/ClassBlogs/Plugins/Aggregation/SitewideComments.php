@@ -196,6 +196,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private $_sitewide_comments;
 
@@ -216,6 +217,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.2
 	 */
 	protected $admin_media = array(
 		'css' => array( 'sitewide-comments.css' )

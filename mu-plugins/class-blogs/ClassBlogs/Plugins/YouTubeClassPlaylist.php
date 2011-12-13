@@ -145,6 +145,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _GDATA_API_KEY = "AI39si5pRSIGylGT-Bh-BOJZ3LTU6QyWHw3D6mj3LE4fZDViHMGqYIEWEVzPf88owlcjD4A-JVu7IYOiF_kEF0ZuGzF6A4vCfw";
 
@@ -153,6 +154,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _GDATA_REQUEST_BASE = 'https://gdata.youtube.com';
 
@@ -161,6 +163,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _YOUTUBE_PLAYLIST_PAGE_TEMPLATE = 'http://www.youtube.com/playlist?p=%s';
 
@@ -169,6 +172,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	*
 	* @access private
 	* @var string
+	* @since 0.1
 	*/
 	const _YOUTUBE_FULL_SIZE_THUMBNAIL_URL_TEMPLATE = 'http://img.youtube.com/vi/%s/0.jpg';
 
@@ -177,6 +181,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _PLAYLIST_API_BASE = '/feeds/api/playlists/';
 
@@ -185,6 +190,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _USER_INFO_URL = '/feeds/api/users/default';
 
@@ -193,6 +199,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _USER_PLAYLISTS_URL = '/feeds/api/users/default/playlists?v=2';
 
@@ -201,6 +208,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.2
 	 */
 	const _YOUTUBE_VIDEO_ID_LENGTH = 11;
 
@@ -209,6 +217,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.2
 	 */
 	const _YOUTUBE_API_MAX_RESULTS = 50;
 
@@ -217,6 +226,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.2
 	 */
 	const _PLAYLIST_MAX_ENTRIES = 200;
 
@@ -225,6 +235,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.1
 	 */
 	const _GDATA_API_VERSION = 2;
 
@@ -233,6 +244,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _GOOGLE_ACCOUNTS_BASE_URL = 'https://www.google.com';
 
@@ -241,6 +253,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _OAUTH_GET_REQUEST_TOKEN_URL = '/accounts/OAuthGetRequestToken';
 
@@ -249,6 +262,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _OAUTH_AUTHORIZE_TOKEN_URL = '/accounts/OAuthAuthorizeToken';
 
@@ -257,6 +271,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _OAUTH_GET_ACCESS_TOKEN_URL = '/accounts/OAuthGetAccessToken';
 
@@ -265,6 +280,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _OAUTH_VERSION = '1.0';
 
@@ -273,6 +289,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _OAUTH_CONSUMER_KEY = 'anonymous';
 
@@ -281,6 +298,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _OAUTH_CONSUMER_SECRET = 'anonymous';
 
@@ -289,6 +307,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _GDATA_SCOPE = 'https://gdata.youtube.com';
 
@@ -297,6 +316,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.1
 	 */
 	const _SHORT_TIMEOUT = 7;
 
@@ -305,6 +325,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.1
 	 */
 	const _LONG_TIMEOUT = 20;
 
@@ -313,6 +334,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.1
 	 */
 	const _PLAYLIST_CACHE_LENGTH = 300;
 
@@ -321,6 +343,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _TABLE_PREFIX = 'yt_';
 
@@ -329,6 +352,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _VIDEOS_TABLE = 'videos';
 
@@ -337,6 +361,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _VIDEO_USAGE_TABLE = 'video_usage';
 
@@ -345,6 +370,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _PLAYLIST_PAGE_DEFAULT_NAME = 'Our YouTube Class Playlist';
 
@@ -353,6 +379,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var string
+	 * @since 0.1
 	 */
 	const _ADD_VIDEO_PAYLOAD_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>
 		<entry xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://gdata.youtube.com/schemas/2007">
@@ -364,6 +391,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *
 	 * @access private
 	 * @var array
+	 * @since 0.1
 	 */
 	private static $_video_searchers = array(
 		'_find_videos_by_url'

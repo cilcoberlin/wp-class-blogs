@@ -24,6 +24,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.1
 	 */
 	protected $default_options = array(
 		'required_weekly_words' => 0
@@ -34,6 +35,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @access protected
 	 * @var array
+	 * @since 0.2
 	 */
 	protected $admin_media = array(
 		'css' => array( 'word-counter.css' )
@@ -44,6 +46,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.2
 	 */
 	const _MONDAY = 1;
 
@@ -52,6 +55,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
 	 *
 	 * @access private
 	 * @var int
+	 * @since 0.2
 	 */
 	const _SUNDAY = 0;
 
