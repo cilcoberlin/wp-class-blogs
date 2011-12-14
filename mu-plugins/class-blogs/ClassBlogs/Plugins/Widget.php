@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A base class for any sidebar widgets used in the class-blogs suite.
+ * A base class for any widgets used in the class-blogs suite.
  *
  * This provides a few basic methods to a descending widget, mainly to help
  * with handling options and validating user input on the widget admin panel.
@@ -10,11 +10,11 @@
  * @subpackage SidebarWidget
  * @since 0.1
  */
-abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
+abstract class ClassBlogs_Plugins_Widget extends WP_Widget
 {
 
 	/**
-	 * The default options for the sidebar widget.
+	 * The default options for the widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -44,7 +44,7 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 	}
 
 	/**
-	 * Outputs markup to open a sidebar widget.
+	 * Outputs markup to open a widget.
 	 *
 	 * @access protected
 	 * @since 0.1
@@ -59,7 +59,7 @@ abstract class ClassBlogs_Plugins_SidebarWidget extends WP_Widget
 	}
 
 	/**
-	 * Outputs markup to close a sidebar widget.
+	 * Outputs markup to close a widget.
 	 *
 	 * @access protected
 	 * @since 0.1

@@ -13,7 +13,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plugins_SidebarWidget
+class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plugins_Widget
 {
 
 	/**
@@ -60,7 +60,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'sitewide_posts' );
 
-		$sitewide_posts = $plugin->get_posts_for_sidebar(
+		$sitewide_posts = $plugin->get_posts_for_widget(
 			$instance['max_posts'],
 			$instance['max_posts_per_blog'],
 			$instance['meta_format'] );
@@ -246,7 +246,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 
 		parent::__construct();
 
-		// Enable the admin menu and the sidebar widget if on the admin side,
+		// Enable the admin menu and the widget if on the admin side,
 		// and enable the root blog hooks if posts are to be shown on the root blog
 		if ( ! is_admin() && $this->get_option( 'root_show_posts' ) ) {
 			add_action( 'pre_get_posts', array( $this, '_initialize_root_blog_hooks' ) );
@@ -395,7 +395,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Enables the sidebar widget for showing recent sitewide posts.
+	 * Enables the widget for showing recent sitewide posts.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -674,10 +674,10 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	}
 
 	/**
-	 * Gets a list of recent posts formatted for display in a sidebar widget.
+	 * Gets a list of recent posts formatted for display in a widget.
 	 *
 	 * The array of returned posts contains custom object instances with the
-	 * following properties that can be used by the sidebar:
+	 * following properties that can be used by the widget:
 	 *
 	 *      content   - the content of the post
 	 *      meta      - a string describing the post's meta, constructed from
@@ -690,13 +690,13 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 * @param  string $meta_format        the formatting string for the post meta
 	 * @return array                      an array of formatted posts
 	 *
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public function get_posts_for_sidebar( $max_posts, $max_posts_per_blog, $meta_format )
+	public function get_posts_for_widget( $max_posts, $max_posts_per_blog, $meta_format )
 	{
 
 		// Use cache values if possible
-		$cached = $this->get_site_cache( 'sidebar' );
+		$cached = $this->get_site_cache( 'widget' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -733,7 +733,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 				'title'     => $post->post_title );
 		}
 
-		$this->set_site_cache( 'sidebar', $posts );
+		$this->set_site_cache( 'widget', $posts );
 		return $posts;
 	}
 

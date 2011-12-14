@@ -8,7 +8,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_SidebarWidget
+class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Widget
 {
 
 	/**
@@ -264,7 +264,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Enables the sidebar widget and its controller.
+	 * Enables the widget and its controller.
 	 *
 	 * @access private
 	 * @since 0.1

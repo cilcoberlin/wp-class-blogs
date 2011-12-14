@@ -11,7 +11,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_SidebarWidget
+class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_Widget
 {
 
 	/**
@@ -46,7 +46,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'youtube_class_playlist' );
 
-		$recent_videos = $plugin->get_recent_videos_for_sidebar( $instance['limit'] );
+		$recent_videos = $plugin->get_recent_videos_for_widget( $instance['limit'] );
 		if ( empty( $recent_videos ) ) {
 			return;
 		}
@@ -1916,14 +1916,14 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	}
 
 	/**
-	 * Returns a list of recently added videos for use in the sidebar widget.
+	 * Returns a list of recently added videos for use in the widget.
 	 *
 	 * @param  int   $limit the optional maximum number of videos to return
 	 * @return array        a list of recently added videos
 	 *
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public function get_recent_videos_for_sidebar( $limit = 5 )
+	public function get_recent_videos_for_widget( $limit = 5 )
 	{
 		$playlist = $this->get_playlist_videos();
 		if ( $limit <= count( $playlist ) ) {

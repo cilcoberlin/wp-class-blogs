@@ -11,7 +11,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plugins_SidebarWidget
+class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plugins_Widget
 {
 
 	/**
@@ -265,7 +265,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	}
 
 	/**
-	 * Enables the sitewide tag cloud sidebar widget.
+	 * Enables the sitewide tag cloud widget.
 	 *
 	 * @access private
 	 * @since 0.1

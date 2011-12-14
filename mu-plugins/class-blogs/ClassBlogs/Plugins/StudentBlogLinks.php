@@ -2,7 +2,7 @@
 
 /**
  * A plugin that allows a professor to make certain links always appear in
- * the sidebar of any student blogs.
+ * a widget shown in the first widgetized area of any student blogs.
  *
  * This plugin provides an admin menu that allows a professor to
  * add unlimited links of their choosing to student blogs.  These links will
@@ -59,22 +59,22 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 		restore_current_blog();
 
 		// If there are any links defined and we're not in the admin side,
-		// inject the professor's links into a widget in the sidebar of all
-		// student blogs in the network
+		// inject the professor's links into a widget in the first widgetized
+		// area of all student blogs in the network
 		$links = $this->get_option( 'links' );
 		if ( ! is_admin() && ! empty( $links ) ) {
-			add_action( 'init', array( $this, '_register_sidebar_widget' ) );
-			add_filter( 'sidebars_widgets', array( $this, '_add_sidebar_widget' ) );
+			add_action( 'init', array( $this, '_register_widget' ) );
+			add_filter( 'sidebars_widgets', array( $this, '_add_widget' ) );
 		}
 	}
 
 	/**
-	 * Register the link list sidebar widget if not on the root blog.
+	 * Register the link-list widget if not on the root blog.
 	 *
 	 * @access private
 	 * @since 0.2
 	 */
-	public function _register_sidebar_widget()
+	public function _register_widget()
 	{
 		if ( ! ClassBlogs_Utils::is_root_blog() ) {
 			$uid = $this->get_uid();
@@ -87,7 +87,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Returns the default widget list used when a sidebar is empty.
+	 * Returns the default widget list used when a widgetized area is empty.
 	 *
 	 * @return array a list of the default widgets
 	 *
@@ -106,59 +106,59 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 	 * to receive theme-appropriate parameters, but to not appear in a user's
 	 * list of available widgets.
 	 *
-	 * @param array $sidebars a list of sidebars and their registered widgets
+	 * @param array $areas a list of widgetized areas and their registered widgets
 	 *
 	 * @access private
 	 * @since 0.2
 	 */
-	public function _add_sidebar_widget( $sidebars )
+	public function _add_widget( $areas )
 	{
 
 		// Remove a possible inactive widgets key for purposes of testing
-		// whether or not any sidebars have been defined
-		$active_sidebars = $sidebars;
-		if ( array_key_exists( ClassBlogs_Settings::INACTIVE_WIDGETS_ID, $active_sidebars ) ) {
-			unset( $active_sidebars[ClassBlogs_Settings::INACTIVE_WIDGETS_ID] );
+		// whether or not any widgetized areas have been defined
+		$active_areas = $areas;
+		if ( array_key_exists( ClassBlogs_Settings::INACTIVE_WIDGETS_ID, $active_areas ) ) {
+			unset( $active_areas[ClassBlogs_Settings::INACTIVE_WIDGETS_ID] );
 		}
 
-		// If no sidebars have been declared, add a single sidebar the list
+		// If no areas have been declared, add a single area to the list
 		// containing the meta widget and the link list
-		if ( empty( $active_sidebars ) ) {
-			$sidebars[] = $this->_get_default_widget_list();
+		if ( empty( $active_areas ) ) {
+			$areas[] = $this->_get_default_widget_list();
 		}
 
-		// If there is one or more active sidebars, try to add our widget to
+		// If there is one or more active areas, try to add our widget to
 		// the first one that declares a meta widget, and, failing that, add
-		// it to the first sidebar in the list
+		// it to the first area in the list
 		else {
-			$add_to_sidebar = null;
-			foreach ( $active_sidebars as $sidebar => $widgets ) {
-				if ( ! $add_to_sidebar ) {
-					$add_to_sidebar = $sidebar;
+			$add_to_area = null;
+			foreach ( $active_areas as $area => $widgets ) {
+				if ( ! $add_to_area ) {
+					$add_to_area = $area;
 				}
 				if ( in_array( ClassBlogs_Settings::META_WIDGET_ID, $widgets ) ) {
-					$add_to_sidebar = $sidebar;
+					$add_to_area = $area;
 					break;
 				}
 			}
 
-			// If the given sidebar starts with a search widget, place the
+			// If the given area starts with a search widget, place the
 			// link list widget below that.  Otherwise, make it the first wdiget
-			$search_index = array_search( ClassBlogs_Settings::SEARCH_WIDGET_ID, $sidebars[$add_to_sidebar] );
+			$search_index = array_search( ClassBlogs_Settings::SEARCH_WIDGET_ID, $areas[$add_to_area] );
 			if ( $search_index === 0 ) {
-				array_splice( $sidebars[$add_to_sidebar], 1, 0, $this->get_uid() );
+				array_splice( $areas[$add_to_area], 1, 0, $this->get_uid() );
 			} else {
-				array_unshift( $sidebars[$add_to_sidebar], $this->get_uid() );
+				array_unshift( $areas[$add_to_area], $this->get_uid() );
 			}
 		}
 
-		return $sidebars;
+		return $areas;
 	}
 
 	/**
-	 * Outputs markup for the the sidebar link-list widget.
+	 * Outputs markup for the link-list widget.
 	 *
-	 * @param array $params a hash of parameters for rendering the sidebar
+	 * @param array $params a hash of parameters for rendering the widget
 	 *
 	 * @access private
 	 * @since 0.2
@@ -247,7 +247,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 
 			check_admin_referer( $this->get_uid() );
 
-			$this->update_option( 'title', ClassBlogs_Utils::sanitize_user_input( $_POST['sidebar_title'] ) );
+			$this->update_option( 'title', ClassBlogs_Utils::sanitize_user_input( $_POST['widget_title'] ) );
 			$this->update_option( 'links', $this->_parse_link_list( $_POST ) );
 
 			ClassBlogs_Admin::show_admin_message( __( 'Your links have been updated.', 'classblogs' ) );
@@ -258,7 +258,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 			<h2><?php _e( 'Student Blog Links', 'classblogs' ); ?></h2>
 
 			<p>
-				<?php _e( "This plugin lets you display links of your choosing in the sidebar of every student's blog. You can use this to have a link back to the main blog appear on every student's blog, for example.", 'classblogs' );
+				<?php _e( "This plugin lets you display links of your choosing in the first widgetized area of every student's blog. You can use this to have a link back to the main blog appear on every student's blog, for example.", 'classblogs' );
 				?>
 			</p>
 
@@ -268,10 +268,10 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
 
 					<table class="form-table">
 						<tr valign="top">
-							<th scope="row"><?php _e( 'Sidebar Widget Title', 'classblogs' ); ?></th>
+							<th scope="row"><?php _e( 'Widget Title', 'classblogs' ); ?></th>
 							<td>
-								<input type="text" name="sidebar_title" id="sidebar-title" value="<?php echo esc_attr( $this->get_option( 'title' ) ); ?>" /><br />
-								<label for="sidebar-title"><?php _e( 'The title for the links section of the sidebar.', 'classblogs' ); ?></label>
+								<input type="text" name="widget_title" id="widget-title" value="<?php echo esc_attr( $this->get_option( 'title' ) ); ?>" /><br />
+								<label for="widget-title"><?php _e( 'The title for the the list of links.', 'classblogs' ); ?></label>
 							</td>
 						</tr>
 					</table>

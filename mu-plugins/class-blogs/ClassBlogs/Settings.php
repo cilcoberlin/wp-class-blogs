@@ -62,7 +62,7 @@ class ClassBlogs_Settings
 	const MEDIA_CSS_DIR_NAME = 'css';
 
 	/**
-	 * The ID WordPress uses for inactive widgets in a sidebar widget list.
+	 * The ID WordPress uses for inactive widgets in a widget list.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -70,7 +70,7 @@ class ClassBlogs_Settings
 	const INACTIVE_WIDGETS_ID = 'wp_inactive_widgets';
 
 	/**
-	 * The ID WordPress uses for the meta sidebar widget.
+	 * The ID WordPress uses for the meta widget.
 	 *
 	 * @var string
 	 * @since 0.1
@@ -78,7 +78,7 @@ class ClassBlogs_Settings
 	const META_WIDGET_ID = 'meta-2';
 
 	/**
-	 * The ID WordPress uses for the search sidebar widget.
+	 * The ID WordPress uses for the search widget.
 	 *
 	 * @var string
 	 * @since 0.1

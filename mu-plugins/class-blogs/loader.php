@@ -25,7 +25,7 @@ foreach ( $core as $file ) {
 // Load the suite's plugins
 $plugins = array(
 	'BasePlugin',
-	'SidebarWidget',
+	'Widget',
 	'Aggregation/Settings',
 	'Aggregation/Schemata',
 	'Aggregation/SitewidePlugin',

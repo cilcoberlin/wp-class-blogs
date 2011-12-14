@@ -525,7 +525,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Registers a sidebar widget.
+	 * Registers a widget.
 	 *
 	 * @param object $widget the widget class
 	 *
@@ -538,7 +538,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Registers a sidebar widget that should only be available on the root blog.
+	 * Registers a widget that should only be available on the root blog.
 	 *
 	 * This makes the widget only appear as a selection on the admin side if the
 	 * user is an admin on the root blog and the root blog is being edited, but

@@ -14,7 +14,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWidget
+class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_Widget
 {
 
 	/**
@@ -135,7 +135,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_SidebarWi
 class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 {
 	/**
-	 * Registers the random-image sidebar widget.
+	 * Registers the random-image widget.
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -143,7 +143,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Enables the random-image sidebar widget.
+	 * Enables the random-image widget.
 	 *
 	 * @access private
 	 * @since 0.1

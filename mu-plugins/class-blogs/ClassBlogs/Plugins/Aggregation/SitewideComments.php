@@ -14,7 +14,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_Plugins_SidebarWidget
+class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_Plugins_Widget
 {
 
 	/**
@@ -61,7 +61,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 		$instance = $this->maybe_apply_instance_defaults( $instance );
 		$plugin = ClassBlogs::get_plugin( 'sitewide_comments' );
 
-		$sitewide_comments = $plugin->get_comments_for_sidebar(
+		$sitewide_comments = $plugin->get_comments_for_widget(
 			$instance['max_comments'],
 			$instance['max_comments_per_blog'],
 			$instance['meta_format'] );
@@ -234,7 +234,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	const COMMENTS_PER_ADMIN_PAGE = 20;
 
 	/**
-	 * Enable the recent comments sidebar widget and the student comment list.
+	 * Enable the recent comments widget and the student comment list.
 	 */
 	function __construct()
 	{
@@ -244,7 +244,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Enables the recent sitewide comments sidebar widget.
+	 * Enables the recent sitewide comments widget.
 	 *
 	 * @access private
 	 * @since 0.2
@@ -710,10 +710,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	}
 
 	/**
-	 * Gets a list of recent comments formatted for display in a sidebar widget.
+	 * Gets a list of recent comments formatted for display in a widget.
 	 *
 	 * The array of returned comments contains custom object instances with the
-	 * following properties that can be used by the sidebar:
+	 * following properties that can be used by the widget:
 	 *
 	 *      author_name - the display name of the comment's author
 	 *      content     - the content of the comment
@@ -727,13 +727,13 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 * @param  string $meta_format           the formatting string for the comment meta
 	 * @return array                         an array of formatted comments
 	 *
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public function get_comments_for_sidebar( $max_comments, $max_comments_per_blog, $meta_format )
+	public function get_comments_for_widget( $max_comments, $max_comments_per_blog, $meta_format )
 	{
 
 		// Use cached values if possible
-		$cached = $this->get_site_cache( 'sidebar' );
+		$cached = $this->get_site_cache( 'widget' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -774,7 +774,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				'post_title'  => $comment->post_title );
 		}
 
-		$this->set_site_cache( 'sidebar', $comments );
+		$this->set_site_cache( 'widget', $comments );
 		return $comments;
 	}
 }

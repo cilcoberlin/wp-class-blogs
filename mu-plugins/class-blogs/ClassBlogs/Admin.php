@@ -146,7 +146,7 @@ class ClassBlogs_Admin
 			<p><?php _e( 'Provides a main-blog-only widget sitewide tag cloud widget, and allows all usages of a single tag on all student blogs to be viewed.', 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'Student Blog Links', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides an admin option that allows you to add links of your choosing as the first sidebar widget on all student blogs.', 'classblogs' ); ?></p>
+			<p><?php _e( 'Provides an admin option that allows you to add links of your choosing as the first widget on all student blogs.', 'classblogs' ); ?></p>
 
 			<h4><?php _e( 'Student Blog List', 'classblogs' ); ?></h4>
 			<p><?php _e( 'Provides a main-blog-only widget that shows a list of all student blogs that are part of this class.', 'classblogs' ); ?></p>
