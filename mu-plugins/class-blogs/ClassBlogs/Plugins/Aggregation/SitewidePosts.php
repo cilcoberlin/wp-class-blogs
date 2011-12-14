@@ -40,14 +40,19 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plu
 	);
 
 	/**
-	 * Creates the sitewide posts widget.
+	 * The name of the plugin.
 	 */
-	public function __construct()
+	protected function get_name()
 	{
-		parent::__construct(
-			__( 'Recent Sitewide Posts', 'classblogs' ),
-			__( 'A list of recent posts from across all student blogs', 'classblogs' ),
-			'cb-sitewide-recent-posts' );
+		return __( 'Recent Sitewide Posts', 'classblogs' );
+	}
+
+	/**
+	 * The description of the plugin.
+	 */
+	protected function get_description()
+	{
+		return __( 'A list of recent posts from across all student blogs', 'classblogs' );
 	}
 
 	/**

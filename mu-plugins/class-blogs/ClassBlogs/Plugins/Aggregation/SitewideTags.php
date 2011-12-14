@@ -28,14 +28,19 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Plug
 	);
 
 	/**
-	 * Creates the sitewide tag cloud widget.
+	 * The name of the plugin.
 	 */
-	public function __construct()
+	protected function get_name()
 	{
-		parent::__construct(
-			__( 'Sitewide Tag Cloud', 'classblogs' ),
-			__( 'A tag cloud made from tags on all blogs on the site', 'classblogs' ),
-			'cb-sitewide-tag-cloud' );
+		return __( 'Sitewide Tag Cloud', 'classblogs' );
+	}
+
+	/**
+	 * The description of the plugin.
+	 */
+	protected function get_description()
+	{
+		return __( 'A tag cloud made from tags on all blogs on the site', 'classblogs' );
 	}
 
 	/**

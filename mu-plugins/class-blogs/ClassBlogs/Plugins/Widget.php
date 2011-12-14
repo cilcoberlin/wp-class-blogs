@@ -17,31 +17,82 @@ abstract class ClassBlogs_Plugins_Widget extends WP_Widget
 	 * The default options for the widget.
 	 *
 	 * @access protected
+	 * @var array
 	 * @since 0.1
 	 */
 	protected $default_options = array();
 
 	/**
+	 * An optional CSS class or classes that is assigned to the widget.
+	 *
+	 * @access protected
+	 * @var string
+	 * @since 0.2
+	 */
+	protected $css_class = "";
+
+	/**
 	 * Initializes the widget.
 	 *
-	 * This is a convenience function wrapping the standard widget constructor.
+	 * As part of initialization, this method uses the values of two required
+	 * methods and one optional attribute on the widget.
 	 *
-	 * @param string $name        the widget's name
-	 * @param string $description the widget's description
-	 * @param string $class       the optional CSS class name of the widget
+	 * The first required method, `get_name()`, should return the name to use
+	 * for the widget.  The second, `get_description()`, should return the
+	 * widget's description.  The optional attribute, `$css_class`, may be
+	 * given a value to provide the widget with a custom CSS class.
+	 *
+	 * In addition to these methods and attributes, this also calls the `init()`
+	 * method on the descending plugin, which can contain any custom initializaiton
+	 * code that the plugin wants to run.
 	 *
 	 * @access protected
 	 * @since 0.1
 	 */
-	public function __construct( $name, $description, $class )
+	public function __construct()
 	{
 		parent::__construct(
 			false,
-			$name,
+			$this->get_name(),
 			array(
-				'description' => $description,
-				'classname'   => $class ) );
+				'description' => $this->get_description(),
+				'classname'   => 'cb-widget ' . $this->css_class ) );
+		$this->init();
 	}
+
+	/**
+	 * Allows the descending widget to safely execute initialization code.
+	 *
+	 * @access protected
+	 * @since 0.2
+	 */
+	protected function init() {}
+
+	/**
+	 * Returns the name to use for the widget.
+	 *
+	 * This is implemented as a method to allow the widget descended from this
+	 * class to provide internationalized text.
+	 *
+	 * @return string the name of the widget
+	 *
+	 * @access protected
+	 * @since 0.2
+	 */
+	protected function get_name() {}
+
+	/**
+	 * Returns the description to use for the widget.
+	 *
+	 * This is implemented as a method to allow the widget descended from this
+	 * class to provide internationalized text.
+	 *
+	 * @return string the name of the widget
+	 *
+	 * @access protected
+	 * @since 0.2
+	 */
+	protected function get_description() {}
 
 	/**
 	 * Outputs markup to open a widget.

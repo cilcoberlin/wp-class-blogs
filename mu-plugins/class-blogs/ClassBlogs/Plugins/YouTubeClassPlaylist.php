@@ -26,14 +26,19 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
 	);
 
 	/**
-	 * Creates the class playlist widget.
+	 * The name of the plugin.
 	 */
-	public function __construct()
+	protected function get_name()
 	{
-		parent::__construct(
-			__( 'YouTube Class Playlist', 'classblogs' ),
-			__( 'A list of YouTube videos that have been recently added to the class playlist', 'classblogs' ),
-			'cb-youtube-class-playlist' );
+		return __( 'YouTube Class Playlist', 'classblogs' );
+	}
+
+	/**
+	 * The description of the plugin.
+	 */
+	protected function get_description()
+	{
+		return __( 'A list of YouTube videos that have been recently added to the class playlist', 'classblogs' );
 	}
 
 	/**

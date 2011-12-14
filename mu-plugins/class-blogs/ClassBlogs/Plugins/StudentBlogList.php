@@ -23,14 +23,19 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Widge
 	);
 
 	/**
-	 * Creates the student-blogs widget.
+	 * The name of the plugin.
 	 */
-	public function __construct()
+	protected function get_name()
 	{
-		parent::__construct(
-			__( 'Student Blog List', 'classblogs' ),
-			__( 'A list of all student blogs on the site', 'classblogs' ),
-			'cb-student-blogs' );
+		return __( 'Student Blog List', 'classblogs' );
+	}
+
+	/**
+	 * The description of the plugin.
+	 */
+	protected function get_description()
+	{
+		return __( 'A list of all student blogs on the site', 'classblogs' );
 	}
 
 	/**

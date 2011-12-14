@@ -41,14 +41,19 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	);
 
 	/**
-	 * Creates the sitewide comments widget.
+	 * The name of the plugin.
 	 */
-	public function __construct()
+	protected function get_name()
 	{
-		parent::__construct(
-			__( 'Recent Sitewide Comments', 'classblogs' ),
-			__( 'A list of recent comments from across all student blogs', 'classblogs' ),
-			'cb-sitewide-recent-comments' );
+		return __( 'Recent Sitewide Comments', 'classblogs' );
+	}
+
+	/**
+	 * The description of the plugin.
+	 */
+	protected function get_description()
+	{
+		return __( 'A list of recent comments from across all student blogs', 'classblogs' );
 	}
 
 	/**

@@ -28,14 +28,19 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_Widget
 	);
 
 	/**
-	 * Creates the random-image widget.
+	 * The name of the plugin.
 	 */
-	public function __construct()
+	protected function get_name()
 	{
-		parent::__construct(
-			__( 'Random Image', 'classblogs' ),
-			__( 'A random image from one of the blogs on the site', 'classblogs' ),
-			'cb-random-image' );
+		return __( 'Random Image', 'classblogs' );
+	}
+
+	/**
+	 * The description of the plugin.
+	 */
+	protected function get_description()
+	{
+		return __( 'A random image from one of the blogs on the site', 'classblogs' );
 	}
 
 	/**
