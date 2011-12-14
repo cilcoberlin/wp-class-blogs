@@ -572,7 +572,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 */
 	private function _calculate_comment_totals_for_students()
 	{
-		$cached = $this->get_sw_cache( 'totals' );
+		$cached = $this->get_site_cache( 'totals' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -586,7 +586,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 		foreach ( $counts as $count ) {
 			$totals[$count->user_id] = $count->total;
 		}
-		$this->set_sw_cache( 'totals', $totals );
+		$this->set_site_cache( 'totals', $totals );
 		return $totals;
 	}
 
@@ -673,7 +673,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 		$cache_key .= ( $approved_only ) ? 'approved' : 'all';
 
 		// Return the cached comments if possible
-		$cached = $this->get_sw_cache( $cache_key );
+		$cached = $this->get_site_cache( $cache_key );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -705,7 +705,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 			$comments = $no_spam;
 		}
 
-		$this->set_sw_cache( $cache_key, $comments );
+		$this->set_site_cache( $cache_key, $comments );
 		return $comments;
 	}
 
@@ -733,7 +733,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	{
 
 		// Use cached values if possible
-		$cached = $this->get_sw_cache( 'sidebar' );
+		$cached = $this->get_site_cache( 'sidebar' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -774,7 +774,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				'post_title'  => $comment->post_title );
 		}
 
-		$this->set_sw_cache( 'sidebar', $comments );
+		$this->set_site_cache( 'sidebar', $comments );
 		return $comments;
 	}
 }

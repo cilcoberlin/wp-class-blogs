@@ -605,7 +605,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	{
 
 		// Return the cached version if we've already built the sitewide post list
-		$cached = $this->get_sw_cache( 'all_posts' );
+		$cached = $this->get_site_cache( 'all_posts' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -625,7 +625,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$posts[] = $post;
 		}
 
-		$this->set_sw_cache( 'all_posts', $posts );
+		$this->set_site_cache( 'all_posts', $posts );
 		return $posts;
 	}
 
@@ -696,7 +696,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	{
 
 		// Use cache values if possible
-		$cached = $this->get_sw_cache( 'sidebar' );
+		$cached = $this->get_site_cache( 'sidebar' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -733,7 +733,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 				'title'     => $post->post_title );
 		}
 
-		$this->set_sw_cache( 'sidebar', $posts );
+		$this->set_site_cache( 'sidebar', $posts );
 		return $posts;
 	}
 
@@ -760,7 +760,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		$by_user = array();
 
 		// Use cached values if possible
-		$cached = $this->get_sw_cache( 'by_user' );
+		$cached = $this->get_site_cache( 'by_user' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -783,7 +783,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		// Sort the posts by the published date of the first post of each user
 		usort( $by_user, array( $this, '_sort_posts_by_user_by_date' ) );
 		$values = array_values( $by_user );
-		$this->set_sw_cache( 'by_user', $values );
+		$this->set_site_cache( 'by_user', $values );
 		return $values;
 	}
 }

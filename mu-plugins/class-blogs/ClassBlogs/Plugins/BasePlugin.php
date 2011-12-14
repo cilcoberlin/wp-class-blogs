@@ -113,6 +113,26 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	private $_options;
 
 	/**
+	 * The name of the option key used to track class-blogs keys stored in
+	 * a blog's individual cache.
+	 *
+	 * @access private
+	 * @var string
+	 * @since 0.2
+	 */
+	const _CACHE_TRACKER_OPTION = 'cb_cache_keys';
+
+	/**
+	 * The name of the option key used to track class-blogs keys stored in the
+	 * sitewide cache.
+	 *
+	 * @access private
+	 * @var string
+	 * @since 0.2
+	 */
+	const _SW_CACHE_TRACKER_OPTION = 'cb_sw_cache_keys';
+
+	/**
 	 * The admin CSS or JavaScript used by the plugin.
 	 *
 	 * A plugin can add admin media by providing values for the `css` or `js`
@@ -288,6 +308,46 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
+	 * Adds a value to the cache using the function provided.
+	 *
+	 * This makes it easy for the other cache methods of this class to add a
+	 * value to either the current blog's cache or the sitewide one.  Whenever
+	 * a key is added to the cache, a record is kept of that to facilitate
+	 * clearing any cached values from the cache later.
+	 *
+	 * If `WP_DEBUG` is true, this will never add a value to the cache.
+	 *
+	 * @param string $cache_fn   the name of the function to use to set the cache data
+	 * @param string $tracker    the name of an option key to use to track the cache keys added
+	 * @param string $key        the key under which to cache the data
+	 * @param mixed  $value      the data to cache
+	 * @param int    $expiration the expiry time for the value in seconds
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _set_cache( $cache_fn, $tracker, $key, $value, $expiration )
+	{
+		if ( WP_DEBUG ) {
+			return;
+		}
+
+		// Add the key to the list of cached keys if it's not there
+		$full_key = $this->_make_cache_key_name( $key );
+		$keys = get_site_option( $tracker );
+		if ( empty( $keys ) ) {
+			$keys = array();
+		}
+		if ( ! array_key_exists( $full_key, $keys ) ) {
+			$keys[$full_key] = true;
+			update_site_option( $tracker, $keys );
+		}
+
+		// Cache the value using the provided function
+		call_user_func( $cache_fn, $full_key, $value, $expiration );
+	}
+
+	/**
 	 * Adds a value to the cache.
 	 *
 	 * This will never add a value to the cache if WP_DEBUG is true.
@@ -301,24 +361,55 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 */
 	protected function set_cache( $key, $value, $expiration = ClassBlogs_Settings::DEFAULT_CACHE_LENGTH )
 	{
-		if ( WP_DEBUG ) {
-			return;
-		}
-		set_transient( $this->make_cache_key_name( $key ), $value, $expiration );
+		$this->_set_cache(
+			'set_transient',
+			self::_CACHE_TRACKER_OPTION,
+			$key, $value, $expiration );
 	}
 
 	/**
-	 * Functions identically to `set_cache`, but uses the site cache.
+	 * Functions identically to `set_cache`, but uses the sitewide cache.
 	 *
 	 * @access protected
 	 * @since 0.1
 	 */
 	protected function set_site_cache( $key, $value, $expiration = ClassBlogs_Settings::DEFAULT_CACHE_LENGTH )
 	{
+		$this->_set_cache(
+			'set_site_transient',
+			self::_SW_CACHE_TRACKER_OPTION,
+			$key, $value, $expiration );
+	}
+
+	/**
+	 * Retrives the request cache value from the given cache.
+	 *
+	 * This is a generalized function that makes it easier for the cache methods
+	 * of this class to get a value from either the current blog's cache or
+	 * the sitewide cache.
+	 *
+	 * If the cache value is not found, a null value is returned.  If WP_DEBUG
+	 * is true, this will always return null.
+	 *
+	 * @param  string $cache_fn the name of the function to use to get the cached value
+	 * @param  string $key      the cache key whose value should be retrieved
+	 * @return mixed            the cached value or null
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _get_cache( $cache_fn, $key )
+	{
 		if ( WP_DEBUG ) {
-			return;
+			return null;
 		}
-		set_site_transient( $this->make_cache_key_name( $key ), $value, $expiration );
+
+		$cached = call_user_func( $cache_fn, $this->_make_cache_key_name( $key ) );
+		if ( $cached === false ) {
+			return null;
+		} else {
+			return $cached;
+		}
 	}
 
 	/**
@@ -335,16 +426,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 */
 	protected function get_cache( $key )
 	{
-		if ( WP_DEBUG ) {
-			return null;
-		}
-
-		$cached = get_transient( $this->make_cache_key_name( $key ) );
-		if ( $cached === false ) {
-			return null;
-		} else {
-			return $cached;
-		}
+		return $this->_get_cache( 'get_transient', $key );
 	}
 
 	/**
@@ -355,40 +437,78 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 */
 	protected function get_site_cache( $key )
 	{
-		if ( WP_DEBUG ) {
-			return null;
-		}
+		return $this->_get_cache( 'get_site_transient', $key );
+	}
 
-		$cached = get_site_transient( $this->make_cache_key_name( $key ) );
-		if ( $cached === false ) {
-			return null;
+	/**
+	 * Clears a single cached value, or the entire cache.
+	 *
+	 * This is a generalized function that allows the cache methods of this plugin
+	 * to easily remove values from either a single blog's cache or the sitewide
+	 * cache.
+	 *
+	 * If no value is passed, all keys tracked in the given option key will
+	 * be removed.
+	 *
+	 * @param string $cache_fn the name of the function to use to delete a cached value
+	 * @param string $tracker  an option key that contains a list of cached keys
+	 * @param string $key      the optional name of the cache key to clear
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	protected function _clear_cache( $cache_fn, $tracker, $key=null )
+	{
+
+		// If a key was passed, delete a single cached value.  If no key was
+		// passed, get the list of cached keys stored in the option defined by
+		// `$tracker` and remove each one of them.
+		if ( $key ) {
+			call_user_func( $cache_fn, $this->_make_cache_key_name( $key ) );
 		} else {
-			return $cached;
+			$cached_keys = get_site_option( $tracker );
+			if ( ! empty( $cached_keys ) ) {
+				foreach ( $cached_keys as $cached_key => $null ) {
+					call_user_func( $cache_fn, $cached_key );
+				}
+				update_site_option( $tracker, array() );
+			}
 		}
 	}
 
 	/**
 	 * Clears a single cached value.
 	 *
+	 * If no value is passed, all keys added by the class-blogs plugins to the
+	 * cache will be removed.
+	 *
 	 * @param string $key the cache key to clear
 	 *
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected function clear_cache( $key )
+	protected function clear_cache( $key=null )
 	{
-		delete_transient( $this->make_cache_key_name( $key ) );
+		$this->_clear_cache(
+			'delete_transient',
+			self::_CACHE_TRACKER_OPTION,
+			$key );
 	}
 
 	/**
-	 * Functions identically to `clear_cache`, but uses the site cache.
+	 * Functions identically to `clear_cache`, but uses the site cache.  This
+	 * means that if no key is passed, all values in the sitewide cache put there
+	 * by class-blogs plugins will be removed.
 	 *
 	 * @access protected
 	 * @since 0.1
 	 */
-	protected function clear_site_cache( $key )
+	protected function clear_site_cache( $key=null )
 	{
-		delete_site_transient( $this->make_cache_key_name( $key ) );
+		$this->_clear_cache(
+			'delete_site_transient',
+			self::_SW_CACHE_TRACKER_OPTION,
+			$key );
 	}
 
 	/**
@@ -397,10 +517,10 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	 * @param  string $key the base name of the cache key
 	 * @return string      the full name of the cache key
 	 *
-	 * @access protected
+	 * @access private
 	 * @since 0.2
 	 */
-	protected function make_cache_key_name( $key ) {
+	private function _make_cache_key_name( $key ) {
 		return $this->get_uid() . '_' . $key;
 	}
 

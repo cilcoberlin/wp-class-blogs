@@ -123,7 +123,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		// If the post is being published, update its sitewide record, and remove
 		// it from the sitewide table if it is no longer visible to the public,
 		// either due to a change of status or outright deletion
-		$this->_clear_sw_cache();
+		$this->clear_site_cache();
 		switch ( get_post_status( $post_id ) ) {
 			case 'publish':
 				$this->_update_sw_post( $blog_id, $post_id );
@@ -155,7 +155,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	public function _track_single_comment( $comment_id, $status = "" )
 	{
 		global $blog_id;
-		$this->_clear_sw_cache();
+		$this->clear_site_cache();
 
 		// Since this function may be called be either the comment_posted hook
 		// or the wp_set_comment_status hook, we might receive the actual status
@@ -567,7 +567,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 
 		// Drop all data before proceeding
 		$this->_clear_tables();
-		$this->_clear_sw_cache();
+		$this->clear_site_cache();
 
 		// Export the post, comment and tag data for each blog to our tables
 		foreach ( $blogs as $blog_id ) {
@@ -660,27 +660,6 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		global $wpdb;
 		foreach ( $this->tables as $name => $table ) {
 			$wpdb->query( "DELETE FROM $table" );
-		}
-	}
-
-	/**
-	 * Clears any cached sitewide data.
-	 *
-	 * This clears the values of any registered sitewide cache keys and clears
-	 * the registry of keys as well.
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _clear_sw_cache()
-	{
-		$option_key = ClassBlogs_Plugins_Aggregation_Settings::CACHE_KEY_OPTION_NAME;
-		$keys = get_site_option( $option_key );
-		if ( ! empty( $keys ) ) {
-			foreach ( $keys as $key => $null ) {
-				delete_site_transient( $key );
-			}
-			update_site_option( $option_key, array() );
 		}
 	}
 

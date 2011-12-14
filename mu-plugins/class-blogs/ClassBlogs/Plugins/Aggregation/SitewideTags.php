@@ -375,7 +375,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	private function _get_tag_counts()
 	{
 		// Use cached information if possible
-		$cached = $this->get_sw_cache( 'tag_counts' );
+		$cached = $this->get_site_cache( 'tag_counts' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -394,7 +394,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 		$max_min = array(
 			'max' => $tag_max,
 			'min' => $tag_min );
-		$this->set_sw_cache( 'tag_counts', $max_min );
+		$this->set_site_cache( 'tag_counts', $max_min );
 		return $max_min;
 	}
 
@@ -463,7 +463,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	{
 
 		// Return the cached version if we've already built the sitewide tags list
-		$cached = $this->get_sw_cache( 'tags' );
+		$cached = $this->get_site_cache( 'tags' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -483,7 +483,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 
 		//  Cache and return the tag list sorted by tag name
 		ksort( $tags );
-		$this->set_sw_cache( 'tags', $tags );
+		$this->set_site_cache( 'tags', $tags );
 		return $tags;
 	}
 
@@ -532,7 +532,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	public function get_tags_for_tag_cloud( $threshold )
 	{
 		// Use cached values if possible
-		$cached = $this->get_sw_cache( 'cloud' );
+		$cached = $this->get_site_cache( 'cloud' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -546,7 +546,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 					'url'   => $this->get_tag_url( $slug ) );
 			}
 		}
-		$this->set_sw_cache( 'cloud', $tags );
+		$this->set_site_cache( 'cloud', $tags );
 		return $tags;
 	}
 
