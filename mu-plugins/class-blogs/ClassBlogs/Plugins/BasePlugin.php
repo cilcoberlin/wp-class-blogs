@@ -67,21 +67,31 @@
  *         switch_to_blog( 1 );
  *         assert( $this->get_cache( 'cached' ) === null );
  *         $this->set_cache( 'cached', true );
+ *         $this->set_cache( 'other', true );
  *         assert( $this->get_cache( 'cached' ) === true );
+ *         assert( $this->get_cache( 'other' ) === true );
  *         switch_to_blog( 2 );
  *         assert( $this->get_cache( 'cached' ) === null );
  *         switch_to_blog( 1 );
  *         $this->clear_cache( 'cached' );
  *         assert( $this->get_cache( 'cached' ) === null );
+ *         assert( $this->get_cache( 'other' ) === true );
+ *         $this->clear_cache();
+ *         assert( $this->get_cache( 'other' ) === null );
  *
  *         switch_to_blog( 1 );
  *         assert( $this->get_site_cache( 'cached' ) === null );
  *         $this->set_site_cache( 'cached', true );
+ *         $this->set_site_cache( 'other', true );
  *         assert( $this->get_site_cache( 'cached' ) === true );
+ *         assert( $this->get_site_cache( 'other' ) === true );
  *         switch_to_blog( 2 );
  *         assert( $this->get_site_cache( 'cached' ) === true );
  *         $this->clear_site_cache( 'cached' );
  *         assert( $this->get_site_cache( 'cached' ) === null );
+ *         assert( $this->get_site_cache( 'other' ) === true );
+ *         $this->clear_site_cache();
+ *         assert( $this->get_site_cache( 'other' ) === null );
  *     }
  * }
  *
@@ -552,7 +562,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	protected function register_root_only_widget( $widget )
 	{
 		global $blog_id;
-		if ( $blog_id == ClassBlogs_Settings::get_root_blog_id() && ( ! is_admin() || $this->current_user_is_admin_on_root_blog() ) ) {
+		if ( $blog_id === ClassBlogs_Settings::get_root_blog_id() && ( ! is_admin() || $this->current_user_is_admin_on_root_blog() ) ) {
 			$this->register_widget( $widget );
 		}
 	}
