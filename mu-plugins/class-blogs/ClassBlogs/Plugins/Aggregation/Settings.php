@@ -17,10 +17,11 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	/**
 	 * The prefix to use for all sitewide tables.
 	 *
+	 * @access private
 	 * @var string
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	const TABLE_PREFIX = 'cb_sw_';
+	const _TABLE_PREFIX = 'cb_sw_';
 
 	/**
 	 * The title of the default first post present on any newly created blog.
@@ -47,42 +48,22 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	const TAG_TAXONOMY_NAME = 'post_tag';
 
 	/**
-	 * The name of the option used to store any sitewide cache keys.
-	 *
-	 * @var string
-	 * @since 0.1
-	 */
-	const CACHE_KEY_OPTION_NAME = 'cb_sw_cache_keys';
-
-	/**
 	 * The available short names for the sitewide tables.
+	 *
+	 * This is a mapping of the name by which the table's full name can be
+	 * accessed to the base name for the actual table.  The access name is
+	 * the key, and the base name is the value.
 	 *
 	 * @access private
 	 * @var array
-	 */
-	private static $_table_names = array(
-		'posts',
-		'comments',
-		'tags',
-		'tag_usage'
-	);
-
-	/**
-	 * Returns the full name of the table used for the given short name.
-	 *
-	 * @param  string $table the short name for the table
-	 * @return string        the full database name of the table, or an empty
-	 *                       string if the table name is not valid
-	 *
 	 * @since 0.1
 	 */
-	public static function get_table_name( $table )
-	{
-		if ( array_search( $table, self::$_table_names ) !== false ) {
-			return self::TABLE_PREFIX . $table;
-		}
-		return "";
-	}
+	private static $_table_names = array(
+		'comments'  => 'comments',
+		'posts'     => 'posts',
+		'tags'      => 'tags',
+		'tag_usage' => 'tag_usage'
+	);
 
 	/**
 	 * Returns a mapping of short table names to their full names.
@@ -101,12 +82,11 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	public static function get_table_names()
 	{
 		$tables = array();
-		foreach ( self::$_table_names as $table_name ) {
-			$tables[$table_name] = self::get_table_name( $table_name );
+		foreach ( self::$_table_names as $access_name => $table_name ) {
+			$tables[$access_name] = self::_TABLE_PREFIX . $table_name;
 		}
 		return (object) $tables;
 	}
-
 }
 
 ?>

@@ -195,7 +195,7 @@ class ClassBlogs_Utils
 	 */
 	public static function get_plugin_css_url()
 	{
-		return self::_get_plugin_media_url( ClassBlogs_Settings::MEDIA_CSS_DIR_NAME );;
+		return self::_get_plugin_media_url( ClassBlogs_Settings::MEDIA_CSS_DIR_NAME );
 	}
 
 	/**

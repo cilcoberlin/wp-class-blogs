@@ -487,10 +487,11 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 *     videos      - a table containing a record of each video on the site
 	 *     video_usage - a table mapping videos to posts
 	 *
+	 * @access protected
 	 * @var object
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public $tables;
+	protected $tables;
 
 	/**
 	 * Registers the necessary WordPress hooks to make the playlist work.

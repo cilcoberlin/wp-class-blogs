@@ -28,6 +28,7 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 *     tags      - a list of all tags used across the site with usage counts
 	 *     tag_usage - a record of which posts are using which tags
 	 *
+	 * @access protected
 	 * @var object
 	 * @since 0.2
 	 */
