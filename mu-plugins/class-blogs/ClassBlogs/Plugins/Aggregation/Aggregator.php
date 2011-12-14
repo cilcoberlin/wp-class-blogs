@@ -23,7 +23,7 @@
  * @subpackage Aggregator
  * @since 0.1
  */
-class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggregation_SitewidePlugin
 {
 
 	/**
@@ -40,31 +40,11 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	);
 
 	/**
-	 * The names of the sitewide tables.
-	 *
-	 * This works similarly to WordPress's `$wpdb` global, with each table name
-	 * being available through a short term that is a property of the `$tables`
-	 * object.  The available table keys and their natures are as follows:
-	 *
-	 *     posts     - a master list of any published posts on any blog on the site
-	 *     comments  - a master list of all comments left on any blog on the site
-	 *     tags      - a list of all tags used across the site with usage counts
-	 *     tag_usage - a record of which posts are using which tags
-	 *
-	 * @var object
-	 * @since 0.1
-	 */
-	public $tables;
-
-	/**
 	 * Determines table names and conditionally registers WordPress hooks.
 	 */
 	public function __construct() {
 
 		parent::__construct();
-
-		// Get the names of the sitewide tables
-		$this->tables = ClassBlogs_Plugins_Aggregation_Settings::get_table_names();
 
 		// If aggregation is enabled, initialize the aggregator hooks
 		if ( $this->get_option( 'aggregation_enabled' ) ) {
@@ -196,7 +176,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		switch_to_blog( $blog_id );
 
 		// Update the post's record in the sitewide table
-		$this->_copy_sw_object( $blog_id, $post_id, 'ID', $wpdb->posts, $this->tables->posts );
+		$this->_copy_sw_object( $blog_id, $post_id, 'ID', $wpdb->posts, $this->sw_tables->posts );
 
 		// Get a list of the tags used by the current post and those that have
 		// been added to the list of sitewide tags
@@ -207,7 +187,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		}
 		$sw_tags = $wpdb->get_results( $wpdb->prepare( "
 			SELECT t.slug
-			FROM {$this->tables->tag_usage} AS tu, {$this->tables->tags} AS t
+			FROM {$this->sw_tables->tag_usage} AS tu, {$this->sw_tables->tags} AS t
 			WHERE tu.post_id=%d AND tu.blog_id=%d AND tu.uses_tag=t.term_id",
 			$post_id, $blog_id ) );
 		foreach ( $sw_tags as $sw_tag ) {
@@ -221,20 +201,20 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 			// See if a record of the tag already exists
 			$tag = $local_tags[$add_slug];
 			$sw_id = $wpdb->get_var( $wpdb->prepare(
-				"SELECT term_id FROM {$this->tables->tags} WHERE slug=%s",
+				"SELECT term_id FROM {$this->sw_tables->tags} WHERE slug=%s",
 				$add_slug ) );
 
 			// Create a new record for the tag if it doesn't exist or update
 			// the usage count for an existing tag record
 			if ( $sw_id ) {
 				$wpdb->query( $wpdb->prepare( "
-					UPDATE {$this->tables->tags}
+					UPDATE {$this->sw_tables->tags}
 					SET count=count+1
 					WHERE term_id=%d",
 					$sw_id ) );
 			} else {
 				$wpdb->insert(
-					$this->tables->tags,
+					$this->sw_tables->tags,
 					array(
 						'name' => $tag->name,
 						'slug' => $tag->slug,
@@ -246,7 +226,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 
 			// Create the actual tag-usage record
 			$wpdb->query( $wpdb->prepare(
-				"INSERT INTO {$this->tables->tag_usage} (post_id, uses_tag, blog_id) VALUES (%d, %d, %d)",
+				"INSERT INTO {$this->sw_tables->tag_usage} (post_id, uses_tag, blog_id) VALUES (%d, %d, %d)",
 				$post_id, $sw_id, $blog_id ) );
 		}
 
@@ -255,13 +235,13 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		$drop_slugs = array_diff( $sw_tag_slugs, $local_tag_slugs );
 		foreach ( $drop_slugs as $drop_slug ) {
 			$sw_id = $wpdb->get_var( $wpdb->prepare(
-				"SELECT term_id FROM {$this->tables->tags} WHERE slug=%s",
+				"SELECT term_id FROM {$this->sw_tables->tags} WHERE slug=%s",
 				$drop_slug ) );
 			$wpdb->query( $wpdb->prepare(
-				"UPDATE {$this->tables->tags} SET count=count-1 WHERE term_id=%d",
+				"UPDATE {$this->sw_tables->tags} SET count=count-1 WHERE term_id=%d",
 				$sw_id ) );
 			$wpdb->query( $wpdb->prepare(
-				"DELETE FROM {$this->tables->tag_usage}
+				"DELETE FROM {$this->sw_tables->tag_usage}
 				WHERE post_id=%d AND blog_id=%d AND uses_tag=%d",
 				$post_id, $blog_id, $sw_id ) );
 		}
@@ -289,17 +269,17 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 
 		// Remove the post from the sitewide table
 		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$this->tables->posts} WHERE ID=%d AND cb_sw_blog_id=%d",
+			"DELETE FROM {$this->sw_tables->posts} WHERE ID=%d AND cb_sw_blog_id=%d",
 			$post_id, $blog_id ) );
 
 		// Remove any record of tags used by the post
 		$wpdb->query( $wpdb->prepare(
-			"UPDATE {$this->tables->tags} AS t, {$this->tables->tag_usage} AS tu
+			"UPDATE {$this->sw_tables->tags} AS t, {$this->sw_tables->tag_usage} AS tu
 			SET t.count=t.count-1
 			WHERE tu.post_id=%d AND tu.blog_id=%d AND t.term_id=tu.uses_tag",
 			$post_id, $blog_id ) );
 		$wpdb->query( $wpdb->prepare( "
-			DELETE FROM {$this->tables->tag_usage}
+			DELETE FROM {$this->sw_tables->tag_usage}
 			WHERE post_id=%d AND blog_id=%d",
 			$post_id, $blog_id ) );
 		$this->_remove_unused_sitewide_tags();
@@ -318,7 +298,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	{
 		global $wpdb;
 		switch_to_blog( $blog_id );
-		$this->_copy_sw_object( $blog_id, $comment_id, 'comment_ID', $wpdb->comments, $this->tables->comments );
+		$this->_copy_sw_object( $blog_id, $comment_id, 'comment_ID', $wpdb->comments, $this->sw_tables->comments );
 		restore_current_blog();
 	}
 
@@ -335,7 +315,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	{
 		global $wpdb;
 		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$this->tables->comments} WHERE comment_ID=%d AND cb_sw_blog_id=%d",
+			"DELETE FROM {$this->sw_tables->comments} WHERE comment_ID=%d AND cb_sw_blog_id=%d",
 			$comment_id, $blog_id ) );
 	}
 
@@ -349,7 +329,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	{
 		global $wpdb;
 		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$this->tables->tags} WHERE count <= 0" ) );
+			"DELETE FROM {$this->sw_tables->tags} WHERE count <= 0" ) );
 	}
 
 	/**
@@ -432,10 +412,10 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		// Create each table from its schema and track whether or not any
 		// modification of the database occurred
 		$table_specs = array(
-			array( $this->tables->comments, ClassBlogs_Plugins_Aggregation_Schemata::get_comments_schema() ),
-			array( $this->tables->posts, ClassBlogs_Plugins_Aggregation_Schemata::get_posts_schema() ),
-			array( $this->tables->tags, ClassBlogs_Plugins_Aggregation_Schemata::get_tags_schema() ),
-			array( $this->tables->tag_usage, ClassBlogs_Plugins_Aggregation_Schemata::get_tag_usage_schema() )
+			array( $this->sw_tables->comments, ClassBlogs_Plugins_Aggregation_Schemata::get_comments_schema() ),
+			array( $this->sw_tables->posts, ClassBlogs_Plugins_Aggregation_Schemata::get_posts_schema() ),
+			array( $this->sw_tables->tags, ClassBlogs_Plugins_Aggregation_Schemata::get_tags_schema() ),
+			array( $this->sw_tables->tag_usage, ClassBlogs_Plugins_Aggregation_Schemata::get_tag_usage_schema() )
 		);
 		foreach ( $table_specs as $spec ) {
 			$modified |= $spec[1]->apply_to_table( $spec[0] );
@@ -578,7 +558,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 			$this->_copy_table(
 				$blog_id,
 				$wpdb->posts,
-				$this->tables->posts,
+				$this->sw_tables->posts,
 				"post_status = 'publish' AND post_type = 'post' AND post_title <> %s",
 				ClassBlogs_Plugins_Aggregation_Settings::FIRST_POST_TITLE );
 
@@ -586,7 +566,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 			$this->_copy_table(
 				$blog_id,
 				$wpdb->comments,
-				$this->tables->comments,
+				$this->sw_tables->comments,
 				"comment_author <> %s",
 				ClassBlogs_Plugins_Aggregation_Settings::FIRST_COMMENT_AUTHOR );
 
@@ -617,7 +597,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 		foreach ( $tag_usage as $slug => $meta ) {
 			if ( $meta['count'] > 0 )
 				$wpdb->query( $wpdb->prepare( "
-					INSERT INTO {$this->tables->tags} (name, slug, count)
+					INSERT INTO {$this->sw_tables->tags} (name, slug, count)
 					VALUES (%s, %s, %s)",
 					$meta['name'], $slug, $meta['count'] ) );
 		}
@@ -636,11 +616,11 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 			foreach ( $wpdb->get_results( "SELECT * FROM $wpdb->term_relationships" ) as $tag ) {
 				if ( in_array( $tag->term_taxonomy_id, array_keys( $tag_origins[$blog_id] ) ) ) {
 					$sw_tag_id = $wpdb->get_var( $wpdb->prepare( "
-						SELECT term_id FROM {$this->tables->tags}
+						SELECT term_id FROM {$this->sw_tables->tags}
 						WHERE slug = %s",
 						$tag_origins[$blog_id][$tag->term_taxonomy_id] ) );
 					$wpdb->query( $wpdb->prepare( "
-						INSERT INTO {$this->tables->tag_usage} (post_id, uses_tag, blog_id)
+						INSERT INTO {$this->sw_tables->tag_usage} (post_id, uses_tag, blog_id)
 						VALUES (%s, %s, %s)",
 						$tag->object_id, $sw_tag_id, $blog_id ) );
 				}
@@ -658,7 +638,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_BaseP
 	private function _clear_tables()
 	{
 		global $wpdb;
-		foreach ( $this->tables as $name => $table ) {
+		foreach ( $this->sw_tables as $name => $table ) {
 			$wpdb->query( "DELETE FROM $table" );
 		}
 	}

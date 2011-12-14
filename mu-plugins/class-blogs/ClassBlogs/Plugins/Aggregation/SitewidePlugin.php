@@ -19,7 +19,15 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	/**
 	 * The names of the sitewide tables.
 	 *
-	 * @access protected
+	 * This works similarly to WordPress's `$wpdb` global, with each table name
+	 * being available through a short term that is a property of the `$tables`
+	 * object.  The available table keys and their natures are as follows:
+	 *
+	 *     posts     - a master list of any published posts on any blog on the site
+	 *     comments  - a master list of all comments left on any blog on the site
+	 *     tags      - a list of all tags used across the site with usage counts
+	 *     tag_usage - a record of which posts are using which tags
+	 *
 	 * @var object
 	 * @since 0.2
 	 */
