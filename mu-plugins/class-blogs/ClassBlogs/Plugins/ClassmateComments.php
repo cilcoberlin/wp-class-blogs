@@ -35,7 +35,7 @@ class ClassBlogs_Plugins_ClassmateComments extends ClassBlogs_Plugins_BasePlugin
 	public function _approve_classmate_comments( $id, $comment )
 	{
 		if ( ! $comment->comment_approved ) {
-			if ( $comment->user_id || get_user_by_email( $comment->comment_author_email ) ) {
+			if ( $comment->user_id || get_user_by( 'email', $comment->comment_author_email ) ) {
 				$comment->comment_approved = 1;
 				wp_update_comment( (array) $comment );
 			}
