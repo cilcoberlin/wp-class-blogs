@@ -535,54 +535,6 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Registers a widget.
-	 *
-	 * @param object $widget the widget class
-	 *
-	 * @access protected
-	 * @since 0.1
-	 */
-	protected function register_widget( $widget )
-	{
-		register_widget( $widget );
-	}
-
-	/**
-	 * Registers a widget that should only be available on the root blog.
-	 *
-	 * This makes the widget only appear as a selection on the admin side if the
-	 * user is an admin on the root blog and the root blog is being edited, but
-	 * will show the widget to any user viewing the root blog.
-	 *
-	 * @param mixed  $widget the widget class
-	 *
-	 * @access protected
-	 * @since 0.1
-	 */
-	protected function register_root_only_widget( $widget )
-	{
-		global $blog_id;
-		if ( (int) $blog_id === ClassBlogs_Settings::get_root_blog_id() && ( ! is_admin() || $this->current_user_is_admin_on_root_blog() ) ) {
-			$this->register_widget( $widget );
-		}
-	}
-
-	/**
-	 * Returns true if the current user is an administrator on the root blog.
-	 *
-	 * @return bool whether the current user is an admin on the root blog
-	 *
-	 * @access protected
-	 * @since 0.1
-	 */
-	protected function current_user_is_admin_on_root_blog()
-	{
-		return current_user_can_for_blog(
-			ClassBlogs_Settings::get_root_blog_id(),
-			'administrator' );
-	}
-
-	/**
 	 * Returns markup to make a checkbox or select box selected if it is true.
 	 *
 	 * @param  string $option the name of the option

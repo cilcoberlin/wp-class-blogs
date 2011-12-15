@@ -601,7 +601,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 */
 	public function _enable_widget()
 	{
-		$this->register_root_only_widget( '_ClassBlogs_Plugins_YouTubeClassPlaylistWidget' );
+		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_YouTubeClassPlaylistWidget' );
 	}
 
 	/**

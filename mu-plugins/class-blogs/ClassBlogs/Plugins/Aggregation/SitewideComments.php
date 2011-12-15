@@ -256,7 +256,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 */
 	public function _enable_widget()
 	{
-		$this->register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget' );
+		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget' );
 	}
 
 	/**

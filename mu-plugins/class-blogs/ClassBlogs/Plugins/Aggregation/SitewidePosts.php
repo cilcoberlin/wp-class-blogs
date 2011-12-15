@@ -407,7 +407,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 */
 	public function _enable_widget()
 	{
-		$this->register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewidePostsWidget' );
+		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewidePostsWidget' );
 	}
 
 	/**

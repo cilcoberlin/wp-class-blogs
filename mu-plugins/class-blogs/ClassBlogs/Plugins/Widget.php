@@ -153,4 +153,27 @@ abstract class ClassBlogs_Plugins_Widget extends WP_Widget
 		return wp_parse_args( $instance, $this->default_options );
 	}
 
+	/**
+	 * Registers a widget that should only be available on the root blog.
+	 *
+	 * This makes the widget only appear as a selection on the admin side if the
+	 * user is an admin on the root blog and the root blog is being edited, but
+	 * will show the widget to any user viewing the root blog.
+	 *
+	 * @param object $widget an instance of the widget class
+	 *
+	 * @since 0.2
+	 */
+	public static function register_root_only_widget( $widget )
+	{
+		global $blog_id;
+
+		// If we're currently on the root blog, see if we're either viewing the
+		// public-facing part of the blog or are a user with admin rights viewing
+		// the admin side.  If so, register the widget.
+		if ( ClassBlogs_Utils::is_root_blog() && ( ! is_admin() || ClassBlogs_Utils::current_user_is_admin_on_root_blog() ) ) {
+			register_widget( $widget );
+		}
+	}
+
 }

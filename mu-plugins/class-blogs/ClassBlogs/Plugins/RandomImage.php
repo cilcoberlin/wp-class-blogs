@@ -155,7 +155,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function _enable_widget()
 	{
-		$this->register_root_only_widget( '_ClassBlogs_Plugins_RandomImageWidget' );
+		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_RandomImageWidget' );
 	}
 
 	/**

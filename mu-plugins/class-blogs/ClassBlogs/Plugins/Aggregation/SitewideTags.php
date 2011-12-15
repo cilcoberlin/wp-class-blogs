@@ -277,7 +277,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function _enable_widget()
 	{
-		$this->register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideTagsWidget' );
+		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideTagsWidget' );
 	}
 
 	/**
