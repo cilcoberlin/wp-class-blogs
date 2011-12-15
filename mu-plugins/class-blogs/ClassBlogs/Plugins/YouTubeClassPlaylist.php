@@ -629,7 +629,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	{
 		wp_register_script(
 			$this->get_uid(),
-			ClassBlogs_Utils::get_plugin_js_url() . 'youtube-class-playlist.js',
+			ClassBlogs_Utils::get_base_js_url() . 'youtube-class-playlist.js',
 			array( 'jquery' ),
 			ClassBlogs_Settings::VERSION
 		);

@@ -641,7 +641,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	public function _add_admin_css()
 	{
 		if ( array_key_exists( 'css', $this->admin_media ) ) {
-			$css_url = esc_url( ClassBlogs_Utils::get_plugin_css_url() );
+			$css_url = esc_url( ClassBlogs_Utils::get_base_css_url() );
 			foreach ( $this->admin_media['css'] as $css_file ) {
 				printf( '<link rel="stylesheet" href="%s%s" />',
 					$css_url, $css_file );
@@ -661,7 +661,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	public function _add_admin_js()
 	{
 		if ( array_key_exists( 'js', $this->admin_media ) ) {
-			$js_url = ClassBlogs_Utils::get_plugin_js_url();
+			$js_url = ClassBlogs_Utils::get_base_js_url();
 			foreach ( $this->admin_media['js'] as $js_file ) {
 				wp_register_script(
 					$this->get_uid(),

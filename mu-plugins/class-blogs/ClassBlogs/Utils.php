@@ -203,7 +203,8 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Returns the URL to the class blogs media directory.
+	 * Returns the URL of a class-blogs media directory containing the given
+	 * type of media.
 	 *
 	 * This takes an argument of the name of the media-type directory to add on
 	 * to the path, such as a 'css' or 'js' directory.
@@ -212,9 +213,9 @@ class ClassBlogs_Utils
 	 * @return string             the path to the class blogs media directory
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	private static function _get_plugin_media_url( $media_type )
+	private static function _get_base_media_url( $media_type )
 	{
 		return implode( "/", array(
 			WPMU_PLUGIN_URL,
@@ -224,27 +225,27 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Returns the URL to the class blogs JavaScript directory.
+	 * Returns the URL of the class-blogs JavaScript directory.
 	 *
-	 * @return string the URL of the class blogs JavaScript directory
+	 * @return string the URL of the class-blogs JavaScript directory
 	 *
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public static function get_plugin_js_url()
+	public static function get_base_js_url()
 	{
-		return self::_get_plugin_media_url( ClassBlogs_Settings::MEDIA_JS_DIR_NAME );
+		return self::_get_base_media_url( ClassBlogs_Settings::MEDIA_JS_DIR_NAME );
 	}
 
 	/**
-	 * Returns the URL to the class blogs CSS directory.
+	 * Returns the URL of the class-blogs CSS directory.
 	 *
-	 * @return string the URL of the class blogs CSS directory
+	 * @return string the URL of the class-blogs CSS directory
 	 *
-	 * @since 0.1
+	 * @since 0.2
 	 */
-	public static function get_plugin_css_url()
+	public static function get_base_css_url()
 	{
-		return self::_get_plugin_media_url( ClassBlogs_Settings::MEDIA_CSS_DIR_NAME );
+		return self::_get_base_media_url( ClassBlogs_Settings::MEDIA_CSS_DIR_NAME );
 	}
 
 	/**
