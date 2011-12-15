@@ -45,11 +45,7 @@
  *
  *     public function demonstrate()
  *     {
- *
  *         echo "The plugin's unique identifier is: " . $this->get_uid() . "\n";
- *
- *         // A site is created with three class blogs on it, with IDs of 1, 2, and 3.
- *         assert( count( $this->get_all_blog_ids() ) === 3 );
  *
  *         $options = $this->get_options();
  *         assert( count( $options ) === 2 );
@@ -188,29 +184,6 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	protected function get_uid()
 	{
 		return strtolower( str_replace( 'ClassBlogs_Plugins', 'cb', get_class( $this ) ) );
-	}
-
-	/**
-	 * Returns a list of all blog IDs on the site.
-	 *
-	 * @return array a list of all blog IDs on the site
-	 *
-	 * @access protected
-	 * @since 0.2
-	 */
-	protected function get_all_blog_ids()
-	{
-		global $wpdb;
-		$blog_ids = array();
-
-		$blogs = $wpdb->get_results( $wpdb->prepare( "
-			SELECT blog_id FROM $wpdb->blogs
-			WHERE site_id = %d AND archived = '0' AND deleted = '0'",
-			$wpdb->siteid ) );
-		foreach ( $blogs as $blog ) {
-			$blog_ids[] = $blog->blog_id;
-		}
-		return $blog_ids;
 	}
 
 	/**

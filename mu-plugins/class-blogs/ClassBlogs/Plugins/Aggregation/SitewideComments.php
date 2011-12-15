@@ -428,7 +428,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 
 		// Create a lookup table for blog names and URLs
 		$all_blogs = array();
-		foreach ( $this->get_all_blog_ids() as $blog_id ) {
+		foreach ( ClassBlogs_Utils::get_all_blog_ids() as $blog_id ) {
 			$all_blogs[$blog_id] = array(
 				'name' => get_blog_option( $blog_id, 'blogname' ),
 				'url' => get_blogaddress_by_id( $blog_id ) );

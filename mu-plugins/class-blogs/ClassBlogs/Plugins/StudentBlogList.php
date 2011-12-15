@@ -253,7 +253,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 		// Cycle through every blog on the current site, adding any blogs that
 		// have only one admin user that is not a site admin or an admin on the
 		// root blog to the list of student blogs
-		foreach ( $this->get_all_blog_ids() as $blog_id ) {
+		foreach ( ClassBlogs_Utils::get_all_blog_ids() as $blog_id ) {
 			$blog_admins = get_users( 'blog_id=' . $blog_id . '&role=administrator' );
 			if ( count( $blog_admins ) == 1 ) {
 				$blog_admin = $blog_admins[0];

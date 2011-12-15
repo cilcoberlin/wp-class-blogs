@@ -218,7 +218,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 
 		// Search through every blog for a usable image.  If an image is found, build
 		// the link to it and add a possible caption.
-		$blogs = $this->get_all_blog_ids();
+		$blogs = ClassBlogs_Utils::get_all_blog_ids();
 		shuffle( $blogs );
 		foreach ( $blogs as $blog ) {
 			switch_to_blog( $blog );

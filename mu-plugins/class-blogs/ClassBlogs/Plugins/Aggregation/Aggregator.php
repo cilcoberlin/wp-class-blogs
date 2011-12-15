@@ -443,7 +443,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	private function _get_usable_blog_ids()
 	{
 		return array_diff(
-			$this->get_all_blog_ids(),
+			ClassBlogs_Utils::get_all_blog_ids(),
 			$this->get_option( 'excluded_blogs' ) );
 	}
 
@@ -740,7 +740,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 		// Display a checkbox for every blog, selecting it if the blog is
 		// currently on the exclusion blacklist
 		$excluded_blogs = $this->get_option( 'excluded_blogs' );
-		foreach ( $this->get_all_blog_ids() as $blog_id ) {
+		foreach ( ClassBlogs_Utils::get_all_blog_ids() as $blog_id ) {
 			$details = get_blog_details( $blog_id, true );
 			printf( '<li><input type="checkbox" id="%1$s" name="%1$s" %2$s /> <label for="%1$s"><strong>%3$s</strong> ( <a href="%4$s">%4$s</a> )</label></li>',
 				'exclude_blog_' . $blog_id,

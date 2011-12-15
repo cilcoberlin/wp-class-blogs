@@ -24,7 +24,7 @@ class ClassBlogs_Utils
 	public static function is_root_blog()
 	{
 		global $blog_id;
-		return ClassBlogs_Settings::get_root_blog_id() == $blog_id;
+		return ClassBlogs_Settings::get_root_blog_id() === (int) $blog_id;
 	}
 
 	/**
@@ -39,6 +39,20 @@ class ClassBlogs_Utils
 	public static function on_root_blog_admin()
 	{
 		return is_admin() && self::is_root_blog() && current_user_can( 'administrator' );
+	}
+
+	/**
+	 * Returns true if the current user is an administrator on the root blog.
+	 *
+	 * @return bool whether the current user is an admin on the root blog
+	 *
+	 * @since 0.2
+	 */
+	public static function current_user_is_admin_on_root_blog()
+	{
+		return current_user_can_for_blog(
+			ClassBlogs_Settings::get_root_blog_id(),
+			'administrator' );
 	}
 
 	/**
@@ -113,6 +127,29 @@ class ClassBlogs_Utils
 		restore_current_blog();
 
 		return $ids;
+	}
+
+	/**
+	 * Returns a list of all blog IDs on the site.
+	 *
+	 * @return array a list of all blog IDs on the site
+	 *
+	 * @access protected
+	 * @since 0.2
+	 */
+	public static function get_all_blog_ids()
+	{
+		global $wpdb;
+		$blog_ids = array();
+
+		$blogs = $wpdb->get_results( $wpdb->prepare( "
+			SELECT blog_id FROM $wpdb->blogs
+			WHERE site_id = %d AND archived = '0' AND deleted = '0'",
+			$wpdb->siteid ) );
+		foreach ( $blogs as $blog ) {
+			$blog_ids[] = $blog->blog_id;
+		}
+		return $blog_ids;
 	}
 
 	/**
