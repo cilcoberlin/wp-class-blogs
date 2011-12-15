@@ -1465,7 +1465,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 			foreach ( $response->getElementsByTagName( 'entry' ) as $playlist ) {
 				preg_match( '/:([^:]+)$/', $this->_get_single_tag_value( $playlist, 'id' ), $id_matches );
 				$playlists[$this->_get_single_tag_value( $playlist, 'title' )] = array(
-					'id' => $id_matches[1] );
+					'id' => $id_matches[1],
+					'count' => $this->_get_single_tag_value( $playlist, 'countHint' ) );
 			}
 		}
 
@@ -1475,8 +1476,9 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 			ksort( $playlists );
 			foreach ( $playlists as $name => $info ) {
 				$playlist_objs[] = (object) array(
-					'id'   => $info['id'],
-					'name' => $name );
+					'count' => $info['count'],
+					'id'    => $info['id'],
+					'name'  => $name );
 			}
 		}
 
@@ -1707,10 +1709,11 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 											<option value="">-----------------------</option>
 											<?php
 												foreach ( $playlists as $playlist ) {
-													printf( '<option value="%s" %s>%s</option>',
+													printf( '<option value="%s" %s>%s (%s)</option>',
 														esc_attr( $playlist->id ),
 														( $playlist->id == $this->get_option( 'youtube_playlist' ) ) ? 'selected="selected"' : "",
-														esc_html( $playlist->name ) );
+														esc_html( $playlist->name ),
+														sprintf( _n( '%d video', '%d videos', $playlist->count ), $playlist->count ) );
 												}
 											?>
 										</select>
