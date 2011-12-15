@@ -403,7 +403,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 						</tr>
 					<?php
 						endforeach;
-						ClassBlogs::restore_blog( $current_blog_id );
+						ClassBlogs_Utils::restore_blog( $current_blog_id );
 					?>
 				</tbody>
 
@@ -536,7 +536,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 						</tr>
 					<?php
 						endforeach;
-						ClassBlogs::restore_blog( $current_blog_id );
+						ClassBlogs_Utils::restore_blog( $current_blog_id );
 					?>
 				</tbody>
 
@@ -706,7 +706,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 					$no_spam[] = $comment;
 				}
 			}
-			ClassBlogs::restore_blog( $current_blog_id );
+			ClassBlogs_Utils::restore_blog( $current_blog_id );
 			$comments = $no_spam;
 		}
 

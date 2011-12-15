@@ -240,7 +240,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 				break;
 			}
 		}
-		ClassBlogs::restore_blog( $current_blog_id );
+		ClassBlogs_Utils::restore_blog( $current_blog_id );
 
 		// If we have a valid image, try to find the first post on which it was
 		// used and add its ID to the image data

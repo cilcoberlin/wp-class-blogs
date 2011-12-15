@@ -613,7 +613,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 */
 	public function _maybe_enable_playlist_page()
 	{
-		if ( ClassBlogs::is_page( $this->get_option( 'playlist_page_id' ) ) ) {
+		if ( ClassBlogs_Utils::is_page( $this->get_option( 'playlist_page_id' ) ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, '_add_playlist_page_scripts' ) );
 			add_filter( 'the_content', array( $this, '_render_playlist_page' ) );
 		}

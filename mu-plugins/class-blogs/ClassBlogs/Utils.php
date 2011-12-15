@@ -42,6 +42,55 @@ class ClassBlogs_Utils
 	}
 
 	/**
+	 * Functions identically to WordPress's native `is_page` function, but returns
+	 * false if the current page is in a state where `is_page` could not be
+	 * called without creating an error.
+	 *
+	 * @param  int  $page_id the ID of the page being checked
+	 * @return bool          whether or not the current page matches the page ID
+	 *
+	 * @since 0.2
+	 */
+	public static function is_page( $page_id )
+	{
+
+		// This exists due to a flaw, likely due to some unknown structural
+		// deficiency of the class blogs suite, that causes WordPress to spew
+		// errors about a null post object when `is_page` is called on a page
+		// where no posts were found.  Making the `post` property of the `wp_query`
+		// object be a null post with all of the properties that are checked
+		// for in the `is_page` call seems to prevent these errors from occurring.
+		global $wp_query;
+		if ( ! isset( $wp_query->post ) ) {
+			$wp_query->post = (object) array(
+				'ID' => null,
+				'post_title' => null,
+				'post_name' => null );
+		}
+
+		return is_page( $page_id );
+	}
+
+	/**
+	 * Restores an arbitrary blog.
+	 *
+	 * This functions identically to `restore_current_blog`, but with the option
+	 * of passing a blog ID to restore to.  This switches to that blog, then
+	 * clears the switched stack and resets the switched state flag to false.
+	 *
+	 * @param int $blog_id the ID of the blog to restore to
+	 *
+	 * @since 0.2
+	 */
+	public static function restore_blog( $blog_id )
+	{
+		global $switched_stack, $switched;
+		switch_to_blog( $blog_id );
+		$switched_stack = array();
+		$switched = false;
+	}
+
+	/**
 	 * Gets the user IDs of any student users, which are defined in this sense
 	 * as any user that is not an admin on the root blog.
 	 *
