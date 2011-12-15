@@ -562,7 +562,7 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	protected function register_root_only_widget( $widget )
 	{
 		global $blog_id;
-		if ( $blog_id === ClassBlogs_Settings::get_root_blog_id() && ( ! is_admin() || $this->current_user_is_admin_on_root_blog() ) ) {
+		if ( (int) $blog_id === ClassBlogs_Settings::get_root_blog_id() && ( ! is_admin() || $this->current_user_is_admin_on_root_blog() ) ) {
 			$this->register_widget( $widget );
 		}
 	}
