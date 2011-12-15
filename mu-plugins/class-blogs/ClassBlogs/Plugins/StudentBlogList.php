@@ -8,7 +8,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Widget
+class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
 {
 
 	/**
@@ -131,7 +131,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Plugins_Widge
  * @subpackage StudentBlogList
  * @since 0.1
  */
-class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 {
 	/**
 	 * A lookup table containing student blog URLs, keyed by user ID.
@@ -276,7 +276,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function _enable_widget()
 	{
-		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_StudentBlogListWidget' );
+		ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_StudentBlogListWidget' );
 	}
 
 	/**

@@ -13,7 +13,7 @@
  * @subpackage StudentBlogLinks
  * @since 0.1
  */
-class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 {
 
 	/**

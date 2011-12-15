@@ -12,7 +12,7 @@
  * @subpackage DisableComments
  * @since 0.1
  */
-class ClassBlogs_Plugins_DisableComments extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_DisableComments extends ClassBlogs_BasePlugin
 {
 	/**
 	 * Default options for the plugin.

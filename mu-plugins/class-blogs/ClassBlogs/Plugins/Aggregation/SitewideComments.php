@@ -14,7 +14,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_Plugins_Widget
+class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_Widget
 {
 
 	/**
@@ -256,7 +256,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 */
 	public function _enable_widget()
 	{
-		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget' );
+		ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget' );
 	}
 
 	/**

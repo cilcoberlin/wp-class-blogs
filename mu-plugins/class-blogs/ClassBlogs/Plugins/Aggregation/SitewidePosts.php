@@ -13,7 +13,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Plugins_Widget
+class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Widget
 {
 
 	/**
@@ -407,7 +407,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 */
 	public function _enable_widget()
 	{
-		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewidePostsWidget' );
+		ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewidePostsWidget' );
 	}
 
 	/**

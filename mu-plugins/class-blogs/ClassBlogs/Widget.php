@@ -6,11 +6,41 @@
  * This provides a few basic methods to a descending widget, mainly to help
  * with handling options and validating user input on the widget admin panel.
  *
+ * Any child widgets should provide definitions for the functions expected
+ * by WordPress, being `widget()`, `update()`, and `form()`.  In addition to
+ * these, they should also provide definitions for the functions expected by
+ * this class that provide the widget with a name and description, being `get_name()`
+ * and `get_description()`, respectively.  Additionaly, a child widget can also
+ * provide a `$css_class` attribute that defines the CSS class to be applied
+ * to the widget and the default options for the widget via `$default_options`.
+ *
+ * An example of a possible child widget is as follows:
+ *
+ *     class MyWidget extends ClassBlogs_Widget {
+ *
+ *         protected $default_options = array(
+ *             'option_one' => 1,
+ *             'option_two' => 2
+ *         );
+ *
+ *         protected $css_class = 'my-widget';
+ *
+ *         protected function get_name() {
+ *             return 'My Widget';
+ *         }
+ *
+ *         protected function get_description() {
+ *             return 'The description of my widget.';
+ *         }
+ *
+ *         ...
+ *     }
+ *
  * @package ClassBlogs_Plugins
  * @subpackage SidebarWidget
- * @since 0.1
+ * @since 0.2
  */
-abstract class ClassBlogs_Plugins_Widget extends WP_Widget
+abstract class ClassBlogs_Widget extends WP_Widget
 {
 
 	/**

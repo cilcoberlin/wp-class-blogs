@@ -13,7 +13,7 @@
  * @subpackage StudentPseudonym
  * @since 0.1
  */
-class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 {
 	/** Registers hooks to add the student pseudonym admin page. */
 	public function __construct()

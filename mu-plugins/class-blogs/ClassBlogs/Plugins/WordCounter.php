@@ -17,7 +17,7 @@
  * @subpackage WordCounter
  * @since 0.1
  */
-class ClassBlogs_Plugins_WordCounter extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_WordCounter extends ClassBlogs_BasePlugin
 {
 	/**
 	 * The default options for the plugin.

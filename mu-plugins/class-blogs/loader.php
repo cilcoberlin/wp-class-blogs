@@ -12,12 +12,14 @@
 // Load core class-blogs modules
 $core = array(
 	'ClassBlogs',
-	'Paginator',
-	'PluginPage',
 	'Settings',
 	'Schema',
 	'Utils',
-	'Admin'
+	'Admin',
+	'Paginator',
+	'PluginPage',
+	'BasePlugin',
+	'Widget'
 );
 foreach ( $core as $file ) {
 	require_once( 'ClassBlogs/' . $file . '.php' );
@@ -25,8 +27,6 @@ foreach ( $core as $file ) {
 
 // Load the suite's plugins
 $plugins = array(
-	'BasePlugin',
-	'Widget',
 	'Aggregation/Settings',
 	'Aggregation/Schemata',
 	'Aggregation/SitewidePlugin',

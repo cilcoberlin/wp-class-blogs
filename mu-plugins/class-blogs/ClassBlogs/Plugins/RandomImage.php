@@ -14,7 +14,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_Widget
+class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Widget
 {
 
 	/**
@@ -137,7 +137,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Plugins_Widget
  * @subpackage RandomImage
  * @since 0.1
  */
-class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 {
 	/**
 	 * Registers the random-image widget.
@@ -155,7 +155,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_Plugins_BasePlugin
 	 */
 	public function _enable_widget()
 	{
-		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_RandomImageWidget' );
+		ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_RandomImageWidget' );
 	}
 
 	/**

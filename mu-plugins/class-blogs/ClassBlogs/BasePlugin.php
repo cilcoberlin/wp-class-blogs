@@ -17,7 +17,7 @@
  * An example, showing how to create a new plugin and use the features provided
  * by this base class, is as follows:
  *
- * class ClassBlogs_Plugins_Example extends ClassBlogs_Plugins_BasePlugin
+ * class ClassBlogs_Plugins_Example extends ClassBlogs_BasePlugin
  * {
  *     protected $default_options = array(
  *         'counter'    => 0,
@@ -96,9 +96,9 @@
  *
  * @package ClassBlogs_Plugins
  * @subpackage BasePlugin
- * @since 0.1
+ * @since 0.2
  */
-abstract class ClassBlogs_Plugins_BasePlugin
+abstract class ClassBlogs_BasePlugin
 {
 
 	/**

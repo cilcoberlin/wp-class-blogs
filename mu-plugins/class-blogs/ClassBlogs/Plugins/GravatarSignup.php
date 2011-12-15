@@ -8,7 +8,7 @@
  * @subpackage GravatarSignup
  * @since 0.1
  */
-class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_GravatarSignup extends ClassBlogs_BasePlugin
 {
 
 	/**

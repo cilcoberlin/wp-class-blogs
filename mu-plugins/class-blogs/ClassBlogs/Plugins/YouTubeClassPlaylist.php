@@ -11,7 +11,7 @@
  * @access private
  * @since 0.1
  */
-class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_Widget
+class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Widget
 {
 
 	/**
@@ -144,7 +144,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Plugins_
  * @subpackage YouTubeClassPlaylist
  * @since 0.1
  */
-class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 {
 
 	/**
@@ -601,7 +601,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_Plugins_BasePlu
 	 */
 	public function _enable_widget()
 	{
-		ClassBlogs_Plugins_Widget::register_root_only_widget( '_ClassBlogs_Plugins_YouTubeClassPlaylistWidget' );
+		ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_YouTubeClassPlaylistWidget' );
 	}
 
 	/**

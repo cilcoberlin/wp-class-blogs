@@ -12,7 +12,7 @@
  * @subpackage ClassmateComments
  * @since 0.1
  */
-class ClassBlogs_Plugins_ClassmateComments extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_ClassmateComments extends ClassBlogs_BasePlugin
 {
 
 	/**

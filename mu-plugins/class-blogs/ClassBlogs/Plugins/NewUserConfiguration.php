@@ -17,7 +17,7 @@
  * @subpackage NewUserConfigurationPlugin
  * @since 0.1
  */
-class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_Plugins_BasePlugin
+class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_BasePlugin
 {
 
 	/**

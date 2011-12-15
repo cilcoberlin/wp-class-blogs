@@ -13,7 +13,7 @@
  * @subpackage SitewidePlugin
  * @since 0.1
  */
-abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_Plugins_BasePlugin
+abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_BasePlugin
 {
 
 	/**
