@@ -13,6 +13,7 @@
 $core = array(
 	'ClassBlogs',
 	'Paginator',
+	'PluginPage',
 	'Settings',
 	'Schema',
 	'Utils',

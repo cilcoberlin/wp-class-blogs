@@ -597,58 +597,6 @@ abstract class ClassBlogs_Plugins_BasePlugin
 	}
 
 	/**
-	 * Creates a page for the plugin with the given name on the root blog.
-	 *
-	 * This makes a private page, so that it is not displayed by page-listing
-	 * function of WordPress.  However, there is logic behind the scenes that
-	 * grants any user access to the page when visiting its URL.
-	 *
-	 * An optional existing page ID can be passed in.  If this argument is given
-	 * and the page ID does not map to a valid page, the page is recreated.
-	 *
-	 * @param  string $name    the name of the page to create
-	 * @param  int    $page_id the optional ID of an already created page
-	 * @return int             the ID of the created page
-	 *
-	 * @access protected
-	 * @since 0.1
-	 */
-	protected function create_plugin_page( $name, $page_id = null )
-	{
-		$conflicts = true;
-		$counter = 0;
-		$page_name = $name;
-
-		// If a page with the given ID already exists, abort early
-		if ( get_page( $page_id ) ) {
-			ClassBlogs::register_plugin_page( $page_id );
-			return $page_id;
-		}
-
-		// Find a name for the new page that doesn't conflict with others
-		while ( $conflicts ) {
-			$page = get_page_by_title( $page_name );
-			if ( isset( $page ) ) {
-				$counter++;
-				$page_name = sprintf( '%s %d', $name, $counter );
-			} else {
-				$conflicts = false;
-			}
-		}
-
-		// Create the new page and store its ID
-		$new_page = array(
-			'post_author' => ClassBlogs_Settings::get_admin_user_id(),
-			'post_status' => 'private',
-			'post_title'  => $page_name,
-			'post_type'   => 'page' );
-		$page_id = wp_insert_post( $new_page );
-		ClassBlogs::register_plugin_page( $page_id );
-
-		return $page_id;
-	}
-
-	/**
 	 * Enables a possible admin page associated with a child plugin.
 	 *
 	 * This simply provides a shortcut for any child plugins to register an admin

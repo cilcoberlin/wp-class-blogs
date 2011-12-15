@@ -262,7 +262,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	{
 		if ( ClassBlogs_Utils::is_root_blog() ) {
 			$current_page = $this->get_option( 'tag_page_id' );
-			$page_id = $this->create_plugin_page( self::_TAG_PAGE_DEFAULT_NAME, $current_page );
+			$page_id = ClassBlogs_PluginPage::create_plugin_page( self::_TAG_PAGE_DEFAULT_NAME, $current_page );
 			if ( $page_id != $current_page ) {
 				$this->update_option( 'tag_page_id', $page_id );
 			}
