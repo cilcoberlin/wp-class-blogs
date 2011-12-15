@@ -1,7 +1,26 @@
 <?php
 
 /**
- * A high-level class for namespacing class blogs data.
+ * A class used by plugins to register themselves and get information on other plugins.
+ *
+ * For a plugin to make itself available to other plugins, it should register an
+ * instance of itself with this class.  This will then allow other plugins to
+ * access that plugin instance via a unique identifier.
+ *
+ * An example of a plugin registering itself in one file is as follows:
+ *
+ *     class MyPlugin {
+ *         public function return_one() {
+ *             return 1;
+ *         }
+ *     }
+ *     ClassBlogs::register_plugin( 'my_plugin', new MyPlugin() );
+ *
+ * In another file in the class-blogs suite, this plugin could be accessed using
+ * the following code:
+ *
+ *     $plugin = ClassBlogs::get_plugin( 'my_plugin' );
+ *     assert( $plugin->return_one() === 1 );
  *
  * @package ClassBlogs
  * @since 0.1
