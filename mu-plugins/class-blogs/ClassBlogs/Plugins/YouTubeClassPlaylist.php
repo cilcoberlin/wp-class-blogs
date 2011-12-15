@@ -705,7 +705,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	 */
 	private function _clear_cached_playlist()
 	{
-		$this->clear_cache( 'playlist' );
+		$this->clear_site_cache( 'playlist' );
 	}
 
 	/**
@@ -1819,7 +1819,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 		if (! $this->get_option( 'youtube_playlist' ) ) {
 			return $videos;
 		}
-		$cached = $this->get_cache( 'playlist' );
+		$cached = $this->get_site_cache( 'playlist' );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -1917,7 +1917,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 			count( $videos ) >= self::_PLAYLIST_MAX_ENTRIES );
 
 		// Cache the full playlist
-		$this->set_cache( 'playlist', $videos, self::_PLAYLIST_CACHE_LENGTH );
+		$this->set_site_cache( 'playlist', $videos, self::_PLAYLIST_CACHE_LENGTH );
 		return $videos;
 	}
 
