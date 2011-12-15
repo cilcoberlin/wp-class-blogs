@@ -709,6 +709,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 ?>
 		<div class="wrap">
 
+			<?php ClassBlogs_Admin::show_admin_icon();  ?>
 			<h2><?php _e( 'Sitewide Data Options', 'classblogs' ); ?></h2>
 
 			<p>

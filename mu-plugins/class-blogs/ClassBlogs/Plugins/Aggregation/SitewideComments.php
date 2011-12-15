@@ -305,6 +305,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 ?>
 		<div class="wrap">
 
+			<?php ClassBlogs_Admin::show_admin_icon();  ?>
 			<h2><?php _e( 'Student Comments', 'classblogs' );  ?></h2>
 
 			<p>

@@ -255,6 +255,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	?>
 		<div class="wrap">
 
+			<?php ClassBlogs_Admin::show_admin_icon();  ?>
 			<h2><?php _e( 'Student Blog Links', 'classblogs' ); ?></h2>
 
 			<p>

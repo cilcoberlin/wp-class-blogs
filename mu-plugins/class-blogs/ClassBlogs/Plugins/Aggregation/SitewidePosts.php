@@ -447,6 +447,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	?>
 		<div class="wrap">
 
+			<?php ClassBlogs_Admin::show_admin_icon();  ?>
 			<h2><?php _e( 'Sitewide Post Options', 'classblogs' ); ?></h2>
 
 			<p>
@@ -521,6 +522,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 ?>
 		<div class="wrap">
 
+			<?php ClassBlogs_Admin::show_admin_icon();  ?>
 			<h2><?php _e( 'Student Posts', 'classblogs' );  ?></h2>
 
 			<p>

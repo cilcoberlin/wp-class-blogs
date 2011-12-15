@@ -286,6 +286,18 @@ class ClassBlogs_Utils
 	}
 
 	/**
+	 * Returns the URL of the class-blogs images directory.
+	 *
+	 * @return string the URL of the class-blogs images directory
+	 *
+	 * @since 0.2
+	 */
+	public static function get_base_images_url()
+	{
+		return self::_get_base_media_url( ClassBlogs_Settings::MEDIA_IMAGES_DIR_NAME );
+	}
+
+	/**
 	 * Returns the name for a table used as part of the class blogs suite.
 	 *
 	 * This simply appends the class blogs prefix to the given table name

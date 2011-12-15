@@ -1652,6 +1652,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	?>
 		<div class="wrap">
 
+			<?php ClassBlogs_Admin::show_admin_icon();  ?>
 			<h2><?php _e( 'YouTube Class Playlist Configuration', 'classblogs' ); ?></h2>
 
 			<p>

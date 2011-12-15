@@ -62,6 +62,14 @@ class ClassBlogs_Settings
 	const MEDIA_CSS_DIR_NAME = 'css';
 
 	/**
+	 * The name of the directory containing images files.
+	 *
+	 * @var string
+	 * @since 0.2
+	 */
+	const MEDIA_IMAGES_DIR_NAME = 'images';
+
+	/**
 	 * The ID WordPress uses for inactive widgets in a widget list.
 	 *
 	 * @var string

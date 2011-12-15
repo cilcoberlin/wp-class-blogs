@@ -75,6 +75,7 @@ class ClassBlogs_Admin
 	private function __construct()
 	{
 		add_action( 'admin_menu', array( $this, '_configure_admin_interface' ) );
+		add_action( 'admin_head', array( $this, '_add_admin_styles' ) );
 	}
 
 	/**
@@ -87,13 +88,52 @@ class ClassBlogs_Admin
 	public function _configure_admin_interface()
 	{
 		if ( ClassBlogs_Utils::on_root_blog_admin() ) {
+			$icon = ( $this->_get_admin_color_scheme() === 'fresh' ) ? 'icon16.png' : 'icon16-vs.png';
 			$page = add_menu_page(
 				__( 'Class Blogs', 'classblogs' ),
 				__( 'Class Blogs', 'classblogs' ),
 				self::_MENU_CAPABILITY,
 				self::_MENU_ID,
-				array( $this, '_class_blogs_admin_page' ) );
+				array( $this, '_class_blogs_admin_page' ),
+				ClassBlogs_Utils::get_base_images_url() . $icon );
 		}
+	}
+
+	/**
+	 * Outputs markup for making minor changes to the admin page's styles
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	public function _add_admin_styles()
+	{
+		printf( '
+			<style type="text/css">
+				#icon-class-blogs {
+					background-image: url("%1$s/%2$s");
+					height: 32px;
+					width: 32px;
+				}
+			</style>',
+			ClassBlogs_Utils::get_base_images_url(),
+			( $this->_get_admin_color_scheme() === 'fresh' ) ? 'icon32.png' : 'icon32-vs.png' );
+	}
+
+	/**
+	 * Returns WordPress's identifier for the current user's admin color scheme.
+	 *
+	 * As of WordPress version 3.0, this will either return "classic", for the
+	 * blue color scheme and "fresh" for the gray one.
+	 *
+	 * @return string the admin color-scheme identifier
+	 *
+	 * @access private
+	 * @since 0.2
+	 */
+	private function _get_admin_color_scheme()
+	{
+		$current_user = get_currentuserinfo();
+		return get_user_option( 'admin_color', $current_user->ID );
 	}
 
 	/**
@@ -106,6 +146,7 @@ class ClassBlogs_Admin
 	{
 ?>
 		<div class="wrap">
+			<?php ClassBlogs_Admin::show_admin_icon();  ?>
 			<h2><?php _e( 'Class Blogs', 'classblogs' ); ?></h2>
 
 			<p>
@@ -241,6 +282,16 @@ class ClassBlogs_Admin
 	public static function show_admin_error( $error )
 	{
 		echo sprintf( '<div id="message" class="error fade"><p>%s</p></div>', $error );
+	}
+
+	/**
+	 * Prints markup to show the class-blogs admin icon.
+	 *
+	 * @since 0.2
+	 */
+	public static function show_admin_icon()
+	{
+		echo '<div id="icon-class-blogs" class="icon32"></div>';
 	}
 }
 

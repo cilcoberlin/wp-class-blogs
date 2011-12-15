@@ -101,6 +101,7 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_BasePlugin
 ?>
 		<div class="wrap">
 
+			<?php ClassBlogs_Admin::show_admin_icon();  ?>
 			<h2><?php _e( 'Disable Commenting', 'classblogs' ); ?></h2>
 
 			<p>

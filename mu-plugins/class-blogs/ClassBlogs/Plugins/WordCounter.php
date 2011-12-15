@@ -185,6 +185,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_BasePlugin
 ?>
 
 	<div class="wrap">
+		<?php ClassBlogs_Admin::show_admin_icon();  ?>
 		<h2><?php _e( 'Student Word Counts', 'classblogs' ); ?></h2>
 <?php
 
