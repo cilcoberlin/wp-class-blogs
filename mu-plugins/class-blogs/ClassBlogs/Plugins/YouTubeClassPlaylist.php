@@ -1713,7 +1713,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 														esc_attr( $playlist->id ),
 														( $playlist->id == $this->get_option( 'youtube_playlist' ) ) ? 'selected="selected"' : "",
 														esc_html( $playlist->name ),
-														sprintf( _n( '%d video', '%d videos', $playlist->count ), $playlist->count ) );
+														sprintf( _n( '%d video', '%d videos', $playlist->count, 'classblogs' ), $playlist->count ) );
 												}
 											?>
 										</select>
