@@ -227,7 +227,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 * @since 0.2
 	 */
 	protected $admin_media = array(
-		'css' => array( 'sitewide-comments.css' )
+		'css' => array( 'sitewide-comments.css' ),
+		'js'  => array( 'paginator.js' )
 	);
 
 	/**
@@ -410,6 +411,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 
 			</table>
 
+			<?php $paginator->show_admin_page_links( $current_page, 'bottom' ); ?>
+
 		</div>
 <?php
 	}
@@ -542,6 +545,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				</tbody>
 
 			</table>
+
+			<?php $paginator->show_admin_page_links( $current_page, 'bottom' ); ?>
 
 		</div>
 

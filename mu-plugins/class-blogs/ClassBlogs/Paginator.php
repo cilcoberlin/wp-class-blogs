@@ -85,11 +85,12 @@ class ClassBlogs_Paginator
 	 * This markup is intended to be displayed on the WordPress admin side, and
 	 * uses classes and styles that the admin styling is familiar with.
 	 *
-	 * @param int $current_page the current page number
+	 * @param int    $current_page the current page number
+	 * @param string $css_class    an optional CSS class to apply to the nav wrapper
 	 *
 	 * @since 0.1
 	 */
-	public function show_admin_page_links( $current_page=1 )
+	public function show_admin_page_links( $current_page=1, $css_class="top" )
 	{
 		$current_page = absint( $current_page );
 		$total = $this->get_total_pages();
@@ -102,7 +103,7 @@ class ClassBlogs_Paginator
 		$next = $current_page + 1;
 		$previous = $current_page - 1;
 ?>
-		<div class="tablenav top">
+		<div class="tablenav class-blogs <?php echo $css_class;  ?>">
 			<div class="tablenav-pages">
 				<span class="displaying-num">
 					<?php printf( _n( '%d item', '%d items', $items ), $items ); ?>
@@ -110,7 +111,11 @@ class ClassBlogs_Paginator
 				<span class="pagination-links">
 					<a class="first-page <?php if ( ! $previous ) { echo 'disabled'; } ?>" href="<?php echo $this->_make_page_url( 1 ); ?>">&laquo;</a>
 					<a class="previous-page <?php if ( ! $previous ) { echo 'disabled'; } ?>" href="<?php echo $this->_make_page_url( max( 1, $previous ) ); ?>">&lsaquo;</a>
-					<?php printf( __( 'Page %1$s of %2$d', 'classblogs' ), '<strong>' . $current_page . '</strong>', $total ); ?>
+					<span class="paging-input">
+						<input class="current-page" type="text" size="1" value="<?php echo $current_page;  ?>" name="paged" title="<?php _e( 'Current page', 'classblogs' );  ?>" />
+						of
+						<span class="total-pages"><?php echo $total;  ?></span>
+					</span>
 					<a class="next-page <?php if ( $next > $total ) { echo 'disabled'; } ?>" href="<?php echo $this->_make_page_url( min( $total, $next) ); ?>">&rsaquo;</a>
 					<a class="last-page <?php if ( $next > $total ) { echo 'disabled'; } ?>" href="<?php echo $this->_make_page_url( $total ); ?>">&raquo;</a>
 				</span>

@@ -218,7 +218,8 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 * @since 0.2
 	 */
 	protected $admin_media = array(
-		'css' => array( 'sitewide-posts.css' )
+		'css' => array( 'sitewide-posts.css' ),
+		'js'  => array( 'paginator.js' )
 	);
 
 	/**
@@ -586,6 +587,8 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 				</tbody>
 
 			</table>
+
+			<?php $paginator->show_admin_page_links( $current_page, 'bottom' ); ?>
 
 		</div>
 <?php
