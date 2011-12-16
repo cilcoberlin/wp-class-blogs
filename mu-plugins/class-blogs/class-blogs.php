@@ -6,7 +6,7 @@
  * associated with each individual plugin in the suite.
  *
  * @package ClassBlogs
- * @since 0.1
+ * @version 0.2
  */
 
 // Load core class-blogs modules
