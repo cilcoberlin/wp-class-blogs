@@ -22,7 +22,7 @@
 .cb-sw-comments-table .deleted td,
 .cb-sw-comments-table .spam td,
 .cb-sw-comments-table .trash td {
-	background-color: #FFAAAA;
+	background-color: #FFDDDD;
 }
 .cb-sw-comments-table .unapproved .status {
 	color: #D98500;
