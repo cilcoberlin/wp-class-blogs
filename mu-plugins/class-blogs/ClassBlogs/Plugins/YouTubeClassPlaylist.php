@@ -1459,14 +1459,38 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 
 		$playlists = array();
 
-		// Build an array of playlists from the response to our API query
-		$response = $this->_make_gdata_request( self::_USER_PLAYLISTS_URL );
-		if ( $response ) {
-			foreach ( $response->getElementsByTagName( 'entry' ) as $playlist ) {
-				preg_match( '/:([^:]+)$/', $this->_get_single_tag_value( $playlist, 'id' ), $id_matches );
-				$playlists[$this->_get_single_tag_value( $playlist, 'title' )] = array(
-					'id' => $id_matches[1],
-					'count' => $this->_get_single_tag_value( $playlist, 'countHint' ) );
+		// Build the template for incrementally fetching a user's playlists,
+		// since YouTube imposes a maximum number of playlists per request.
+		$url_template = sprintf( "%s&max-results=%d&start-index=%%d",
+			self::_USER_PLAYLISTS_URL,
+			self::_YOUTUBE_API_MAX_RESULTS );
+		$start_index = 1;
+
+		// Request playlists until none remain
+		$are_results = true;
+		while ( $are_results ) {
+
+			// Build an array of playlists from the response to our API query
+			$response = $this->_make_gdata_request(
+				sprintf( $url_template, $start_index ) );
+			if ( $response ) {
+				$fetched = 0;
+				foreach ( $response->getElementsByTagName( 'entry' ) as $playlist ) {
+					preg_match( '/:([^:]+)$/', $this->_get_single_tag_value( $playlist, 'id' ), $id_matches );
+					$playlists[$this->_get_single_tag_value( $playlist, 'title' )] = array(
+						'id' => $id_matches[1],
+						'count' => $this->_get_single_tag_value( $playlist, 'countHint' ) );
+					$start_index++;
+					$fetched++;
+				}
+
+				// If we received less than the maximum number of playlists for this
+				// response, flag that we have received all of the playlists
+				if ( $fetched < self::_YOUTUBE_API_MAX_RESULTS ) {
+					$are_results = false;
+				}
+			} else {
+				$are_results = false;
 			}
 		}
 
@@ -1854,6 +1878,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 				$youtube_namespace = $this->_get_namespace( $response, 'yt' );
 
 				// Get information on each entry
+				$fetched = 0;
 				foreach ( $response->getElementsByTagName( 'entry' ) as $video ) {
 
 					// Get the date the video was added to the playlist and the title
@@ -1896,11 +1921,12 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 
 					$videos[] = (object) $info;
 					$start_index++;
+					$fetched++;
 				}
 
 				// If we received less than the maximum number of results from
 				// the API query, signal that we are finished getting results
-				if ( ( $start_index - 1 ) % 50 ) {
+				if ( $fetched < self::_YOUTUBE_API_MAX_RESULTS ) {
 					$are_results = false;
 				}
 			} else {
