@@ -4,7 +4,7 @@
 Plugin Name: Class Blogs
 Plugin URI: http://languages.oberlin.edu/cilc/projects/class-blogs/
 Description: A suite of plugins that make it easier to manage a class blog.
-Version: 0.1
+Version: 0.2
 Author: the Oberlin Cooper International Learning Center
 Author URI: http://languages.oberlin.edu/
 License: GPLv2 or later
