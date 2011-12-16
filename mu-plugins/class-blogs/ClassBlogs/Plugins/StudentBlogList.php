@@ -163,7 +163,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 
 		// Register a cache-clearning listener for any actions that break the cache
 		foreach ( self::$_CLEAR_CACHE_ACTIONS as $action ) {
-			add_action( $action, array( $this, '_clear_cache' ) );
+			add_action( $action, array( $this, '_clear_blog_cache' ) );
 		}
 	}
 
@@ -177,7 +177,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 	 * @access private
 	 * @since 0.1
 	 */
-	public function _clear_cache( $one = null, $two = null )
+	public function _clear_blog_cache( $one = null, $two = null )
 	{
 		$this->clear_site_cache( 'student_blogs' );
 	}
