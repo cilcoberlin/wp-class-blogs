@@ -1,0 +1,809 @@
+# Copyright (C) 2010 {package-name}
+# This file is distributed under the same license as the {package-name} package.
+msgid ""
+msgstr ""
+"Project-Id-Version:  \n"
+"Report-Msgid-Bugs-To: wp-polyglots@lists.automattic.com\n"
+"POT-Creation-Date: 2011-12-16 22:34:59+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: Admin.php:93 Admin.php:94 Admin.php:150
+msgid "Class Blogs"
+msgstr ""
+
+#: Admin.php:153
+msgid "The class blogs plugin suite will help you manage a blog for a class where you have control over the main blog and each student has full ownership of a child blog."
+msgstr ""
+
+#: Admin.php:158
+msgid "The plugins that are part of this suite are provided in the list below.  Not every plugin has configurable options, but the ones that do should appear as links in the admin menu in the lower left."
+msgstr ""
+
+#: Admin.php:163
+msgid "Plugins"
+msgstr ""
+
+#: Admin.php:165
+msgid "Classmate Comments"
+msgstr ""
+
+#: Admin.php:166
+msgid "Automatically approves any comment left by a logged-in student on another student's blog."
+msgstr ""
+
+#: Admin.php:168
+msgid "Disable Comments"
+msgstr ""
+
+#: Admin.php:169
+msgid "Provides an admin option to disable commenting on all blogs used by this class."
+msgstr ""
+
+#: Admin.php:171
+msgid "Gravatar Signup"
+msgstr ""
+
+#: Admin.php:172
+msgid "Adds a link for the user to sign up for a gravatar to each account activation email sent out."
+msgstr ""
+
+#: Admin.php:174
+msgid "New User Configuration"
+msgstr ""
+
+#: Admin.php:175
+msgid "Creates a first and last name for a newly added user based on their email address."
+msgstr ""
+
+#: Admin.php:177 Plugins/RandomImage.php:35
+msgid "Random Image"
+msgstr ""
+
+#: Admin.php:178
+msgid "Provides a main-blog-only widget that displays a randomly selected image chosen from all the images used on all blogs that are part of this class."
+msgstr ""
+
+#: Admin.php:180
+msgid "Sitewide Comments"
+msgstr ""
+
+#: Admin.php:181
+msgid "Provides a main-blog-only widget that shows recent comments left on all student blogs, as well as a professor-only admin page showing a table of all student comments and a student-only admin page showing a table of all comments that they have left."
+msgstr ""
+
+#: Admin.php:183
+msgid "Sitewide Posts"
+msgstr ""
+
+#: Admin.php:184
+msgid "Provides a main-blog-only widget that shows recent posts made on all student blogs and allows for displaying all recent sitewide posts on the main blog."
+msgstr ""
+
+#: Admin.php:186
+msgid "Sitewide Tags"
+msgstr ""
+
+#: Admin.php:187
+msgid "Provides a main-blog-only widget sitewide tag cloud widget, and allows all usages of a single tag on all student blogs to be viewed."
+msgstr ""
+
+#: Admin.php:189 Plugins/StudentBlogLinks.php:193
+#: Plugins/StudentBlogLinks.php:259
+msgid "Student Blog Links"
+msgstr ""
+
+#: Admin.php:190
+msgid "Provides an admin option that allows you to add links of your choosing as the first widget on all student blogs."
+msgstr ""
+
+#: Admin.php:192 Plugins/StudentBlogList.php:30
+msgid "Student Blog List"
+msgstr ""
+
+#: Admin.php:193
+msgid "Provides a main-blog-only widget that shows a list of all student blogs that are part of this class."
+msgstr ""
+
+#: Admin.php:195
+msgid "Student Pseudonym"
+msgstr ""
+
+#: Admin.php:196
+msgid "Adds a page to the Users group on the admin side of any student blog that allows them to quickly change their username, blog URL and display name."
+msgstr ""
+
+#: Admin.php:198
+msgid "Word Counter"
+msgstr ""
+
+#: Admin.php:199
+msgid "Adds a page for the professor on the admin side to view student word counts by week, and adds a dashboard widget to each student blog that shows the word counts for the current and previous weeks.  Word counts are drawn from any posts or comments that students have made."
+msgstr ""
+
+#: Admin.php:201 Plugins/YouTubeClassPlaylist.php:33
+#: Plugins/YouTubeClassPlaylist.php:1615
+msgid "YouTube Class Playlist"
+msgstr ""
+
+#: Admin.php:202
+msgid "Allows you to link a YouTube playlist with this blog that is automatically updated whenever students embed YouTube videos in a post."
+msgstr ""
+
+#: Paginator.php:109
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Paginator.php:115
+msgid "Current page"
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:654
+#: Plugins/Aggregation/Aggregator.php:713
+msgid "Sitewide Data Options"
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:698
+msgid "The sitewide data has been refreshed."
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:706
+msgid "Your options have been updated."
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:716
+msgid "This page allows you to manage the options for collecting sitewide data on posts, comments and tags from all the blogs on this site."
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:721
+msgid "Data Sources"
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:726
+msgid "Aggregation Enabled"
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:729
+#: Plugins/Aggregation/SitewidePosts.php:465
+#: Plugins/Aggregation/SitewidePosts.php:472
+#: Plugins/Aggregation/SitewidePosts.php:479 Plugins/DisableComments.php:118
+msgid "Enabled"
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:731 Plugins/DisableComments.php:120
+msgid "Disabled"
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:736
+msgid "Excluded Blogs"
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:760
+#: Plugins/Aggregation/Aggregator.php:769
+msgid "Refresh Sitewide Data"
+msgstr ""
+
+#: Plugins/Aggregation/Aggregator.php:768
+msgid "Update Sitewide Data Options"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:48
+msgid "Recent Sitewide Comments"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:56
+msgid "A list of recent comments from across all student blogs"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:84
+msgctxt "comment author, then post"
+msgid "%1$s on %2$s"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:124
+#: Plugins/Aggregation/SitewidePosts.php:119
+#: Plugins/Aggregation/SitewideTags.php:104 Plugins/RandomImage.php:111
+#: Plugins/StudentBlogLinks.php:301 Plugins/StudentBlogList.php:84
+#: Plugins/YouTubeClassPlaylist.php:106
+msgid "Title"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:128
+msgid "Comment Limit"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:132
+msgid "Comments-per-Blog Limit"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:136
+msgid "Show Comment Excerpt"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:140
+#: Plugins/Aggregation/SitewidePosts.php:135
+msgid "Meta Format"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:144
+msgid "Format variables you can use:"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:147
+msgid "The name of the blog on which the comment was made"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:149
+msgid "The date on which the comment was made"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:151
+msgid "The time at which the comment was made"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:271
+#: Plugins/Aggregation/SitewideComments.php:310
+msgid "Student Comments"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:313
+msgid "This page allows you to view all of the comments that have been left on yours students' blogs."
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:322
+#: Plugins/Aggregation/SitewideComments.php:333
+msgid "Author"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:323
+#: Plugins/Aggregation/SitewideComments.php:334
+msgid "Comment"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:324
+#: Plugins/Aggregation/SitewideComments.php:335
+#: Plugins/Aggregation/SitewideComments.php:469
+#: Plugins/Aggregation/SitewideComments.php:479
+#: Plugins/Aggregation/SitewidePosts.php:540
+#: Plugins/Aggregation/SitewidePosts.php:549
+msgid "Post"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:325
+#: Plugins/Aggregation/SitewideComments.php:336
+msgid "Student Blog"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:326
+#: Plugins/Aggregation/SitewideComments.php:337
+#: Plugins/Aggregation/SitewideComments.php:471
+#: Plugins/Aggregation/SitewideComments.php:481
+msgid "Status"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:327
+#: Plugins/Aggregation/SitewideComments.php:338
+#: Plugins/Aggregation/SitewideComments.php:472
+#: Plugins/Aggregation/SitewideComments.php:482
+msgid "Date"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:382
+#: Plugins/Aggregation/SitewideComments.php:517
+msgid "Approved"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:384
+#: Plugins/Aggregation/SitewideComments.php:519
+msgid "Deleted"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:386
+#: Plugins/Aggregation/SitewideComments.php:521
+msgid "Spam"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:388
+#: Plugins/Aggregation/SitewideComments.php:523
+msgid "Unapproved"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:390
+#: Plugins/Aggregation/SitewideComments.php:525
+msgid "Unknown"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:456
+#: Plugins/Aggregation/SitewideComments.php:568
+#: Plugins/Aggregation/SitewideComments.php:569
+msgid "My Comments"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:459
+msgid "This page allows you to view all of the comments that you have left on other students' blogs."
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:468
+#: Plugins/Aggregation/SitewideComments.php:478
+msgid "Blog"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideComments.php:470
+#: Plugins/Aggregation/SitewideComments.php:480
+msgid "Content"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:47
+msgid "Recent Sitewide Posts"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:55
+msgid "A list of recent posts from across all student blogs"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:123
+msgid "Post Limit"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:127
+msgid "Posts-per-Blog Limit"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:131
+msgid "Show Post Excerpt"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:139 Plugins/StudentBlogList.php:92
+msgid "Format variables you can use"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:142
+msgid "The author's name"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:144
+msgid "The name of the blog on which the post was made"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:146
+msgid "The creation date of the post"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:148
+msgid "The creation time of the post"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:422
+#: Plugins/Aggregation/SitewidePosts.php:452
+msgid "Sitewide Post Options"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:423
+#: Plugins/Aggregation/SitewidePosts.php:527
+msgid "Student Posts"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:446
+msgid "Your sitewide post options have been updated"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:455
+msgid "This page allows you to control options that will affect the display of sitewide posts on the home page of the root blog."
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:462
+msgid "Show Sitewide Posts On Root Blog"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:469
+msgid "Remove Post Formatting"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:476
+msgid "Only Show Post Excerpt"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:481
+msgid "Excerpt length (in words)"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:487
+msgid "Update Sitewide Post Options"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:530
+msgid "This page allows you to view all of the posts that your students have published."
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:539
+#: Plugins/Aggregation/SitewidePosts.php:548
+msgid "Student"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:541
+#: Plugins/Aggregation/SitewidePosts.php:550
+msgid "Excerpt"
+msgstr ""
+
+#: Plugins/Aggregation/SitewidePosts.php:542
+#: Plugins/Aggregation/SitewidePosts.php:551
+msgid "Posted"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideTags.php:35
+msgid "Sitewide Tag Cloud"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideTags.php:43
+msgid "A tag cloud made from tags on all blogs on the site"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideTags.php:73
+msgid "%d topic"
+msgid_plural "%d topics"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Plugins/Aggregation/SitewideTags.php:108
+msgid "Minimum Font Size"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideTags.php:112
+msgid "Maximum Font Size"
+msgstr ""
+
+#: Plugins/Aggregation/SitewideTags.php:116
+msgid "Minimum Usage Count"
+msgstr ""
+
+#: Plugins/DisableComments.php:83 Plugins/DisableComments.php:105
+msgid "Disable Commenting"
+msgstr ""
+
+#: Plugins/DisableComments.php:99
+msgid "Your sitewide commenting options have been updated"
+msgstr ""
+
+#: Plugins/DisableComments.php:108
+msgid "This page allows you to disable commenting on every blog on this site, which includes both the root blog and the student blogs.  Any new posts will have commenting disabled by default, and all existing posts will not be able to receive comments."
+msgstr ""
+
+#: Plugins/DisableComments.php:115
+msgid "Commenting on All Blogs is"
+msgstr ""
+
+#: Plugins/DisableComments.php:126
+msgid "Update Sitewide Commenting Options"
+msgstr ""
+
+#: Plugins/GravatarSignup.php:97
+msgid "To keep track of your posts on the class blog, you should configure a Gravatar, which is an image of your choosing that will appear next to any posts or comments that you create.  You can sign up for a Gravatar for free by visiting the following URL:"
+msgstr ""
+
+#: Plugins/RandomImage.php:43
+msgid "A random image from one of the blogs on the site"
+msgstr ""
+
+#: Plugins/RandomImage.php:64
+msgid "From the post %1$s on %2$s"
+msgstr ""
+
+#: Plugins/RandomImage.php:72
+msgid "From the blog %s"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:56
+msgid "Return to Course Blog"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:253
+msgid "Your links have been updated."
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:262
+msgid "This plugin lets you display links of your choosing in the first widgetized area of every student's blog. You can use this to have a link back to the main blog appear on every student's blog, for example."
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:268 Plugins/WordCounter.php:282
+msgid "Options"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:272
+msgid "Widget Title"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:275
+msgid "The title for the the list of links."
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:280
+msgid "Links"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:284
+msgid "Add another link"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:299
+msgid "Link"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:303
+msgid "URL"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:305
+msgid "Delete"
+msgstr ""
+
+#: Plugins/StudentBlogLinks.php:316
+msgid "Update Student Blog Links Options"
+msgstr ""
+
+#: Plugins/StudentBlogList.php:38
+msgid "A list of all student blogs on the site"
+msgstr ""
+
+#: Plugins/StudentBlogList.php:88
+msgid "Display Format"
+msgstr ""
+
+#: Plugins/StudentBlogList.php:95
+msgid "The name of the student's blog"
+msgstr ""
+
+#: Plugins/StudentBlogList.php:97
+msgid "The student's first name"
+msgstr ""
+
+#: Plugins/StudentBlogList.php:99
+msgid "The student's last name"
+msgstr ""
+
+#: Plugins/StudentBlogList.php:101
+msgid "The student's nickname"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:38 Plugins/StudentPseudonym.php:39
+msgid "Use A Pseudonym"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:79
+msgid "First Name"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:80
+msgid "Last Name"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:81
+msgid "Username"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:82
+msgid "Blog URL"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:85
+msgid "You are now blogging using a pseudonym.  Your new user information is as follows."
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:97
+msgid "You cannot have a blank username."
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:99
+msgid "The username %s is invalid or conflicts with another user or blog.  Please choose a different username."
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:110
+msgid "Use a Pseudonym"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:112
+msgid "User Information"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:115
+msgid "You can use the form below to change how you appear on the blog if you do not wish for your real name to be associated with the content that you create."
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:122
+msgid "New Username"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:125
+msgid "Changing this will change the username that you use to access your blog and the URL at which it can be found."
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:128
+msgid "Your current username is %s"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:131
+msgid "Your current blog URL is %s"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:136
+msgid "New First Name"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:140
+msgid "Your current first name is %s"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:145
+msgid "New Last Name"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:149
+msgid "Your current last name is %s"
+msgstr ""
+
+#: Plugins/StudentPseudonym.php:156
+msgid "Use this Pseudonym"
+msgstr ""
+
+#: Plugins/WordCounter.php:82
+msgid "Word Count"
+msgstr ""
+
+#: Plugins/WordCounter.php:108
+msgid "This Week"
+msgstr ""
+
+#: Plugins/WordCounter.php:113
+msgid "Previous Week"
+msgstr ""
+
+#: Plugins/WordCounter.php:121
+msgid "Words required per week"
+msgstr ""
+
+#: Plugins/WordCounter.php:166
+msgid "Word Counts"
+msgstr ""
+
+#: Plugins/WordCounter.php:183
+msgid "Your word-counter options been updated."
+msgstr ""
+
+#: Plugins/WordCounter.php:189
+msgid "Student Word Counts"
+msgstr ""
+
+#: Plugins/WordCounter.php:213
+msgid "Word Counts by Week"
+msgstr ""
+
+#: Plugins/WordCounter.php:216
+msgid "The table below shows the word counts for each student, drawn from any posts and comments that they have written, broken down by the week for which those counts are calculated.  The date displayed in the \"Week of\" column is for the Monday that started that week."
+msgstr ""
+
+#: Plugins/WordCounter.php:224
+msgid "Week of"
+msgstr ""
+
+#: Plugins/WordCounter.php:235
+msgid "Totals"
+msgstr ""
+
+#: Plugins/WordCounter.php:268
+msgid "%1$s on %2$s"
+msgstr ""
+
+#: Plugins/WordCounter.php:288
+msgid "Required Weekly Words"
+msgstr ""
+
+#: Plugins/WordCounter.php:291
+msgid "The number of words a student must write per week."
+msgstr ""
+
+#: Plugins/WordCounter.php:297
+msgid "Update Word-Counter Options"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:41
+msgid "A list of YouTube videos that have been recently added to the class playlist"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:76
+msgid "View videos used on blogs"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:79
+msgid "View playlist on YouTube"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:110
+msgid "Video Limit"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:656
+msgid "View on YouTube"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:665
+msgid "Added to the playlist on %s"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:667
+msgid "Embedded in"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1635
+msgid "You have successfully linked your YouTube account (%s) with this blog!  You may now select a playlist to which all posted videos will be added."
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1638
+msgid "Your YouTube account was not able to be linked to this blog!"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1654
+msgid "Your YouTube class playlist settings have been updated."
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1666
+msgid "Your YouTube account has been unlinked from this blog."
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1675
+msgid "Your playlist has reached the maximum number of entries allowed by YouTube (%1$d).  No new videos can be added to this playlist."
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1682
+msgid "YouTube Class Playlist Configuration"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1685
+msgid "This plugin lets you define a YouTube playlist to which any videos posted on a student's blog will be added.  To use it, you must sign in to your YouTube account."
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1692
+msgid "YouTube Account"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1700
+msgid "Your YouTube account (%s) has been linked with this blog"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1711
+msgid "You have not associated a YouTube account with this blog."
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1713
+msgid "Click here to sign in to your YouTube account and link it with this blog."
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1716
+msgid "The YouTube authorization process cannot be started.  Try refreshing your browser."
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1729
+msgid "Playlist"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1731
+msgid "The playlist to which videos will be added"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1740
+msgid "%d video"
+msgid_plural "%d videos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Plugins/YouTubeClassPlaylist.php:1753
+msgid "Update Options"
+msgstr ""
+
+#: Plugins/YouTubeClassPlaylist.php:1754
+msgid "Unlink YouTube Account"
+msgstr ""

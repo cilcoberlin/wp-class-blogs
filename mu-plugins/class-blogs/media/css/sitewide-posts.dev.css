@@ -1,0 +1,16 @@
+
+/*
+ * The table shown to a professor on the admin side of the main blog that lists
+ * all posts made by students
+ */
+
+/* Prevent the excerpt on the admin post list table from taking up too much space */
+#cb-sw-student-posts-list .excerpt {
+	width: 30%;
+}
+
+/* Properly align the student's gravatar on the admin post list page */
+#cb-sw-student-posts-list .student .avatar {
+	margin-right: 0.5em;
+	vertical-align: top;
+}

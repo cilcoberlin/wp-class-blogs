@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Bentham 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/bentham\n"
-"POT-Creation-Date: 2011-07-01 13:48:59+00:00\n"
+"POT-Creation-Date: 2011-12-16 23:16:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,131 +13,159 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 #: archive.php:15
-msgid "Daily Archives"
+msgid "Day"
 msgstr ""
 
 #: archive.php:18
-msgid "Monthly Archives"
+msgid "Month"
 msgstr ""
 
 #: archive.php:21
-msgid "Yearly Archives"
+msgid "Year"
 msgstr ""
 
 #: archive.php:24
-msgid "Blog Archives"
+msgid "Author"
+msgstr ""
+
+#: archive.php:27
+msgid "Archives"
 msgstr ""
 
 #: category.php:8
 msgid "Category"
 msgstr ""
 
-#: comments.php:6
+#: comments.php:8
 msgid ""
 "This post is password protected. Enter the password to view any comments."
 msgstr ""
 
-#: comments.php:14
+#: comments.php:16
 msgid "One Comment"
 msgid_plural "%1$s Comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: comments.php:29
-msgctxt "verb"
+#: comments.php:31
+msgctxt "comment reply link"
 msgid "Reply"
 msgstr ""
 
 #: footer.php:10
-msgctxt "WordPress theme"
+msgctxt "a WordPress theme"
 msgid "theme"
 msgstr ""
 
-#: functions.php:29
+#: functions.php:36
 msgid "Primary Navigation"
 msgstr ""
 
-#: functions.php:66
+#: functions.php:73
 msgid "Sidebar"
 msgstr ""
 
-#: functions.php:104
+#: functions.php:111
 msgid "No Posts Found"
 msgstr ""
 
-#: functions.php:106
+#: functions.php:113
 msgid ""
 "No posts were found.  You can try searching for posts using the form below."
 msgstr ""
 
-#: functions.php:139
+#: functions.php:137 header.php:25 loop-single.php:29
+msgid "Page %d"
+msgstr ""
+
+#: functions.php:155
 msgid "Older posts"
 msgstr ""
 
-#: functions.php:140
+#: functions.php:156
 msgid "Newer posts"
 msgstr ""
 
-#: functions.php:167
+#: functions.php:183
+msgctxt "post creation date"
 msgid "Posted"
 msgstr ""
 
-#: functions.php:169
-msgctxt "noun"
+#: functions.php:185
+msgctxt "post author name"
 msgid "Author"
 msgstr ""
 
-#: functions.php:203
+#: functions.php:219
 msgid "Categories"
 msgstr ""
 
-#: functions.php:206
+#: functions.php:222
 msgctxt "plural noun"
 msgid "Tags"
 msgstr ""
 
-#: functions.php:219
+#: functions.php:235
 msgid "Edit Post"
-msgstr ""
-
-#: header.php:25 loop-single.php:22
-msgid "Page %d"
 msgstr ""
 
 #: header.php:49
 msgid "Logo"
 msgstr ""
 
-#: loop-single.php:32
-msgctxt "noun"
+#: loop-single.php:37
+msgctxt "single post page list header"
 msgid "Pages"
 msgstr ""
 
-#: loop-students.php:30
+#: loop-students.php:12
+msgid ""
+"You have no posts to display yet.  If you create a new post, it will be "
+"shown on this page."
+msgstr ""
+
+#: loop-students.php:49
 msgid "View all posts by this user"
 msgstr ""
 
-#: loop-students.php:41
+#: loop-students.php:60
 msgid "%d post"
 msgid_plural "%d posts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: loop-students.php:47
+#: loop-students.php:66
 msgid "%d comment"
 msgid_plural "%d comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: loop.php:29
+#: loop-students.php:96
+msgctxt "date format"
+msgid "M j"
+msgstr ""
+
+#: loop-students.php:100
+msgid "Read more"
+msgstr ""
+
+#: loop-students.php:112
+msgid "View all posts"
+msgstr ""
+
+#: loop.php:28
+msgid "Unnamed Post"
+msgstr ""
+
+#: loop.php:41
 msgid "Leave a comment"
 msgstr ""
 
-#: loop.php:29
+#: loop.php:41
 msgid "1 Comment"
 msgstr ""
 
-#: loop.php:29
+#: loop.php:41
 msgid "% Comments"
 msgstr ""
 
@@ -150,7 +178,7 @@ msgid "Next Entries"
 msgstr ""
 
 #: search.php:9
-msgctxt "noun phrase"
+msgctxt "search results page title"
 msgid "Search Results"
 msgstr ""
 
@@ -185,5 +213,6 @@ msgstr ""
 
 #. Tags of the plugin/theme
 msgid ""
-"black, blue, white, gray, threaded-comments, two-columns, translation-ready"
+"black, blue, white, gray, threaded-comments, two-columns, translation-ready, "
+"custom-header, custom-menu"
 msgstr ""

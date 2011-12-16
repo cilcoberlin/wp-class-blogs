@@ -1,0 +1,61 @@
+
+/*
+ * The page shown to a professor on the admin side of the root blog that lists
+ * all student comments made on any blog that is part of the site
+ */
+
+/* Stack the date and time in comment list tables */
+.cb-sw-comments-table .posted .date {
+	display: block;
+	font-weight: bold;
+}
+
+/* Color comments based on their status */
+.cb-sw-comments-table .approved .status {
+	color: #006505;
+}
+.cb-sw-comments-table .deleted .status,
+.cb-sw-comments-table .spam .status,
+.cb-sw-comments-table .trash .status {
+	color: #BC0B0B;
+}
+.cb-sw-comments-table .deleted td,
+.cb-sw-comments-table .spam td,
+.cb-sw-comments-table .trash td {
+	background-color: #FFDDDD;
+}
+.cb-sw-comments-table .unapproved .status {
+	color: #D98500;
+}
+.cb-sw-comments-table .unapproved td {
+	background-color: #FFFFE0;
+}
+
+/* Prevent the comments on the admin post list table from taking up too much space */
+#cb-sw-student-comments-list .author {
+	width: 20%;
+}
+#cb-sw-student-comments-list .content {
+	width: 35%;
+}
+#cb-sw-student-comments-list .posted {
+	width: 15%;
+}
+
+/* Properly align the commenter's gravatar on the admin comment list page */
+#cb-sw-student-comments-list .author .avatar {
+	float: left;
+	margin-right: 0.5em;
+	vertical-align: top;
+}
+
+/* Prevent the comments on the student admin page from taking up too much space */
+#cb-sw-my-comments-list .blog {
+	width: 17%;
+}
+#cb-sw-my-comments-list .post {
+	width: 17%;
+}
+#cb-sw-my-comments-list .posted {
+	width: 15%;
+}

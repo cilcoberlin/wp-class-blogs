@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="WordPress Class Blogs" default="build" basedir=".">
+
+	<description>Compresses static media and builds language files for the WordPress class blogs project.</description>
+
+	<property name="compressor" value="assets/yui/yuicompressor-2.4.7.jar" />
+	<property name="makePOT" value="assets/wpi18n/makepot.php" />
+	<property name="plugin" value="mu-plugins/class-blogs" />
+	<property name="pluginMedia" value="${plugin}/media" />
+	<property name="theme" value="themes/bentham" />
+
+	<!-- Build the class blogs suite -->
+	<target name="build">
+		<antcall target="minify" />
+		<antcall target="make-languages" />
+	</target>
+
+	<!-- Minify JavaScript and CSS files -->
+	<target name="minify" >
+		<antcall target="minify-js" />
+		<antcall target="minify-css" />
+	</target>
+
+	<!-- Minify JavaScript -->
+	<target name="minify-js" >
+		<minify-extension extension="js"/>
+	</target>
+
+	<!-- Minify CSS -->
+	<target name="minify-css" >
+		<minify-extension extension="css"/>
+	</target>
+
+	<!-- Macro for minimizing media using the YUI compressor -->
+	<macrodef name="minify-extension">
+		<attribute name="extension" />
+		<sequential>
+			<echo>Minifying @{extension}...</echo>
+			<apply executable="java" parallel="false" dest="${pluginMedia}/@{extension}">
+				<arg line="-jar" />
+				<arg path="${compressor}" />
+				<arg line="--type" />
+				<arg value="@{extension}" />
+				<arg line="-o" />
+				<targetfile/>
+				<srcfile/>
+				<fileset dir="${pluginMedia}/@{extension}" includes="*.dev.@{extension}" id="dev-files" />
+				<mapper type="glob" from="*.dev.@{extension}" to="*.@{extension}" />
+			</apply>
+			<pathconvert pathsep="${line.separator}" property="minned-files" refid="dev-files"/>
+			<echo>${minned-files}</echo>
+		</sequential>
+	</macrodef>
+
+	<!-- Creates language files for the class-blogs plugin and Bentham -->
+	<target name="make-languages">
+		<make-pot basedir="${plugin}" potname="class-blogs" project="wp-plugin"/>
+		<make-pot basedir="${theme}" potname="bentham" project="wp-theme"/>
+	</target>
+
+	<!-- Macro for making a .POT file for a directory -->
+	<macrodef name="make-pot">
+		<attribute name="basedir"/>
+		<attribute name="potname" />
+		<attribute name="project"/>
+		<sequential>
+			<echo>Making .POT file for @{basedir}...</echo>
+			<exec executable="php">
+				<arg value="${makePOT}"/>
+				<arg value="@{project}"/>
+				<arg path="@{basedir}"/>
+				<arg path="@{basedir}/languages/@{potname}.pot"/>
+			</exec>
+		</sequential>
+	</macrodef>
+
+</project>
