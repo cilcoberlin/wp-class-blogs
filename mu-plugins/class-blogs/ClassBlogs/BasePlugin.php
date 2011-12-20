@@ -171,6 +171,51 @@ abstract class ClassBlogs_BasePlugin
 	}
 
 	/**
+	 * Adds the plugin's admin CSS to the page.
+	 *
+	 * This uses the value of the `$admin_media` member variable to determine
+	 * which admin files should be added.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _add_admin_css()
+	{
+		if ( array_key_exists( 'css', $this->admin_media ) ) {
+			$css_url = esc_url( ClassBlogs_Utils::get_base_css_url() );
+			foreach ( $this->admin_media['css'] as $css_file ) {
+				printf( '<link rel="stylesheet" href="%s%s" />',
+					$css_url, $css_file );
+			}
+		}
+	}
+
+	/**
+	 * Adds the plugin's admin JavaScript to the page.
+	 *
+	 * This uses the value of the `$admin_media` member variable to determine
+	 * which admin files should be added.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	public function _add_admin_js()
+	{
+		if ( array_key_exists( 'js', $this->admin_media ) ) {
+			$js_url = ClassBlogs_Utils::get_base_js_url();
+			foreach ( $this->admin_media['js'] as $js_file ) {
+				wp_register_script(
+					$this->get_uid(),
+					$js_url . $js_file,
+					array( 'jquery' ),
+					ClassBlogs_Settings::VERSION,
+					true );
+			}
+			wp_print_scripts( $this->get_uid() );
+		}
+	}
+
+	/**
 	 * Generates a pseudo-unique ID for the plugin.
 	 *
 	 * This ID is automatically generated from a truncated and modified version
@@ -555,49 +600,21 @@ abstract class ClassBlogs_BasePlugin
 	protected function enable_admin_page( $admin ) {}
 
 	/**
-	 * Adds the plugin's admin CSS to the page.
+	 * Allows a child plugin to perform upgrade actions.
 	 *
-	 * This uses the value of the `$admin_media` member variable to determine
-	 * which admin files should be added.
+	 * Any child plugin can implement this method if it wishes to perform
+	 * actions to make sure that a version upgrade goes smoothly.  This method
+	 * is only called if a version difference is detected between the stored
+	 * version on the site and the current version according to the class-blogs
+	 * code.
 	 *
-	 * @access private
-	 * @since 0.1
+	 * @param string $old the old version number
+	 * @param string $new the new version number
+	 *
+	 * @access public
+	 * @since 0.3
 	 */
-	public function _add_admin_css()
-	{
-		if ( array_key_exists( 'css', $this->admin_media ) ) {
-			$css_url = esc_url( ClassBlogs_Utils::get_base_css_url() );
-			foreach ( $this->admin_media['css'] as $css_file ) {
-				printf( '<link rel="stylesheet" href="%s%s" />',
-					$css_url, $css_file );
-			}
-		}
-	}
-
-	/**
-	 * Adds the plugin's admin JavaScript to the page.
-	 *
-	 * This uses the value of the `$admin_media` member variable to determine
-	 * which admin files should be added.
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _add_admin_js()
-	{
-		if ( array_key_exists( 'js', $this->admin_media ) ) {
-			$js_url = ClassBlogs_Utils::get_base_js_url();
-			foreach ( $this->admin_media['js'] as $js_file ) {
-				wp_register_script(
-					$this->get_uid(),
-					$js_url . $js_file,
-					array( 'jquery' ),
-					ClassBlogs_Settings::VERSION,
-					true );
-			}
-			wp_print_scripts( $this->get_uid() );
-		}
-	}
+	public function upgrade( $old, $new ) {}
 }
 
 ?>

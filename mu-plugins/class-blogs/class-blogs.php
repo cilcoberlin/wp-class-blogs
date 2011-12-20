@@ -12,6 +12,7 @@
 // Require the core class-blogs class and use it to load all required files
 require_once( dirname( __FILE__ ) . '/ClassBlogs.php' );
 ClassBlogs::initialize();
+ClassBlogs::maybe_upgrade();
 
 /**
  * Performs initialization actions for the entire class-blogs suite.

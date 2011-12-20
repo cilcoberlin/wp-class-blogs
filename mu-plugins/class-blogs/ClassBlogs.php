@@ -309,6 +309,36 @@ class ClassBlogs {
 		$disabled[$plugin_id] = true;
 		update_site_option( 'cb_disabled_plugins', $disabled );
 	}
+
+	/**
+	 * Possibly upgrade the plugin if a version difference is detected.
+	 *
+	 * This checks whether the stored version on the database is greater than
+	 * the current version of the plugin.
+	 *
+	 * @since 0.3
+	 */
+	public static function maybe_upgrade()
+	{
+
+		// Check the version stored on the database, setting it if none is found
+		$db_version = get_site_option( 'cb_version' );
+		if ( empty( $db_version ) ){
+			$db_version = ClassBlogs_Settings::VERSION;
+			update_site_option( 'cb_version', $db_version );
+		}
+
+		// If the version on the database is less than the current version, call
+		// the upgrade script on all of the plugins
+		if ( version_compare( $db_version, ClassBlogs_Settings::VERSION, '<' ) ) {
+			foreach ( self::get_all_plugins() as $plugin ) {
+				if ( is_callable( array( $plugin->plugin, 'upgrade' ) ) ) {
+					$plugin->plugin->upgrade( $db_version, ClassBlogs_Settings::VERSION );
+				}
+			}
+			update_site_option( 'cb_version', ClassBlogs_Settings::VERSION );
+		}
+	}
 }
 
 ClassBlogs::register_plugin(

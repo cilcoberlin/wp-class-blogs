@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/class-blogs\n"
-"POT-Creation-Date: 2011-12-20 19:41:42+00:00\n"
+"POT-Creation-Date: 2011-12-20 20:14:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 #: ClassBlogs/Admin.php:93 ClassBlogs/Admin.php:94 ClassBlogs/Admin.php:186
-#: ClassBlogs.php:317
+#: ClassBlogs.php:347
 msgid "Class Blogs"
 msgstr ""
 
@@ -938,6 +938,6 @@ msgid ""
 "updated whenever students embed YouTube videos in a post."
 msgstr ""
 
-#: ClassBlogs.php:318
+#: ClassBlogs.php:348
 msgid "The base class-blogs plugin that is used to manage plugin registration."
 msgstr ""
