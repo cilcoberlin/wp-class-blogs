@@ -320,6 +320,11 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	}
 }
 
-ClassBlogs::register_plugin( 'student_links', new ClassBlogs_Plugins_StudentBlogLinks() );
+ClassBlogs::register_plugin(
+	'student_links',
+	'ClassBlogs_Plugins_StudentBlogLinks',
+	__( 'Student Blog Links', 'classblogs' ),
+	__( 'Provides an admin option that allows you to add links of your choosing as the first widget on all student blogs.', 'classblogs' )
+);
 
 ?>

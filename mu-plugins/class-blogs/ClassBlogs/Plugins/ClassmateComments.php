@@ -43,6 +43,11 @@ class ClassBlogs_Plugins_ClassmateComments extends ClassBlogs_BasePlugin
 	}
 }
 
-ClassBlogs::register_plugin( 'classmate_comments', new ClassBlogs_Plugins_ClassmateComments() );
+ClassBlogs::register_plugin(
+	'classmate_comments',
+	'ClassBlogs_Plugins_ClassmateComments',
+	__( 'Classmate Comments', 'classblogs' ),
+	__( "Automatically approves any comment left by a logged-in student on another student's blog.", 'classblogs' )
+);
 
 ?>

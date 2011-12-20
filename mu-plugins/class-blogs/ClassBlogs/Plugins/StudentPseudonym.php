@@ -260,6 +260,11 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 	}
 }
 
-ClassBlogs::register_plugin( 'student_pseudonym', new ClassBlogs_Plugins_StudentPseudonym() );
+ClassBlogs::register_plugin(
+	'student_pseudonym',
+	'ClassBlogs_Plugins_StudentPseudonym',
+	__( 'Student Pseudonym', 'classblogs' ),
+	__( 'Adds a page to the Users group on the admin side of any student blog that allows them to quickly change their username, blog URL and display name.', 'classblogs' )
+);
 
 ?>

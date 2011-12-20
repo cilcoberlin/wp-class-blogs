@@ -359,6 +359,11 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 	}
 }
 
-ClassBlogs::register_plugin( 'student_blogs', new ClassBlogs_Plugins_StudentBlogList() );
+ClassBlogs::register_plugin(
+	'student_blogs',
+	'ClassBlogs_Plugins_StudentBlogList',
+	__( 'Student Blog List', 'classblogs' ),
+	__( 'Provides a main-blog-only widget that shows a list of all student blogs that are part of this class.', 'classblogs' )
+);
 
 ?>

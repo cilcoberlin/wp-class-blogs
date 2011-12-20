@@ -261,6 +261,11 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 	}
 }
 
-ClassBlogs::register_plugin( 'random_image', new ClassBlogs_Plugins_RandomImage() );
+ClassBlogs::register_plugin(
+	'random_image',
+	'ClassBlogs_Plugins_RandomImage',
+	__( 'Random Image', 'classblogs' ),
+	__( 'Provides a main-blog-only widget that displays a randomly selected image chosen from all the images used on all blogs that are part of this class.', 'classblogs' )
+);
 
 ?>

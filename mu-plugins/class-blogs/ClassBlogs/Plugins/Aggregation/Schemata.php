@@ -156,7 +156,6 @@ class ClassBlogs_Plugins_Aggregation_Schemata
 			)
 		);
 	}
-
 }
 
 ?>

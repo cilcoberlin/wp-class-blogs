@@ -130,6 +130,11 @@ class ClassBlogs_Plugins_DisableComments extends ClassBlogs_BasePlugin
 	}
 }
 
-ClassBlogs::register_plugin( 'disable_comments', new ClassBlogs_Plugins_DisableComments() );
+ClassBlogs::register_plugin(
+	'disable_comments',
+	'ClassBlogs_Plugins_DisableComments',
+	__( 'Disable Comments', 'classblogs' ),
+	__( 'Provides an admin option to disable commenting on all blogs used by this class.', 'classblogs' )
+);
 
 ?>

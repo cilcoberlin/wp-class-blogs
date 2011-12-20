@@ -149,6 +149,12 @@ class ClassBlogs_PluginPage
 	}
 }
 
-ClassBlogs::register_plugin( 'plugin_page', new ClassBlogs_PluginPage() );
+ClassBlogs::register_plugin(
+	'plugin_page',
+	'ClassBlogs_PluginPage',
+	__( 'Plugin Page', 'classblogs' ),
+	__( 'Manages semi-private pages associated with a plugin.', 'classblogs' ),
+	false
+);
 
 ?>

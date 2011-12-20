@@ -114,9 +114,11 @@ class ClassBlogs_Admin
 					height: 32px;
 					width: 32px;
 				}
-			</style>',
+			</style>
+			<link rel="stylesheet" href="%3$sadmin.css" />',
 			ClassBlogs_Utils::get_base_images_url(),
-			( $this->_get_admin_color_scheme() === 'fresh' ) ? 'icon32.png' : 'icon32-vs.png' );
+			( $this->_get_admin_color_scheme() === 'fresh' ) ? 'icon32.png' : 'icon32-vs.png',
+			ClassBlogs_Utils::get_base_css_url() );
 	}
 
 	/**
@@ -133,7 +135,11 @@ class ClassBlogs_Admin
 	private function _get_admin_color_scheme()
 	{
 		$current_user = get_currentuserinfo();
-		return get_user_option( 'admin_color', $current_user->ID );
+		if ( ! empty( $current_user ) ) {
+			return get_user_option( 'admin_color', $current_user->ID );
+		} else {
+			return 'fresh';
+		}
 	}
 
 	/**
@@ -144,6 +150,36 @@ class ClassBlogs_Admin
 	 */
 	public function _class_blogs_admin_page()
 	{
+
+		// Disable any plugins that are not checked
+		if ( $_POST ) {
+
+			// Get a list of all plugins that are checked to be enabled
+			$enabled = array();
+			foreach ( $_POST as $field => $value ) {
+				$plugin = str_replace( 'plugin_', '', $field );
+				if ( $plugin !== $field ) {
+					$enabled[$plugin] = true;
+				}
+			}
+
+			// Enable any plugins that were previously disabled, and disable any
+			// that were previously enabled
+			foreach ( ClassBlogs::get_user_controlled_plugins() as $plugin ) {
+				if ( array_key_exists( $plugin->id, $enabled ) ) {
+					if ( ! $plugin->enabled ) {
+						ClassBlogs::enable_plugin( $plugin->id );
+					}
+				} else {
+					if ( $plugin->enabled ) {
+						ClassBlogs::disable_plugin( $plugin->id );
+					}
+				}
+			}
+
+			self::show_admin_message( __( 'Enabled class-blogs plugins have been updated.  You must refresh the page to see the effects  of this.' ), 'classblogs' );
+		}
+
 ?>
 		<div class="wrap">
 			<?php ClassBlogs_Admin::show_admin_icon();  ?>
@@ -151,56 +187,64 @@ class ClassBlogs_Admin
 
 			<p>
 				<?php _e(
-					'The class blogs plugin suite will help you manage a blog for a class where you have control over the main blog and each student has full ownership of a child blog.', 'classblogs' );
+					'The class blogs plugin	suite will help you manage a blog for a class where you have control over the main blog and each student has full ownership of a child blog.', 'classblogs' );
 				?>
 			</p>
 			<p>
-				<?php _e(
-					'The plugins that are part of this suite are provided in the list below.  Not every plugin has configurable options, but the ones that do should appear as links in the admin menu in the lower left.', 'classblogs' )
+				<?php _e( '
+					The plugins that are part of this suite are provided in the list below.
+					Not every plugin has configurable options, but the ones that do will appear as links in the Class Blogs admin menu.
+					If you do not wish to use a certain component of the class-blogs suite, you can uncheck it in the list below and click on the "Update Enabled Plugins" button.', 'classblogs' )
 				?>
 			</p>
 
-			<h3><?php _e( 'Plugins', 'classblogs' ); ?></h3>
+			<h3><?php _e( 'Enabled Plugins', 'classblogs' ); ?></h3>
 
-			<h4><?php _e( 'Classmate Comments', 'classblogs' ); ?></h4>
-			<p><?php _e( "Automatically approves any comment left by a logged-in student on another student's blog.", 'classblogs' ); ?></p>
+			<form method="post" action="">
 
-			<h4><?php _e( 'Disable Comments', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides an admin option to disable commenting on all blogs used by this class.', 'classblogs' ); ?></p>
+				<table id="cb-enabled-plugins">
 
-			<h4><?php _e( 'Gravatar Signup', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Adds a link for the user to sign up for a gravatar to each account activation email sent out.', 'classblogs' ); ?></p>
+					<thead>
+						<tr>
+							<th class="toggle"><?php _e( 'Enabled', 'classblogs' ); ?></th>
+							<th class="name"><?php _e( 'Name', 'classblogs' ); ?></th>
+							<th class="description"><?php _e( 'Description', 'classblogs' ); ?></th>
+						</tr>
+					</thead>
 
-			<h4><?php _e( 'New User Configuration', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Creates a first and last name for a newly added user based on their email address.', 'classblogs' ); ?></p>
+					<tbody>
+						<?php
 
-			<h4><?php _e( 'Random Image', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides a main-blog-only widget that displays a randomly selected image chosen from all the images used on all blogs that are part of this class.', 'classblogs' ); ?></p>
+							// Display each user-controlled plugin
+							$plugins = ClassBlogs::get_user_controlled_plugins();
+							foreach ( $plugins as $plugin ) {
+								$field = 'plugin_' . $plugin->id;
+								$name = ( $plugin->name ) ? $plugin->name : get_class( $plugin->plugin );
+								printf('
+									<tr>
+										<td class="toggle">
+											<input type="checkbox" id="%1$s" name="%1$s" %2$s />
+										</td>
+										<td class="name">
+											<label for="%1$s">%3$s</label>
+										</td>
+										<td class="description">%4$s</td>
+									</tr>',
+									esc_attr( $field ),
+									( $plugin->enabled ) ? 'checked="checked"' : '',
+									esc_html( $name ),
+									esc_html( $plugin->description ) );
+							}
+						?>
+					</tbody>
 
-			<h4><?php _e( 'Sitewide Comments', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides a main-blog-only widget that shows recent comments left on all student blogs, as well as a professor-only admin page showing a table of all student comments and a student-only admin page showing a table of all comments that they have left.', 'classblogs' ); ?></p>
+				</table>
 
-			<h4><?php _e( 'Sitewide Posts', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides a main-blog-only widget that shows recent posts made on all student blogs and allows for displaying all recent sitewide posts on the main blog.', 'classblogs' ); ?></p>
-
-			<h4><?php _e( 'Sitewide Tags', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides a main-blog-only widget sitewide tag cloud widget, and allows all usages of a single tag on all student blogs to be viewed.', 'classblogs' ); ?></p>
-
-			<h4><?php _e( 'Student Blog Links', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides an admin option that allows you to add links of your choosing as the first widget on all student blogs.', 'classblogs' ); ?></p>
-
-			<h4><?php _e( 'Student Blog List', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Provides a main-blog-only widget that shows a list of all student blogs that are part of this class.', 'classblogs' ); ?></p>
-
-			<h4><?php _e( 'Student Pseudonym', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Adds a page to the Users group on the admin side of any student blog that allows them to quickly change their username, blog URL and display name.', 'classblogs' ); ?></p>
-
-			<h4><?php _e( 'Word Counter', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Adds a page for the professor on the admin side to view student word counts by week, and adds a dashboard widget to each student blog that shows the word counts for the current and previous weeks.  Word counts are drawn from any posts or comments that students have made.', 'classblogs' ); ?></p>
-
-			<h4><?php _e( 'YouTube Class Playlist', 'classblogs' ); ?></h4>
-			<p><?php _e( 'Allows you to link a YouTube playlist with this blog that is automatically updated whenever students embed YouTube videos in a post.', 'classblogs' ); ?></p>
-
+				<?php wp_nonce_field( 'classblogs_admin' ); ?>
+				<p class="submit">
+					<input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Enabled Plugins', 'classblogs' ); ?>" />
+				</p>
+			</form>
 		</div>
 <?php
 	}

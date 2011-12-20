@@ -188,6 +188,11 @@ class ClassBlogs_Plugins_NewUserConfiguration extends ClassBlogs_BasePlugin
 	}
 }
 
-ClassBlogs::register_plugin( 'new_user_configuration', new ClassBlogs_Plugins_NewUserConfiguration() );
+ClassBlogs::register_plugin(
+	'new_user_configuration',
+	'ClassBlogs_Plugins_NewUserConfiguration',
+	__( 'New User Configuration', 'classblogs' ),
+	__( 'Creates a first and last name for a newly added user based on their email address.', 'classblogs' )
+);
 
 ?>

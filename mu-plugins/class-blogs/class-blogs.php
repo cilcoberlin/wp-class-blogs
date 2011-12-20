@@ -9,48 +9,12 @@
  * @version 0.2
  */
 
-// Load core class-blogs modules
-$core = array(
-	'ClassBlogs',
-	'Settings',
-	'Schema',
-	'Utils',
-	'Admin',
-	'Paginator',
-	'PluginPage',
-	'BasePlugin',
-	'Widget'
-);
-foreach ( $core as $file ) {
-	require_once( 'ClassBlogs/' . $file . '.php' );
-}
-
-// Load the suite's plugins
-$plugins = array(
-	'Aggregation/Settings',
-	'Aggregation/Schemata',
-	'Aggregation/SitewidePlugin',
-	'Aggregation/Aggregator',
-	'Aggregation/SitewideComments',
-	'Aggregation/SitewidePosts',
-	'Aggregation/SitewideTags',
-	'ClassmateComments',
-	'DisableComments',
-	'GravatarSignup',
-	'NewUserConfiguration',
-	'RandomImage',
-	'StudentBlogLinks',
-	'StudentBlogList',
-	'StudentPseudonym',
-	'WordCounter',
-	'YouTubeClassPlaylist'
-);
-foreach ( $plugins as $plugin ) {
-	require_once( 'ClassBlogs/Plugins/' . $plugin . '.php' );
-}
+// Require the core class-blogs class and use it to load all required files
+require_once( dirname( __FILE__ ) . '/ClassBlogs.php' );
+ClassBlogs::initialize();
 
 /**
- * Performs initialization actions for the entire class blogs suite
+ * Performs initialization actions for the entire class-blogs suite.
  *
  * @access private
  * @since 0.1
