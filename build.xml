@@ -36,7 +36,7 @@
 		<attribute name="extension" />
 		<sequential>
 			<echo>Minifying @{extension}...</echo>
-			<apply executable="java" parallel="false" dest="${pluginMedia}/@{extension}">
+			<apply executable="java" parallel="false" dest="${pluginMedia}/prod/@{extension}">
 				<arg line="-jar" />
 				<arg path="${compressor}" />
 				<arg line="--type" />
@@ -44,8 +44,8 @@
 				<arg line="-o" />
 				<targetfile/>
 				<srcfile/>
-				<fileset dir="${pluginMedia}/@{extension}" includes="*.dev.@{extension}" id="dev-files" />
-				<mapper type="glob" from="*.dev.@{extension}" to="*.@{extension}" />
+				<fileset dir="${pluginMedia}/devel/@{extension}" includes="*.@{extension}" id="dev-files" />
+				<mapper type="identity" />
 			</apply>
 			<pathconvert pathsep="${line.separator}" property="minned-files" refid="dev-files"/>
 			<echo>${minned-files}</echo>

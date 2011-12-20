@@ -1,0 +1,47 @@
+
+/*
+ * The page allowing a user to disable certain class-blogs components
+ */
+
+/* Basic table styling */
+#cb-enabled-plugins {
+	border-collapse: collapse;
+}
+#cb-enabled-plugins th {
+	text-align: left;
+}
+#cb-enabled-plugins td,
+#cb-enabled-plugins th {
+	vertical-align: top;
+}
+
+/* Hide the enabled column's header text */
+#cb-enabled-plugins thead .toggle {
+	text-indent: -9000em;
+}
+
+/* Size the columns appropriately */
+#cb-enabled-plugins .toggle {
+	width: 3%;
+}
+#cb-enabled-plugins .name {
+	width: 20%;
+}
+
+/* Emphasize the plugin name */
+#cb-enabled-plugins tbody .name {
+	font-weight: bold;
+}
+
+/* Space out the table rows */
+#cb-enabled-plugins tbody td {
+	border-top: 1px solid #ccc;
+	padding-bottom: 0.75em;
+	padding-top: 0.75em;
+}
+
+/* Properly align the student's gravatar on the admin post list page */
+#cb-sw-student-posts-list .student .avatar {
+	margin-right: 0.5em;
+	vertical-align: top;
+}

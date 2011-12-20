@@ -246,18 +246,27 @@ class ClassBlogs_Utils
 	 * This takes an argument of the name of the media-type directory to add on
 	 * to the path, such as a 'css' or 'js' directory.
 	 *
-	 * @param  string $media_type the name of a media type to append to the URL
-	 * @return string             the path to the class blogs media directory
+	 * The optional `$supports_dev` flag is used in conjuction with the value of
+	 * `WP_DEBUG` to determine which media to use.  If the given media directory
+	 * has a development branch and debugging mode is on, that will be used
+	 * instead of the production branch.  This is used to serve optimized
+	 * static media in a production environment but allow for easy development
+	 * of uncompressed, commented media in a test environment.
+	 *
+	 * @param  string $media_type  the name of a media type to append to the URL
+	 * @param  bool   $support_dev whether or not the media type supports a dev branch
+	 * @return string              the path to the class blogs media directory
 	 *
 	 * @access private
 	 * @since 0.2
 	 */
-	private static function _get_base_media_url( $media_type )
+	private static function _get_base_media_url( $media_type, $supports_dev=true )
 	{
 		return implode( "/", array(
 			WPMU_PLUGIN_URL,
 			ClassBlogs_Settings::SRC_DIR_NAME,
 			ClassBlogs_Settings::MEDIA_DIR_NAME,
+			( $supports_dev && WP_DEBUG ) ? 'devel' : 'prod',
 			$media_type ) ) . "/";
 	}
 
@@ -294,7 +303,7 @@ class ClassBlogs_Utils
 	 */
 	public static function get_base_images_url()
 	{
-		return self::_get_base_media_url( ClassBlogs_Settings::MEDIA_IMAGES_DIR_NAME );
+		return self::_get_base_media_url( ClassBlogs_Settings::MEDIA_IMAGES_DIR_NAME, false );
 	}
 
 	/**
