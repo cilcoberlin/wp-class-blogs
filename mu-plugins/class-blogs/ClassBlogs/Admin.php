@@ -191,10 +191,8 @@ class ClassBlogs_Admin
 				?>
 			</p>
 			<p>
-				<?php _e( '
-					The plugins that are part of this suite are provided in the list below.
-					Not every plugin has configurable options, but the ones that do will appear as links in the Class Blogs admin menu.
-					If you do not wish to use a certain component of the class-blogs suite, you can uncheck it in the list below and click on the "Update Enabled Plugins" button.', 'classblogs' )
+				<?php _e(
+					'The plugins that are part of this suite are provided in the list below.  Not every plugin has configurable options, but the ones that do will appear as links in the Class Blogs admin menu.  If you do not wish to use a certain component of the class-blogs suite, you can uncheck it in the list below and click on the "Update Enabled Plugins" button.', 'classblogs' )
 				?>
 			</p>
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/class-blogs\n"
-"POT-Creation-Date: 2011-12-16 23:16:08+00:00\n"
+"POT-Creation-Date: 2011-12-20 19:41:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,162 +12,55 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: ClassBlogs/Admin.php:93 ClassBlogs/Admin.php:94 ClassBlogs/Admin.php:150
+#: ClassBlogs/Admin.php:93 ClassBlogs/Admin.php:94 ClassBlogs/Admin.php:186
+#: ClassBlogs.php:317
 msgid "Class Blogs"
 msgstr ""
 
-#: ClassBlogs/Admin.php:153
+#: ClassBlogs/Admin.php:180
 msgid ""
-"The class blogs plugin suite will help you manage a blog for a class where "
+"Enabled class-blogs plugins have been updated.  You must refresh the page to "
+"see the effects  of this."
+msgstr ""
+
+#: ClassBlogs/Admin.php:189
+msgid ""
+"The class blogs plugin\tsuite will help you manage a blog for a class where "
 "you have control over the main blog and each student has full ownership of a "
 "child blog."
 msgstr ""
 
-#: ClassBlogs/Admin.php:158
+#: ClassBlogs/Admin.php:194
 msgid ""
 "The plugins that are part of this suite are provided in the list below.  Not "
-"every plugin has configurable options, but the ones that do should appear as "
-"links in the admin menu in the lower left."
-msgstr ""
-
-#: ClassBlogs/Admin.php:163
-msgid "Plugins"
-msgstr ""
-
-#: ClassBlogs/Admin.php:165
-msgid "Classmate Comments"
-msgstr ""
-
-#: ClassBlogs/Admin.php:166
-msgid ""
-"Automatically approves any comment left by a logged-in student on another "
-"student's blog."
-msgstr ""
-
-#: ClassBlogs/Admin.php:168
-msgid "Disable Comments"
-msgstr ""
-
-#: ClassBlogs/Admin.php:169
-msgid ""
-"Provides an admin option to disable commenting on all blogs used by this "
-"class."
-msgstr ""
-
-#: ClassBlogs/Admin.php:171
-msgid "Gravatar Signup"
-msgstr ""
-
-#: ClassBlogs/Admin.php:172
-msgid ""
-"Adds a link for the user to sign up for a gravatar to each account "
-"activation email sent out."
-msgstr ""
-
-#: ClassBlogs/Admin.php:174
-msgid "New User Configuration"
-msgstr ""
-
-#: ClassBlogs/Admin.php:175
-msgid ""
-"Creates a first and last name for a newly added user based on their email "
-"address."
-msgstr ""
-
-#: ClassBlogs/Admin.php:177 ClassBlogs/Plugins/RandomImage.php:35
-msgid "Random Image"
-msgstr ""
-
-#: ClassBlogs/Admin.php:178
-msgid ""
-"Provides a main-blog-only widget that displays a randomly selected image "
-"chosen from all the images used on all blogs that are part of this class."
-msgstr ""
-
-#: ClassBlogs/Admin.php:180
-msgid "Sitewide Comments"
-msgstr ""
-
-#: ClassBlogs/Admin.php:181
-msgid ""
-"Provides a main-blog-only widget that shows recent comments left on all "
-"student blogs, as well as a professor-only admin page showing a table of all "
-"student comments and a student-only admin page showing a table of all "
-"comments that they have left."
-msgstr ""
-
-#: ClassBlogs/Admin.php:183
-msgid "Sitewide Posts"
-msgstr ""
-
-#: ClassBlogs/Admin.php:184
-msgid ""
-"Provides a main-blog-only widget that shows recent posts made on all student "
-"blogs and allows for displaying all recent sitewide posts on the main blog."
-msgstr ""
-
-#: ClassBlogs/Admin.php:186
-msgid "Sitewide Tags"
-msgstr ""
-
-#: ClassBlogs/Admin.php:187
-msgid ""
-"Provides a main-blog-only widget sitewide tag cloud widget, and allows all "
-"usages of a single tag on all student blogs to be viewed."
-msgstr ""
-
-#: ClassBlogs/Admin.php:189 ClassBlogs/Plugins/StudentBlogLinks.php:193
-#: ClassBlogs/Plugins/StudentBlogLinks.php:259
-msgid "Student Blog Links"
-msgstr ""
-
-#: ClassBlogs/Admin.php:190
-msgid ""
-"Provides an admin option that allows you to add links of your choosing as "
-"the first widget on all student blogs."
-msgstr ""
-
-#: ClassBlogs/Admin.php:192 ClassBlogs/Plugins/StudentBlogList.php:30
-msgid "Student Blog List"
-msgstr ""
-
-#: ClassBlogs/Admin.php:193
-msgid ""
-"Provides a main-blog-only widget that shows a list of all student blogs that "
-"are part of this class."
-msgstr ""
-
-#: ClassBlogs/Admin.php:195
-msgid "Student Pseudonym"
-msgstr ""
-
-#: ClassBlogs/Admin.php:196
-msgid ""
-"Adds a page to the Users group on the admin side of any student blog that "
-"allows them to quickly change their username, blog URL and display name."
-msgstr ""
-
-#: ClassBlogs/Admin.php:198
-msgid "Word Counter"
+"every plugin has configurable options, but the ones that do will appear as "
+"links in the Class Blogs admin menu.  If you do not wish to use a certain "
+"component of the class-blogs suite, you can uncheck it in the list below and "
+"click on the \"Update Enabled Plugins\" button."
 msgstr ""
 
 #: ClassBlogs/Admin.php:199
-msgid ""
-"Adds a page for the professor on the admin side to view student word counts "
-"by week, and adds a dashboard widget to each student blog that shows the "
-"word counts for the current and previous weeks.  Word counts are drawn from "
-"any posts or comments that students have made."
+msgid "Enabled Plugins"
 msgstr ""
 
-#: ClassBlogs/Admin.php:201 ClassBlogs/Plugins/YouTubeClassPlaylist.php:33
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1615
-msgid "YouTube Class Playlist"
+#: ClassBlogs/Admin.php:207 ClassBlogs/Plugins/Aggregation/Aggregator.php:729
+#: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:465
+#: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:472
+#: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:479
+#: ClassBlogs/Plugins/DisableComments.php:118
+msgid "Enabled"
 msgstr ""
 
-#: ClassBlogs/Admin.php:202
-msgid ""
-"Allows you to link a YouTube playlist with this blog that is automatically "
-"updated whenever students embed YouTube videos in a post."
+#: ClassBlogs/Admin.php:208
+msgid "Name"
+msgstr ""
+
+#: ClassBlogs/Admin.php:209
+msgid "Description"
+msgstr ""
+
+#: ClassBlogs/Admin.php:243
+msgid "Update Enabled Plugins"
 msgstr ""
 
 #: ClassBlogs/Paginator.php:109
@@ -178,6 +71,14 @@ msgstr[1] ""
 
 #: ClassBlogs/Paginator.php:115
 msgid "Current page"
+msgstr ""
+
+#: ClassBlogs/PluginPage.php:155
+msgid "Plugin Page"
+msgstr ""
+
+#: ClassBlogs/PluginPage.php:156
+msgid "Manages semi-private pages associated with a plugin."
 msgstr ""
 
 #: ClassBlogs/Plugins/Aggregation/Aggregator.php:654
@@ -207,14 +108,6 @@ msgstr ""
 msgid "Aggregation Enabled"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:729
-#: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:465
-#: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:472
-#: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:479
-#: ClassBlogs/Plugins/DisableComments.php:118
-msgid "Enabled"
-msgstr ""
-
 #: ClassBlogs/Plugins/Aggregation/Aggregator.php:731
 #: ClassBlogs/Plugins/DisableComments.php:120
 msgid "Disabled"
@@ -231,6 +124,14 @@ msgstr ""
 
 #: ClassBlogs/Plugins/Aggregation/Aggregator.php:768
 msgid "Update Sitewide Data Options"
+msgstr ""
+
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:781
+msgid "Sitewide Aggregator"
+msgstr ""
+
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:782
+msgid "Handles post, comment and tag data from all blogs on the site."
 msgstr ""
 
 #: ClassBlogs/Plugins/Aggregation/SitewideComments.php:48
@@ -385,6 +286,18 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
+#: ClassBlogs/Plugins/Aggregation/SitewideComments.php:796
+msgid "Sitewide Comments"
+msgstr ""
+
+#: ClassBlogs/Plugins/Aggregation/SitewideComments.php:797
+msgid ""
+"Provides a main-blog-only widget that shows recent comments left on all "
+"student blogs, as well as a professor-only admin page showing a table of all "
+"student comments and a student-only admin page showing a table of all "
+"comments that they have left."
+msgstr ""
+
 #: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:47
 msgid "Recent Sitewide Posts"
 msgstr ""
@@ -487,6 +400,16 @@ msgstr ""
 msgid "Posted"
 msgstr ""
 
+#: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:804
+msgid "Sitewide Posts"
+msgstr ""
+
+#: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:805
+msgid ""
+"Provides a main-blog-only widget that shows recent posts made on all student "
+"blogs and allows for displaying all recent sitewide posts on the main blog."
+msgstr ""
+
 #: ClassBlogs/Plugins/Aggregation/SitewideTags.php:35
 msgid "Sitewide Tag Cloud"
 msgstr ""
@@ -511,6 +434,26 @@ msgstr ""
 
 #: ClassBlogs/Plugins/Aggregation/SitewideTags.php:116
 msgid "Minimum Usage Count"
+msgstr ""
+
+#: ClassBlogs/Plugins/Aggregation/SitewideTags.php:582
+msgid "Sitewide Tags"
+msgstr ""
+
+#: ClassBlogs/Plugins/Aggregation/SitewideTags.php:583
+msgid ""
+"Provides a main-blog-only widget sitewide tag cloud widget, and allows all "
+"usages of a single tag on all student blogs to be viewed."
+msgstr ""
+
+#: ClassBlogs/Plugins/ClassmateComments.php:49
+msgid "Classmate Comments"
+msgstr ""
+
+#: ClassBlogs/Plugins/ClassmateComments.php:50
+msgid ""
+"Automatically approves any comment left by a logged-in student on another "
+"student's blog."
 msgstr ""
 
 #: ClassBlogs/Plugins/DisableComments.php:83
@@ -538,12 +481,47 @@ msgstr ""
 msgid "Update Sitewide Commenting Options"
 msgstr ""
 
+#: ClassBlogs/Plugins/DisableComments.php:136
+msgid "Disable Comments"
+msgstr ""
+
+#: ClassBlogs/Plugins/DisableComments.php:137
+msgid ""
+"Provides an admin option to disable commenting on all blogs used by this "
+"class."
+msgstr ""
+
 #: ClassBlogs/Plugins/GravatarSignup.php:97
 msgid ""
 "To keep track of your posts on the class blog, you should configure a "
 "Gravatar, which is an image of your choosing that will appear next to any "
 "posts or comments that you create.  You can sign up for a Gravatar for free "
 "by visiting the following URL:"
+msgstr ""
+
+#: ClassBlogs/Plugins/GravatarSignup.php:121
+msgid "Gravatar Signup"
+msgstr ""
+
+#: ClassBlogs/Plugins/GravatarSignup.php:122
+msgid ""
+"Adds a link for the user to sign up for a gravatar to each account "
+"activation email sent out."
+msgstr ""
+
+#: ClassBlogs/Plugins/NewUserConfiguration.php:194
+msgid "New User Configuration"
+msgstr ""
+
+#: ClassBlogs/Plugins/NewUserConfiguration.php:195
+msgid ""
+"Creates a first and last name for a newly added user based on their email "
+"address."
+msgstr ""
+
+#: ClassBlogs/Plugins/RandomImage.php:35
+#: ClassBlogs/Plugins/RandomImage.php:267
+msgid "Random Image"
 msgstr ""
 
 #: ClassBlogs/Plugins/RandomImage.php:43
@@ -558,8 +536,20 @@ msgstr ""
 msgid "From the blog %s"
 msgstr ""
 
+#: ClassBlogs/Plugins/RandomImage.php:268
+msgid ""
+"Provides a main-blog-only widget that displays a randomly selected image "
+"chosen from all the images used on all blogs that are part of this class."
+msgstr ""
+
 #: ClassBlogs/Plugins/StudentBlogLinks.php:56
 msgid "Return to Course Blog"
+msgstr ""
+
+#: ClassBlogs/Plugins/StudentBlogLinks.php:193
+#: ClassBlogs/Plugins/StudentBlogLinks.php:259
+#: ClassBlogs/Plugins/StudentBlogLinks.php:326
+msgid "Student Blog Links"
 msgstr ""
 
 #: ClassBlogs/Plugins/StudentBlogLinks.php:253
@@ -610,6 +600,17 @@ msgstr ""
 msgid "Update Student Blog Links Options"
 msgstr ""
 
+#: ClassBlogs/Plugins/StudentBlogLinks.php:327
+msgid ""
+"Provides an admin option that allows you to add links of your choosing as "
+"the first widget on all student blogs."
+msgstr ""
+
+#: ClassBlogs/Plugins/StudentBlogList.php:30
+#: ClassBlogs/Plugins/StudentBlogList.php:365
+msgid "Student Blog List"
+msgstr ""
+
 #: ClassBlogs/Plugins/StudentBlogList.php:38
 msgid "A list of all student blogs on the site"
 msgstr ""
@@ -632,6 +633,12 @@ msgstr ""
 
 #: ClassBlogs/Plugins/StudentBlogList.php:101
 msgid "The student's nickname"
+msgstr ""
+
+#: ClassBlogs/Plugins/StudentBlogList.php:366
+msgid ""
+"Provides a main-blog-only widget that shows a list of all student blogs that "
+"are part of this class."
 msgstr ""
 
 #: ClassBlogs/Plugins/StudentPseudonym.php:38
@@ -724,6 +731,16 @@ msgstr ""
 msgid "Use this Pseudonym"
 msgstr ""
 
+#: ClassBlogs/Plugins/StudentPseudonym.php:266
+msgid "Student Pseudonym"
+msgstr ""
+
+#: ClassBlogs/Plugins/StudentPseudonym.php:267
+msgid ""
+"Adds a page to the Users group on the admin side of any student blog that "
+"allows them to quickly change their username, blog URL and display name."
+msgstr ""
+
 #: ClassBlogs/Plugins/WordCounter.php:82
 msgid "Word Count"
 msgstr ""
@@ -786,6 +803,24 @@ msgstr ""
 
 #: ClassBlogs/Plugins/WordCounter.php:297
 msgid "Update Word-Counter Options"
+msgstr ""
+
+#: ClassBlogs/Plugins/WordCounter.php:480
+msgid "Word Counter"
+msgstr ""
+
+#: ClassBlogs/Plugins/WordCounter.php:481
+msgid ""
+"Adds a page for the professor on the admin side to view student word counts "
+"by week, and adds a dashboard widget to each student blog that shows the "
+"word counts for the current and previous weeks.  Word counts are drawn from "
+"any posts or comments that students have made."
+msgstr ""
+
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:33
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1615
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:2001
+msgid "YouTube Class Playlist"
 msgstr ""
 
 #: ClassBlogs/Plugins/YouTubeClassPlaylist.php:41
@@ -895,4 +930,14 @@ msgstr ""
 
 #: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1754
 msgid "Unlink YouTube Account"
+msgstr ""
+
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:2002
+msgid ""
+"Allows you to link a YouTube playlist with this blog that is automatically "
+"updated whenever students embed YouTube videos in a post."
+msgstr ""
+
+#: ClassBlogs.php:318
+msgid "The base class-blogs plugin that is used to manage plugin registration."
 msgstr ""
