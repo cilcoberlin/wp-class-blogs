@@ -9,25 +9,30 @@
  * @version 0.2
  */
 
-// Require the core class-blogs class and use it to load all required files
-require_once( dirname( __FILE__ ) . '/ClassBlogs.php' );
-ClassBlogs::initialize();
-ClassBlogs::maybe_upgrade();
+// If we're not running in multisite mode or the version of WordPress does not
+// understand multisite mode, abort early
+if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
-/**
- * Performs initialization actions for the entire class-blogs suite.
- *
- * @access private
- * @since 0.1
- */
-function _classblogs_init()
-{
-	// Loads translations for the current locale
-	load_plugin_textdomain(
-		'classblogs',
-		false,
-		basename( dirname( __FILE__ ) ) . '/languages' );
+	// Require the core class-blogs class and use it to load all required files
+	require_once( dirname( __FILE__ ) . '/ClassBlogs.php' );
+	ClassBlogs::initialize();
+	ClassBlogs::maybe_upgrade();
+
+	/**
+	 * Performs initialization actions for the entire class-blogs suite.
+	 *
+	 * @access private
+	 * @since 0.1
+	 */
+	function _classblogs_init()
+	{
+		// Loads translations for the current locale
+		load_plugin_textdomain(
+			'classblogs',
+			false,
+			basename( dirname( __FILE__ ) ) . '/languages' );
+	}
+	add_action( 'init', '_classblogs_init' );
 }
-add_action( 'init', '_classblogs_init' );
 
 ?>
