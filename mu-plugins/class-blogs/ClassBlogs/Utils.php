@@ -383,6 +383,19 @@ class ClassBlogs_Utils
 		}
 		return $url;
 	}
+
+	/**
+	 * Creates a slug from the given text.
+	 *
+	 * @param  string $text the text to slugify
+	 * @return string       a slug containing only ASCII characters
+	 *
+	 * @since 0.3
+	 */
+	public static function slugify( $text )
+	{
+		return sanitize_title_with_dashes( $text );
+	}
 }
 
 ?>
