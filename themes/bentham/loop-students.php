@@ -30,7 +30,20 @@
 			<div class="user-info">
 
 				<?php /* Show the user's name and gravatar, making the name a link to their blog if possible */ ?>
-				<?php echo get_avatar( $post_info->user_id, 54 ); ?>
+				<?php
+
+					// Display the gravatar, optionally making it a link to
+					// the user's blog
+					if ( $user_url ) {
+						printf('<a href="%s" title="%s">',
+							$user_url,
+							__( 'View all posts by this user', 'bentham' ) );
+					}
+					echo get_avatar( $post_info->user_id, 54 );
+					if ( $user_url ) {
+						echo '</a>';
+					}
+				?>
 				<h3 class="user-name">
 					<?php
 

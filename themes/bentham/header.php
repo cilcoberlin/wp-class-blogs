@@ -46,7 +46,9 @@
 
 		<?php /* The optional user-specified image header */ ?>
 		<div id="logo">
-			<img src="<?php header_image(); ?>" width="<?php echo HEADER_IMAGE_WIDTH; ?>" height="<?php echo HEADER_IMAGE_HEIGHT; ?>" alt="<?php _e( 'Logo', 'bentham' ); ?>" />
+			<a href="<?php echo home_url(); ?>">
+				<img src="<?php header_image(); ?>" width="<?php echo HEADER_IMAGE_WIDTH; ?>" height="<?php echo HEADER_IMAGE_HEIGHT; ?>" alt="<?php _e( 'Logo', 'bentham' ); ?>" />
+			</a>
 		</div>
 
 		<?php /* Blog branding section using the name and description */ ?>
