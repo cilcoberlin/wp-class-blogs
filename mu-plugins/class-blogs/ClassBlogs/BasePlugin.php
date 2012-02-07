@@ -27,6 +27,10 @@ ClassBlogs::require_cb_file( 'Utils.php' );
  *         'is_example' => true
  *     );
  *
+ *     protected $default_per_blog_options = array(
+ *         'blog_id' => 0
+ *     );
+ *
  *     protected $admin_media = array(
  *         'css' => array( 'styles.css' ),
  *         'js'  => array( 'script.js' )
@@ -50,10 +54,14 @@ ClassBlogs::require_cb_file( 'Utils.php' );
  *     {
  *         echo "The plugin's unique identifier is: " . $this->get_uid() . "\n";
  *
+ *         switch_to_blog( 1 );
  *         $options = $this->get_options();
  *         assert( count( $options ) === 2 );
  *         assert( $options['counter'] === 0 );
  *         assert( $options['is_example'] === true );
+ *         switch_to_blog( 2 );
+ *         assert( $options['counter'] === 0 );
+ *         switch_to_blog( 1 );
  *         assert( $this->get_option( 'counter' ) === $options['counter'] );
  *         assert( $this->option_is_empty( 'empty' ) === true );
  *
@@ -62,6 +70,20 @@ ClassBlogs::require_cb_file( 'Utils.php' );
  *         $options['counter'] = 2;
  *         $this->update_options( $options );
  *         assert( $this->get_option( 'counter' ) === 2 );
+ *
+ *         switch_to_blog( 2 );
+ *         $options = $this->get_per_blog_options();
+ *         assert( $options['blog_id'] === 0 );
+ *         $this->update_per_blog_option( 'blog_id', 2 );
+ *         $options = $this->get_per_blog_options();
+ *         assert( $options['blog_id'] === 2 );
+ *         switch_to_blog( 3 );
+ *         $options = $this->get_per_blog_options();
+ *         assert( $options['blog_id'] === 0 );
+ *         $options['blog_id'] = 3;
+ *         $this->update_per_blog_options( $options );
+ *         $options = $this->get_per_blog_options();
+ *         assert( $options['blog_id'] === 3 );
  *
  *         switch_to_blog( 1 );
  *         assert( $this->get_cache( 'cached' ) === null );
@@ -105,15 +127,25 @@ abstract class ClassBlogs_BasePlugin
 {
 
 	/**
-	 * The default options for the plugin.
+	 * The default sitewide options for the plugin.
 	 *
+	 * @access protected
 	 * @var array
 	 * @since 0.1
 	 */
 	protected $default_options = array();
 
 	/**
-	 * The internally stored options for the plugin.
+	 * The default options to set for each blog that uses the current plugin.
+	 *
+	 * @access protected
+	 * @var array
+	 * @since 0.3
+	 */
+	protected $default_per_blog_options = array();
+
+	/**
+	 * The internally stored sitewide options for the plugin.
 	 *
 	 * @access private
 	 * @var array
@@ -336,6 +368,72 @@ abstract class ClassBlogs_BasePlugin
 	{
 		update_site_option( $this->get_uid(), $options );
 		$this->_get_options();
+	}
+
+	/**
+	 * Gets the plugin options set for the current blog.
+	 *
+	 * @return array the plugin's options on the current blog
+	 *
+	 * @access protected
+	 * @since 0.3
+	 */
+	protected function get_per_blog_options()
+	{
+		$options = get_option( $this->get_uid() );
+		if ( empty( $options ) ) {
+			$options = $this->default_per_blog_options;
+			$this->update_per_blog_options( $options );
+		}
+		return $options;
+	}
+
+	/**
+	 * Returns the value of the requested plugin option set on the current blog.
+	 *
+	 * @param  string $key the name of the option's value to get
+	 * @return mixed       the value of the option or null
+	 *
+	 * @access protected
+	 * @since 0.3
+	 */
+	protected function get_per_blog_option( $key )
+	{
+		$options = $this->get_per_blog_options();
+		if ( array_key_exists( $key, $options ) ) {
+			return $options[$key];
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Update the value of a single plugin option on the current blog.
+	 *
+	 * @param string $key   the option key to set
+	 * @param mixed  $value the new value of the option
+	 *
+	 * @access protected
+	 * @since 0.3
+	 */
+	protected function update_per_blog_option( $key, $value )
+	{
+		$options = get_option( $this->get_uid() );
+		$options[$key] = $value;
+		$this->update_per_blog_options( $options );
+	}
+
+	/**
+	 * Updates the plugin's options set on the current blog.
+	 *
+	 * @param array $options the new options to set
+	 *
+	 * @access protected
+	 * @since 0.3
+	 */
+	protected function update_per_blog_options( $options )
+	{
+		update_option( $this->get_uid(), $options );
 	}
 
 	/**
