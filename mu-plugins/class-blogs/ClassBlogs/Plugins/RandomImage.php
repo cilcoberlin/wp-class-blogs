@@ -1,5 +1,9 @@
 <?php
 
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'Widget.php' );
+
 /**
  * A widget that displays an chosen randomly from all of the posts on the site.
  *

@@ -1,5 +1,7 @@
 <?php
 
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+
 /**
  * A plugin that automatically approves any comments left by a logged-in user
  * with an account on any blog on the site.

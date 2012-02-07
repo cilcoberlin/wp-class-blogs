@@ -1,5 +1,11 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Admin.php' );
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePosts.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewideComments.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+
 /**
  * A plugin that tracks the number of words produced each week by students.
  *

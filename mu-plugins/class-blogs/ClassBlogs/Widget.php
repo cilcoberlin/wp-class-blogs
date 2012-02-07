@@ -1,5 +1,7 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Utils.php' );
+
 /**
  * A base class for any widgets used in the class-blogs suite.
  *

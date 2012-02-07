@@ -1,5 +1,7 @@
 <?php
 
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+
 /**
  * A plugin that performs post-creation configuration on new user accounts.
  *

@@ -1,5 +1,8 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+
 /**
  * An interface to a private page created by a plugin.
  *

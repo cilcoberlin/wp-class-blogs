@@ -1,19 +1,7 @@
 <?php
 
 // Load the components of the aggregation suite
-$base_dir = dirname( __FILE__ );
-$required_files = array(
-	'Settings',
-	'SitewidePlugin',
-	'Aggregator',
-	'Schemata',
-	'SitewideComments',
-	'SitewidePosts',
-	'SitewideTags'
-);
-foreach ( $required_files as $file ) {
-	require_once( "$base_dir/Aggregation/$file.php" );
-}
+ClassBlogs::load_php_files( dirname( __FILE__ ) . '/Aggregation' );
 
 /**
  * A collection of plugins that deal with aggregated data from all of the blogs

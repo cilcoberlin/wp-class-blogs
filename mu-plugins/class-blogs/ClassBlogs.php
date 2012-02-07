@@ -339,6 +339,8 @@ class ClassBlogs {
 	public static function maybe_upgrade()
 	{
 
+		ClassBlogs::require_cb_file( 'Settings.php' );
+
 		// Check the version stored on the database, setting it if none is found
 		$db_version = get_site_option( 'cb_version' );
 		if ( empty( $db_version ) ){

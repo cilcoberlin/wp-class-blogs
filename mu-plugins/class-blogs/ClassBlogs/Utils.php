@@ -1,5 +1,7 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Settings.php' );
+
 /**
  * Utility functions used by the class blogs plugin suite.
  *

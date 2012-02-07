@@ -1,5 +1,7 @@
 <?
 
+ClassBlogs::require_cb_file( 'Schema.php' );
+
 /**
  * Schemata for tables used by the sitewide plugins.
  *

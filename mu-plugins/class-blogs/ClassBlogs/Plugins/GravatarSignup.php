@@ -1,5 +1,7 @@
 <?php
 
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+
 /**
  * A plugin that adds a link to the bottom of the account-activation email that
  * will allow a user to create a gravatar associated with their email address.

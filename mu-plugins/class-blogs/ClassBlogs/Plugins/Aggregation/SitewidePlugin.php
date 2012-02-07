@@ -1,5 +1,8 @@
 <?php
 
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/Settings.php' );
+
 /**
  * The base class for any plugin that deals with sitewide data.
  *

@@ -1,5 +1,13 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Admin.php' );
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'PluginPage.php' );
+ClassBlogs::require_cb_file( 'Schema.php' );
+ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'Widget.php' );
+
 /**
  * A widget that displays the most recent additions to the YouTube class playlist.
  *

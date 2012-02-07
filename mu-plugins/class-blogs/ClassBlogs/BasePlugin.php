@@ -1,5 +1,8 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+
 /**
  * The base class for any plugin that is part of the class-blogs suite.
  *

@@ -1,5 +1,11 @@
 <?php
 
+ClassBlogs::require_cb_file( 'PluginPage.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
+ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'Widget.php' );
+
 /**
  * A widget that shows a tag cloud built from all of the tags used on the site.
  *

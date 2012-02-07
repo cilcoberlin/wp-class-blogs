@@ -1,5 +1,8 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Admin.php' );
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+
 /**
  * A plugin that can disable commenting on every post across the entire site.
  *

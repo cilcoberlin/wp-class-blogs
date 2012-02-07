@@ -1,5 +1,7 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Utils.php' );
+
 /**
  * A class to handle shared administrative class blogs functions.
  *

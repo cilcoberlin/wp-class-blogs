@@ -1,5 +1,12 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Admin.php' );
+ClassBlogs::require_cb_file( 'Paginator.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
+ClassBlogs::require_cb_file( 'Plugins/StudentBlogList.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'Widget.php' );
+
 /**
  * A widget that shows a list of recent sitewide posts.
  *

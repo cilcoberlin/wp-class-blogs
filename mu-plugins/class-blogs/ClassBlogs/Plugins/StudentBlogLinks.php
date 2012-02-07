@@ -1,5 +1,10 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Admin.php' );
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+
 /**
  * A plugin that allows a professor to make certain links always appear in
  * a widget shown in the first widgetized area of any student blogs.

@@ -1,5 +1,10 @@
 <?php
 
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'Widget.php' );
+
 /**
  * A widget that shows a list of links to every student blog on the site.
  *

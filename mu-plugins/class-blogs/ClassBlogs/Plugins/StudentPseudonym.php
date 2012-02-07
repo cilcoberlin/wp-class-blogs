@@ -1,5 +1,9 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Admin.php' );
+ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+
 /**
  * A plugin that allows a student to blog using a pseudonym.
  *

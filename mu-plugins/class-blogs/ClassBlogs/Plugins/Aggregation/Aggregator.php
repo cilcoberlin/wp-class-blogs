@@ -1,5 +1,12 @@
 <?php
 
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/Schemata.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/Settings.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
+ClassBlogs::require_cb_file( 'Admin.php' );
+ClassBlogs::require_cb_file( 'Schema.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+
 /**
  * An aggregator that keeps track of any posts, comments and tags used on the site.
  *
