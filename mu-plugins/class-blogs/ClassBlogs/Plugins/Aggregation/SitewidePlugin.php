@@ -158,10 +158,9 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * it means that it is a sitewide post, and the blog that it exists on should
 	 * be made active so that the post's permalinks, tags, etc. can be determined.
 	 *
-	 * @access protected
-	 * @since 0.2
+	 * @since 0.3
 	 */
-	protected function use_correct_blog_for_sitewide_post()
+	public function use_correct_blog_for_sitewide_post()
 	{
 		global $post, $wp_rewrite;
 
@@ -189,10 +188,9 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * blog on which the last sitewide post displayed was made, which will result
 	 * in display and URL-resolution issues.
 	 *
-	 * @access protected
-	 * @since 0.2
+	 * @since 0.3
 	 */
-	protected function reset_blog_on_loop_end()
+	public function reset_blog_on_loop_end()
 	{
 		global $wp_query, $wp_rewrite;
 		restore_current_blog();
@@ -239,10 +237,9 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 * function to give a post back its proper ID when needed, such as when
 	 * a theme is in the loop.
 	 *
-	 * @access protected
-	 * @since 0.2
+	 * @since 0.3
 	 */
-	protected function restore_sitewide_post_ids()
+	public function restore_sitewide_post_ids()
 	{
 		// If the conflict-preventing function has yet to be run, abort early
 		if ( empty( $this->_sitewide_post_ids ) ) {
