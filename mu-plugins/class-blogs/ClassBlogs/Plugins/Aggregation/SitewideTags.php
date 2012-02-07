@@ -576,7 +576,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 		return $wpdb->get_results( $wpdb->prepare ( "
 			SELECT p.*, p.cb_sw_blog_id
 			FROM {$this->sw_tables->posts} AS p, {$this->sw_tables->tags} AS t, {$this->sw_tables->tag_usage} AS tu
-			WHERE t.slug = %s AND t.term_id = tu.uses_tag AND tu.post_id = p.ID AND tu.cb_sw_blog_id = p.cb_sw_blog_id
+			WHERE t.slug = %s AND t.term_id = tu.uses_tag AND tu.post_id = p.ID AND tu.blog_id = p.cb_sw_blog_id
 			ORDER BY post_date DESC ",
 			$slug ) );
 	}
