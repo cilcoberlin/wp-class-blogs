@@ -11,12 +11,14 @@
 
 	<!-- Build the class blogs suite -->
 	<target name="build">
+		<echo>Building the class blogs suite...</echo>
 		<antcall target="minify" />
 		<antcall target="make-languages" />
 	</target>
 
 	<!-- Minify JavaScript and CSS files -->
 	<target name="minify" >
+		<echo>Minifying media...</echo>
 		<antcall target="minify-js" />
 		<antcall target="minify-css" />
 	</target>
@@ -35,7 +37,7 @@
 	<macrodef name="minify-extension">
 		<attribute name="extension" />
 		<sequential>
-			<echo>Minifying @{extension}...</echo>
+			<echo>Minifying @{extension} media...</echo>
 			<apply executable="java" parallel="false" dest="${pluginMedia}/prod/@{extension}">
 				<arg line="-jar" />
 				<arg path="${compressor}" />
@@ -54,6 +56,7 @@
 
 	<!-- Creates language files for the class-blogs plugin and Bentham -->
 	<target name="make-languages">
+		<echo>Creating language files...</echo>
 		<make-pot basedir="${plugin}" potname="class-blogs" project="wp-plugin"/>
 		<make-pot basedir="${theme}" potname="bentham" project="wp-theme"/>
 	</target>
