@@ -245,7 +245,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 			global $wpdb;
 			$slug = $_GET[self::_TAG_QUERY_VAR_NAME];
 			$this->_current_tag = array(
-				'name' => $wpdb->get_var( $wpdb->prepare( "SELECT name FROM {$this->sw_tables->tags} WHERE slug = %s", $slug ) ),
+				'name' => $wpdb->get_var( $wpdb->prepare( "SELECT name FROM {$this->sw_tables->tags} WHERE slug = %s", ClassBlogs_Utils::slugify( $slug ) ) ),
 				'slug' => $slug
 			);
 
@@ -571,14 +571,13 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function get_tagged_posts( $slug )
 	{
-
 		global $wpdb;
 		return $wpdb->get_results( $wpdb->prepare ( "
 			SELECT p.*, p.cb_sw_blog_id
 			FROM {$this->sw_tables->posts} AS p, {$this->sw_tables->tags} AS t, {$this->sw_tables->tag_usage} AS tu
 			WHERE t.slug = %s AND t.term_id = tu.uses_tag AND tu.post_id = p.ID AND tu.blog_id = p.cb_sw_blog_id
 			ORDER BY post_date DESC ",
-			$slug ) );
+			ClassBlogs_Utils::slugify( $slug ) ) );
 	}
 }
 

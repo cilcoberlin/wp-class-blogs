@@ -204,7 +204,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 			$tag = $local_tags[$add_slug];
 			$sw_id = $wpdb->get_var( $wpdb->prepare(
 				"SELECT term_id FROM {$this->sw_tables->tags} WHERE slug=%s",
-				$add_slug ) );
+				ClassBlogs_Utils::slugify( $add_slug ) ) );
 
 			// Create a new record for the tag if it doesn't exist or update
 			// the usage count for an existing tag record
@@ -238,7 +238,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 		foreach ( $drop_slugs as $drop_slug ) {
 			$sw_id = $wpdb->get_var( $wpdb->prepare(
 				"SELECT term_id FROM {$this->sw_tables->tags} WHERE slug=%s",
-				$drop_slug ) );
+				ClassBlogs_Utils::slugify( $drop_slug ) ) );
 			$wpdb->query( $wpdb->prepare(
 				"UPDATE {$this->sw_tables->tags} SET count=count-1 WHERE term_id=%d",
 				$sw_id ) );
@@ -620,7 +620,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 					$sw_tag_id = $wpdb->get_var( $wpdb->prepare( "
 						SELECT term_id FROM {$this->sw_tables->tags}
 						WHERE slug = %s",
-						$tag_origins[$blog_id][$tag->term_taxonomy_id] ) );
+						ClassBlogs::slugify( $tag_origins[$blog_id][$tag->term_taxonomy_id] ) ) );
 					$wpdb->query( $wpdb->prepare( "
 						INSERT INTO {$this->sw_tables->tag_usage} (post_id, uses_tag, blog_id)
 						VALUES (%s, %s, %s)",
