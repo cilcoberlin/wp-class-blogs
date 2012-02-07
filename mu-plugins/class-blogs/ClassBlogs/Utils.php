@@ -396,6 +396,31 @@ class ClassBlogs_Utils
 	{
 		return sanitize_title_with_dashes( $text );
 	}
+
+	/**
+	 * Finds the position of the widget with the given base name in the widget list.
+	 *
+	 * The list of widgets should be an array containing the string IDs of any
+	 * registered widgets.  This list is search for both the provided widget
+	 * base name and any multiwidget variants.  If the widget is not found
+	 * in the list, a value of FALSE is returned.
+	 *
+	 * @param  string $name    the base name of the widget to search for
+	 * @param  array  $widgets a list of widget IDs
+	 * @return mixed           the index of the widget or FALSE if not found
+	 *
+	 * @since 0.3
+	 */
+	public function widget_search( $name, $widgets )
+	{
+		$search = '/^' . preg_quote( $name ) . '([_-]\d+)?$/';
+		foreach ( $widgets as $index => $widget ) {
+			if ( preg_match( $search, $widget ) ) {
+				return $index;
+			}
+		}
+		return false;
+	}
 }
 
 ?>
