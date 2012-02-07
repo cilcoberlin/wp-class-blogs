@@ -332,17 +332,15 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_BasePlugin
 		$by_week = array();
 
 		// Get the dates of the oldest and newest posts and comments, which will
-		// be used to influence our date bounds
+		// be used to influence our date bounds.  If no posts or comments are
+		// found, abort and return an empty object.
 		$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
 		$newest_post = $sitewide_posts->get_newest_post();
 		$oldest_post = $sitewide_posts->get_oldest_post();
-		if ( empty( $newest_post ) || empty( $oldest_post ) ) {
-			return $by_week;
-		}
 		$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
 		$newest_comment = $sitewide_comments->get_newest_comment();
 		$oldest_comment = $sitewide_comments->get_oldest_comment();
-		if ( empty( $newest_comment ) || empty( $oldest_comment ) ) {
+		if ( ( empty( $newest_post ) || empty( $oldest_post ) ) && ( empty( $newest_comment ) || empty( $oldest_comment ) ) ) {
 			return $by_week;
 		}
 
