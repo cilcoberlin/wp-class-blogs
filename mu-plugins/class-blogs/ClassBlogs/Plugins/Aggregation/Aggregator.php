@@ -115,13 +115,8 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 			case 'publish':
 				$this->_update_sw_post( $blog_id, $post_id );
 				break;
-			case 'auto-draft':
-			case 'draft':
-			case 'future':
-			case 'pending':
-			case 'private':
+			default:
 				$this->_delete_sw_post( $blog_id, $post_id );
-				break;
 		}
 	}
 
