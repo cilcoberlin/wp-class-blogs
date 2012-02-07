@@ -44,6 +44,18 @@ class ClassBlogs_Utils
 	}
 
 	/**
+	 * Returns true when a user is on the administrative side of a student blog.
+	 *
+	 * @return bool whether or not the current user is adminstering a student log
+	 *
+	 * @since 0.3
+	 */
+	public static function on_student_blog_admin()
+	{
+		return is_admin() && ! self::is_root_blog();
+	}
+
+	/**
 	 * Returns true if the current user is an administrator on the root blog.
 	 *
 	 * @return bool whether the current user is an admin on the root blog

@@ -25,7 +25,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 		parent::__construct();
 
 		// Add the pseudonym page to any student blog's admin side
-		if ( is_admin() && ! ClassBlogs_Utils::is_root_blog() ) {
+		if ( ClassBlogs_Utils::on_student_blog_admin() ) {
 			add_action( 'admin_menu', array( $this, '_add_admin_page' ) );
 		}
 	}
