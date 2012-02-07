@@ -70,30 +70,6 @@ class ClassBlogs_Settings
 	const MEDIA_IMAGES_DIR_NAME = 'images';
 
 	/**
-	 * The ID WordPress uses for inactive widgets in a widget list.
-	 *
-	 * @var string
-	 * @since 0.1
-	 */
-	const INACTIVE_WIDGETS_ID = 'wp_inactive_widgets';
-
-	/**
-	 * The ID WordPress uses for the meta widget.
-	 *
-	 * @var string
-	 * @since 0.1
-	 */
-	const META_WIDGET_ID = 'meta-2';
-
-	/**
-	 * The ID WordPress uses for the search widget.
-	 *
-	 * @var string
-	 * @since 0.1
-	 */
-	const SEARCH_WIDGET_ID = 'search-2';
-
-	/**
 	 * The prefix used for all tables created by a class blogs plugin.
 	 *
 	 * @var string

@@ -20,7 +20,6 @@ ClassBlogs::require_cb_file( 'Utils.php' );
  */
 class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 {
-
 	/**
 	 * The default options for the plugin.
 	 *
@@ -43,6 +42,37 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	protected $admin_media = array(
 		'js' => array( 'student-blog-links.js' )
 	);
+
+	/**
+	 * A list of regex searches for unused sidebar IDs.
+	 *
+	 * This includes sidebar IDs used to collect inactive or orphaned widgets,
+	 * which should not be viewed as actual widgetized areas.
+	 *
+	 * @access private
+	 * @var array
+	 * @since 0.3
+	 */
+	private $_INACTIVE_SIDEBARS = array(
+		'/^wp_inactive_widgets$/',
+		'/^orphaned_widgets(_\d+)?$/'
+	);
+
+	/**
+	 * The base ID WordPress uses for the meta widget.
+	 *
+	 * @var string
+	 * @since 0.3
+	 */
+	const _META_WIDGET_BASE_ID = 'meta';
+
+	/**
+	 * The base ID WordPress uses for the search widget.
+	 *
+	 * @var string
+	 * @since 0.3
+	 */
+	const _SEARCH_WIDGET_BASE_ID = 'search';
 
 	/**
 	 * Registers plugin hooks and sets default options.
@@ -92,19 +122,6 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	}
 
 	/**
-	 * Returns the default widget list used when a widgetized area is empty.
-	 *
-	 * @return array a list of the default widgets
-	 *
-	 * @access private
-	 * @since 0.2
-	 */
-	private function _get_default_widget_list()
-	{
-		return array( $this->get_uid(), ClassBlogs_Settings::META_WIDGET_ID );
-	}
-
-	/**
 	 * Adds the link-list widget to those registered by the user at display time.
 	 *
 	 * This allows the link-list widget to play well with WordPress, being able
@@ -118,42 +135,46 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	 */
 	public function _add_widget( $areas )
 	{
-
-		// Remove a possible inactive widgets key for purposes of testing
-		// whether or not any widgetized areas have been defined
+		// Remove inactive sidebars from the list of widgetized areas
+		$inactive_keys = array();
+		foreach ( $areas as $area => $contents ) {
+			foreach ( $this->_INACTIVE_SIDEBARS as $search ) {
+				if ( preg_match( $search, $area ) ) {
+					$inactive_keys[] = $area;
+				}
+			}
+		}
 		$active_areas = $areas;
-		if ( array_key_exists( ClassBlogs_Settings::INACTIVE_WIDGETS_ID, $active_areas ) ) {
-			unset( $active_areas[ClassBlogs_Settings::INACTIVE_WIDGETS_ID] );
+		foreach ( $inactive_keys as $inactive ) {
+			unset( $active_areas[$inactive] );
 		}
 
-		// If no areas have been declared, add a single area to the list
-		// containing the meta widget and the link list
-		if ( empty( $active_areas ) ) {
-			$areas[] = $this->_get_default_widget_list();
-		}
-
-		// If there is one or more active areas, try to add our widget to
+		// If there is at least one active widgetized area, try to add our widget to
 		// the first one that declares a meta widget, and, failing that, add
 		// it to the first area in the list
-		else {
+		if ( !empty( $active_areas ) ) {
 			$add_to_area = null;
 			foreach ( $active_areas as $area => $widgets ) {
 				if ( ! $add_to_area ) {
 					$add_to_area = $area;
 				}
-				if ( in_array( ClassBlogs_Settings::META_WIDGET_ID, $widgets ) ) {
+				if ( ClassBlogs_Utils::widget_search( self::_META_WIDGET_BASE_ID, $widgets ) !== false ) {
 					$add_to_area = $area;
 					break;
 				}
 			}
 
-			// If the given area starts with a search widget, place the
-			// link list widget below that.  Otherwise, make it the first wdiget
-			$search_index = array_search( ClassBlogs_Settings::SEARCH_WIDGET_ID, $areas[$add_to_area] );
-			if ( $search_index === 0 ) {
-				array_splice( $areas[$add_to_area], 1, 0, $this->get_uid() );
-			} else {
-				array_unshift( $areas[$add_to_area], $this->get_uid() );
+			// If the given area does not yet contain an instance of the blog-links
+			// widget, examine its contents.  If itstarts with a search widget,
+			// place the link list widget below that.  Otherwise, make it the
+			// first widget in the list.
+			if ( ClassBlogs_Utils::widget_search( $this->get_uid(), $areas[$add_to_area] ) === false ) {
+				$search_index = ClassBlogs_Utils::widget_search( self::_SEARCH_WIDGET_BASE_ID, $areas[$add_to_area] );
+				if ( $search_index === 0 ) {
+					array_splice( $areas[$add_to_area], 1, 0, $this->get_uid() );
+				} else {
+					array_unshift( $areas[$add_to_area], $this->get_uid() );
+				}
 			}
 		}
 
