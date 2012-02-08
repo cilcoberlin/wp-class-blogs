@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/class-blogs\n"
-"POT-Creation-Date: 2012-02-07 18:35:03+00:00\n"
+"POT-Creation-Date: 2012-02-08 02:03:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Enabled Plugins"
 msgstr ""
 
-#: ClassBlogs/Admin.php:209 ClassBlogs/Plugins/Aggregation/Aggregator.php:731
+#: ClassBlogs/Admin.php:209 ClassBlogs/Plugins/Aggregation/Aggregator.php:631
 #: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:472
 #: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:479
 #: ClassBlogs/Plugins/Aggregation/SitewidePosts.php:486
@@ -81,56 +81,56 @@ msgstr ""
 msgid "Manages semi-private pages associated with a plugin."
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:656
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:715
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:556
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:615
 msgid "Sitewide Data Options"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:700
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:600
 msgid "The sitewide data has been refreshed."
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:708
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:608
 msgid "Your options have been updated."
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:718
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:618
 msgid ""
 "This page allows you to manage the options for collecting sitewide data on "
 "posts, comments and tags from all the blogs on this site."
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:723
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:623
 msgid "Data Sources"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:728
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:628
 msgid "Aggregation Enabled"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:733
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:633
 #: ClassBlogs/Plugins/DisableComments.php:123
 msgid "Disabled"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:738
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:638
 msgid "Excluded Blogs"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:762
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:771
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:662
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:671
 msgid "Refresh Sitewide Data"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:770
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:670
 msgid "Update Sitewide Data Options"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:783
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:683
 msgid "Sitewide Aggregator"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:784
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:684
 msgid "Handles post, comment and tag data from all blogs on the site."
 msgstr ""
 
