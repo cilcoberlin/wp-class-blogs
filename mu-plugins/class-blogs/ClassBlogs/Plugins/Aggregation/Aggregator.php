@@ -86,6 +86,27 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	}
 
 	/**
+	 * Checks whether the content published on the given date is part of the
+	 * initial data created for a new user.
+	 *
+	 * This compares the time at which the user's account was created and the
+	 * time at which the content was published.  If they are within ten seconds
+	 * of each other, the content is assumed to be initial.
+	 *
+	 * @param  string $datetime a MySQL datetime string of a publication date
+	 * @param  int    $user_id  the ID of a user
+	 * @return bool             whether the content is default initial content
+	 *
+	 */
+	private function _content_is_initial_for_user( $datetime, $user_id )
+	{
+		$user_created = get_userdata( $user_id )->user_registered;
+		$a = new DateTime( $user_created );
+		$b = new DateTime( $datetime );
+		return ( $b->format('U') - $a->format('U') <= 10 );
+	}
+
+	/**
 	 * Monitors updates to all post tables and updates the sitewide posts table
 	 * based on the status of the post.
 	 *
@@ -102,8 +123,9 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	{
 		global $blog_id;
 
-		// Abort early if the post is a revision
-		if ( wp_is_post_revision( $post_id ) ) {
+		// Abort early if the post is a revision or an initial default post
+		$post = get_post( $post_id );
+		if ( wp_is_post_revision( $post_id ) || $this->_content_is_initial_for_user( $post->post_date, $post->post_author ) ) {
 			return;
 		}
 
@@ -145,6 +167,13 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 		// the post's ID, if no status information was passed
 		if ( ! $status ) {
 			$status = wp_get_comment_status( $comment_id );
+		}
+
+		// If the comment is an initial comment, don't do anything
+		$comment = get_comment( $comment_id );
+		$for_post = get_post( $comment->comment_post_ID );
+		if ( $this->_content_is_initial_for_user( $comment->comment_date, $for_post->post_author ) ) {
+			return;
 		}
 
 		// If the comment is being made public, update its sitewide record,
@@ -432,7 +461,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	}
 
 	/**
-	 * Returns a list of all blog IDs that whose data can be aggregated.
+	 * Returns a list of the IDs of all blogs whose data can be aggregated.
 	 *
 	 * This takes an initial list of all blog IDs on the site and then removes
 	 * any IDs that appear in the exclusion list.
@@ -475,67 +504,6 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	}
 
 	/**
-	 * Copies data from the source table to the destination table.
-	 *
-	 * This is used to copy WordPress tables that have almost identical sitewide
-	 * tables created to store their contents, such as posts or comments.  This
-	 * can take an optional WHERE clause via $where, which will be added to
-	 * the end of the SQL statement.
-	 *
-	 * If a WHERE clause is provided in $where, this function checks for any
-	 * additional parameters passed and uses those to fill in any placeholder
-	 * values in the WHERE clause.
-	 *
-	 * @param  int    $blog_id     the ID of the blog using the source table
-	 * @param  string $source      the name of the source table
-	 * @param  string $destination the name of the destination table
-	 * @param  string $where       an optional WHERE clause to limit the data
-	 * @param  mixed  $v,...       multiple optional params used for string
-	 *                             substitution in the WHERE clause
-	 * @return bool                whether or not the copy succeeded
-	 *
-	 * @access private
-	 * @since 0.2
-	 */
-	private function _copy_table( $blog_id, $source, $destination, $where = "" )
-	{
-		global $wpdb;
-
-		// Build a list of fields to copy over, adding in the from-blog column
-		$fields = $this->_get_sw_shadow_fields( $source, $destination );
-		$insert_fields = $fields;
-		$insert_fields[] = 'cb_sw_blog_id';
-		$select_fields = $fields;
-		$select_fields[] = $blog_id;
-
-		// Assemble the base copy statement
-		if ( $where ) {
-			$where = 'WHERE ' . $where;
-		}
-		$prep_args = array(
-			sprintf( "INSERT INTO %s (%s) SELECT %s FROM %s %s",
-				$destination,
-				implode( ", ", $insert_fields ),
-				implode( ", ", $select_fields ),
-				$source,
-				$where ) );
-
-		// Add in the WHERE-clause variables if a WHERE statement was passed
-		if ( $where ) {
-			$num_args = func_num_args();
-			if ( $num_args > 4 ) {
-				$args = func_get_args();
-				for ( $i = 4; $i < $num_args; $i++ ) {
-					$prep_args[] = $args[$i];
-				}
-			}
-		}
-
-		// Perform the actual copying of data
-		$wpdb->query( call_user_func_array( array( $wpdb, 'prepare' ), $prep_args ) );
-	}
-
-	/**
 	 * Aggregates all sitewide posts, comments and tags into separate tables.
 	 *
 	 * @access private
@@ -544,88 +512,20 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	private function _sync_tables()
 	{
 		global $wpdb;
-		$tag_counts = $tag_usage = $tag_origins = array();
-		$blogs = $this->_get_usable_blog_ids();
 
 		// Drop all data before proceeding
 		$this->_clear_tables();
 		$this->clear_site_cache();
 
-		// Export the post, comment and tag data for each blog to our tables
-		foreach ( $blogs as $blog_id ) {
-
+		// Export the post and comment data for each blog to our tables, which
+		// will also update the tag-usage data
+		foreach ( $this->_get_usable_blog_ids() as $blog_id ) {
 			switch_to_blog( $blog_id );
-
-			// Populate the posts table, ignoring any default posts
-			$this->_copy_table(
-				$blog_id,
-				$wpdb->posts,
-				$this->sw_tables->posts,
-				"post_status = 'publish' AND post_type = 'post' AND post_title <> %s",
-				ClassBlogs_Plugins_Aggregation_Settings::FIRST_POST_TITLE );
-
-			// Populate the comments table, ignoring any default comments
-			$this->_copy_table(
-				$blog_id,
-				$wpdb->comments,
-				$this->sw_tables->comments,
-				"comment_author <> %s",
-				ClassBlogs_Plugins_Aggregation_Settings::FIRST_COMMENT_AUTHOR );
-
-			// Add all tags used by the blog to a master list
-			$used_tags = $wpdb->get_results( $wpdb->prepare( "
-				SELECT t.name, t.slug, tt.count, tt.term_taxonomy_id
-				FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt
-				WHERE t.term_id = tt.term_id AND tt.taxonomy = %s",
-				ClassBlogs_Plugins_Aggregation_Settings::TAG_TAXONOMY_NAME ) );
-			foreach ( $used_tags as $tag ) {
-
-				// Keep track of the originating blog for the tag
-				$tag_origins[$blog_id][$tag->term_taxonomy_id] = $tag->slug;
-
-				// Update the tag's usage count
-				if ( ! isset ( $tag_usage[$tag->slug] ) ) {
-					$tag_usage[$tag->slug] = array(
-						'count' => 0,
-						'name'  => $tag->name );
-				}
-				$tag_usage[$tag->slug]['count'] += $tag->count;
+			foreach ( $wpdb->get_results( "SELECT ID FROM $wpdb->posts" ) as $post ) {
+				$this->_track_single_post( $post->ID );
 			}
-
-			restore_current_blog();
-		}
-
-		//  Add the master list of tags to the sitewide table
-		foreach ( $tag_usage as $slug => $meta ) {
-			if ( $meta['count'] > 0 )
-				$wpdb->query( $wpdb->prepare( "
-					INSERT INTO {$this->sw_tables->tags} (name, slug, count)
-					VALUES (%s, %s, %s)",
-					$meta['name'], $slug, $meta['count'] ) );
-		}
-
-		// Update the records of tag usage in the sitewide table
-		foreach ( $blogs as $blog_id) {
-
-			// Ignore the current blog if it has no tags registered
-			if ( ! array_key_exists( $blog_id, $tag_origins ) ) {
-				continue;
-			}
-
-			// Add any tag usage records on the current blog to the sitewide
-			// master list, linking the tag with its ID in the sitewide table
-			switch_to_blog( $blog_id );
-			foreach ( $wpdb->get_results( "SELECT * FROM $wpdb->term_relationships" ) as $tag ) {
-				if ( in_array( $tag->term_taxonomy_id, array_keys( $tag_origins[$blog_id] ) ) ) {
-					$sw_tag_id = $wpdb->get_var( $wpdb->prepare( "
-						SELECT term_id FROM {$this->sw_tables->tags}
-						WHERE slug = %s",
-						ClassBlogs::slugify( $tag_origins[$blog_id][$tag->term_taxonomy_id] ) ) );
-					$wpdb->query( $wpdb->prepare( "
-						INSERT INTO {$this->sw_tables->tag_usage} (post_id, uses_tag, blog_id)
-						VALUES (%s, %s, %s)",
-						$tag->object_id, $sw_tag_id, $blog_id ) );
-				}
+			foreach ( $wpdb->get_results( "SELECT comment_ID FROM $wpdb->comments" ) as $comment ) {
+				$this->_track_single_comment( $comment->comment_ID );
 			}
 			restore_current_blog();
 		}

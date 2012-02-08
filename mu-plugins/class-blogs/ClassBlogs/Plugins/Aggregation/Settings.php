@@ -24,23 +24,7 @@ class ClassBlogs_Plugins_Aggregation_Settings
 	const _TABLE_PREFIX = 'cb_sw_';
 
 	/**
-	 * The title of the default first post present on any newly created blog.
-	 *
-	 * @var string
-	 * @since 0.1
-	 */
-	const FIRST_POST_TITLE = 'Hello world!';
-
-	/**
-	 * The name of the author of the first default comment on any new blog.
-	 *
-	 * @var string
-	 * @since 0.1
-	 */
-	const FIRST_COMMENT_AUTHOR = 'Mr WordPress';
-
-	/**
-	 * The name used to identify a tag in the WordPress's taxonomy.
+	 * The name used to identify a tag in WordPress's taxonomy.
 	 *
 	 * @var string
 	 * @since 0.1
