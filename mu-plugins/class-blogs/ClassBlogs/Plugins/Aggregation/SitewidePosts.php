@@ -256,9 +256,18 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 */
 	public function __construct()
 	{
-
 		parent::__construct();
+		add_action( 'plugins_loaded', array( $this, '_register_hooks' ) );
+	}
 
+	/**
+	 * Registers the hooks to display sitewide posts.
+	 *
+	 * @access private
+	 * @since 0.3
+	 */
+	public function _register_hooks()
+	{
 		// Enable the admin menu and the widget if on the admin side,
 		// and enable the root blog hooks if posts are to be shown on the root blog
 		if ( ! is_admin() && $this->get_option( 'root_show_posts' ) ) {

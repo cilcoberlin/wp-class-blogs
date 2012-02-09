@@ -23,8 +23,17 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 	public function __construct()
 	{
 		parent::__construct();
+		add_action( 'plugins_loaded', array( $this, '_register_hooks' ) );
+	}
 
-		// Add the pseudonym page to any student blog's admin side
+	/**
+	 * Register hooks to show the admin page when on a student blog.
+	 *
+	 * @access private
+	 * @since 0.3
+	 */
+	public function _register_hooks()
+	{
 		if ( ClassBlogs_Utils::on_student_blog_admin() ) {
 			add_action( 'admin_menu', array( $this, '_add_admin_page' ) );
 		}

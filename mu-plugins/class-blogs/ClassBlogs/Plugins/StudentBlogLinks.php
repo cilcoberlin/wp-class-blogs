@@ -75,13 +75,22 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	const _SEARCH_WIDGET_BASE_ID = 'search';
 
 	/**
-	 * Registers plugin hooks and sets default options.
+	 * Registers plugin hooks once all plugins have loaded.
 	 */
 	function __construct()
 	{
-
 		parent::__construct();
+		add_action( 'plugins_loaded', array( $this, '_register_hooks' ) );
+	}
 
+	/**
+	 * Registers hooks and sets default options for the plugin.
+	 *
+	 * @access private
+	 * @since 0.3
+	 */
+	public function _register_hooks()
+	{
 		// Update the default links options to be a single link pointing back
 		// to the main class blog
 		switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );

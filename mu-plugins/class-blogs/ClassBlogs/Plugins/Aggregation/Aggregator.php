@@ -55,7 +55,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 
 		// If aggregation is enabled, initialize the aggregator hooks
 		if ( $this->get_option( 'aggregation_enabled' ) ) {
-			$this->_initialize_aggregation_hooks();
+			add_action( 'init', array( $this, '_initialize_aggregation_hooks' ) );
 		}
 	}
 
@@ -67,9 +67,9 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	 * allows us to catch changes in the sitewide tags as well.
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 0.3
 	 */
-	private function _initialize_aggregation_hooks() {
+	public function _initialize_aggregation_hooks() {
 
 		// If the tables have yet to be created, do so now
 		if ( ! $this->get_option( 'tables_created' ) ) {
