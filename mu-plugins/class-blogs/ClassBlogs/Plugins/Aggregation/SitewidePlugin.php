@@ -249,7 +249,9 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 		// Give each sitewide post back its proper ID
 		global $wp_query;
 		for ( $i=0; $i < count( $wp_query->posts ); $i++ ) {
-			$wp_query->posts[$i]->ID = $this->_sitewide_post_ids[$i];
+			if ( array_key_exists( $i, $this->_sitewide_post_ids ) ) {
+				$wp_query->posts[$i]->ID = $this->_sitewide_post_ids[$i];
+			}
 		}
 	}
 }
