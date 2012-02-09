@@ -543,7 +543,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	public function get_tags_for_tag_cloud( $threshold )
 	{
 		// Use cached values if possible
-		$cached = $this->get_site_cache( 'cloud' );
+		$key = 'cloud_' . $threshold;
+		$cached = $this->get_site_cache( $key );
 		if ( $cached !== null ) {
 			return $cached;
 		}
@@ -557,7 +558,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 					'url'   => $this->get_tag_url( $slug ) );
 			}
 		}
-		$this->set_site_cache( 'cloud', $tags );
+		$this->set_site_cache( $key, $tags );
 		return $tags;
 	}
 

@@ -68,12 +68,19 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
 
 	/**
 	 * Updates the student-blogs widget.
+	 *
+	 * @uses ClassBlogs_Plugins_StudentBlogList to clear the blog cache
 	 */
 	public function update( $new, $old )
 	{
+		// Update the widget options
 		$instance = $old;
 		$instance['display'] = ClassBlogs_Utils::sanitize_user_input( $new['display'] );
 		$instance['title'] = ClassBlogs_Utils::sanitize_user_input( $new['title'] );
+
+		// Clear the cached blog list and return the new instance
+		$plugin = ClassBlogs::get_plugin( 'student_blogs' );
+		$plugin->clear_blog_cache();
 		return $instance;
 	}
 
@@ -148,28 +155,11 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 	private $_blog_urls;
 
 	/**
-	 * Actions that should result in the blog list cache being cleared.
-	 *
-	 * @access private
-	 * @var array
-	 * @since 0.1
-	 */
-	private static $_CLEAR_CACHE_ACTIONS = array(
-		'profile_update',
-		'update_option_blogname'
-	);
-
-	/**
 	 * Registers WordPress hooks to enable the student blog list widget.
 	 */
 	function __construct() {
 		parent::__construct();
 		add_action( 'widgets_init',  array( $this, '_enable_widget' ) );
-
-		// Register a cache-clearning listener for any actions that break the cache
-		foreach ( self::$_CLEAR_CACHE_ACTIONS as $action ) {
-			add_action( $action, array( $this, '_clear_blog_cache' ) );
-		}
 	}
 
 	/**
@@ -179,10 +169,9 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 	 * display name of a blog, such as the user updating their personal information
 	 * or changing their blog's name.
 	 *
-	 * @access private
-	 * @since 0.1
+	 * @since 0.3
 	 */
-	public function _clear_blog_cache( $one = null, $two = null )
+	public function clear_blog_cache( $one = null, $two = null )
 	{
 		$this->clear_site_cache( 'student_blogs' );
 	}

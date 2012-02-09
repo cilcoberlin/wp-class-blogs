@@ -103,15 +103,22 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Wid
 
 	/**
 	 * Updates the sitewide posts widget.
+	 *
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewidePosts to clear the cached widget
 	 */
 	public function update( $new, $old )
 	{
+		// Update the widget options
 		$instance = $old;
 		$instance['max_posts']          = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_posts'] ) );
 		$instance['max_posts_per_blog'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_posts_per_blog'] ) );
 		$instance['meta_format']        = ClassBlogs_Utils::sanitize_user_input( $new['meta_format'] );
 		$instance['show_excerpt']       = ClassBlogs_Utils::checkbox_as_bool( $new, 'show_excerpt' );
 		$instance['title']              = ClassBlogs_Utils::sanitize_user_input( $new['title'] );
+
+		// Clear the cached widget
+		$plugin = ClassBlogs::get_plugin( 'sitewide_posts' );
+		$plugin->clear_cached_widget();
 		return $instance;
 	}
 
@@ -697,6 +704,16 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$this->sw_tables->posts,
 			'post_author', $user_id,
 			'post_date', $start_dt, $end_dt );
+	}
+
+	/**
+	 * Clears the cached contents of the sidebar widget.
+	 *
+	 * @since 0.3
+	 */
+	public function clear_cached_widget()
+	{
+		$this->clear_site_cache( 'widget' );
 	}
 
 	/**

@@ -145,6 +145,24 @@ abstract class ClassBlogs_BasePlugin
 	protected $default_per_blog_options = array();
 
 	/**
+	 * The admin CSS or JavaScript used by the plugin.
+	 *
+	 * A plugin can add admin media by providing values for the `css` or `js`
+	 * keys of the array, which should be assigned to arrays of strings, where
+	 * each string is the name of the media file.  CSS files will be interpreted
+	 * as relative to the CSS media directory (`media/css`) and JavaScript files
+	 * will be viewed as relative to the JavaScript media directory (`media/js`).
+	 *
+	 * @access protected
+	 * @var array
+	 * @since 0.2
+	 */
+	protected $admin_media = array(
+		'css' => array(),
+		'js'  => array()
+	);
+
+	/**
 	 * The internally stored sitewide options for the plugin.
 	 *
 	 * @access private
@@ -174,21 +192,25 @@ abstract class ClassBlogs_BasePlugin
 	const _SW_CACHE_TRACKER_OPTION = 'cb_sw_cache_keys';
 
 	/**
-	 * The admin CSS or JavaScript used by the plugin.
+	 * A flag for indicating whether the sitewide-cache-clearing listeners
+	 * have been enabled.
 	 *
-	 * A plugin can add admin media by providing values for the `css` or `js`
-	 * keys of the array, which should be assigned to arrays of strings, where
-	 * each string is the name of the media file.  CSS files will be interpreted
-	 * as relative to the CSS media directory (`media/css`) and JavaScript files
-	 * will be viewed as relative to the JavaScript media directory (`media/js`).
-	 *
-	 * @access protected
-	 * @var array
-	 * @since 0.2
+	 * @access private
+	 * @var bool
+	 * @since 0.3
 	 */
-	protected $admin_media = array(
-		'css' => array(),
-		'js'  => array()
+	private static $_site_cache_listeners_enabled = false;
+
+	/**
+	 * Actions that should result in the sitewide cache being cleared.
+	 *
+	 * @access private
+	 * @var array
+	 * @since 0.3
+	 */
+	private static $_CLEAR_SITE_CACHE_ACTIONS = array(
+		'profile_update',
+		'update_option_blogname'
 	);
 
 	/**
@@ -197,12 +219,48 @@ abstract class ClassBlogs_BasePlugin
 	 */
 	public function __construct()
 	{
+		// Configure cache-clearing listeners if they have yet to be loaded
+		if ( ! self::$_site_cache_listeners_enabled ) {
+			$this->_enable_site_cache_listeners();
+			self::$_site_cache_listeners_enabled = true;
+		}
+
 		// Provide plugins with the option of enabling an admin page
 		if ( is_admin() ) {
     		add_action( 'admin_footer', array( $this, '_add_admin_js' ) );
     		add_action( 'admin_head',   array( $this, '_add_admin_css' ) );
     		add_action( 'admin_menu',   array( $this, '_maybe_enable_admin_page' ) );
     	}
+	}
+
+	/**
+	 * Register sitewide-cache-clearing listeners.
+	 *
+	 * This registers listeners on any events that have been specified as
+	 * requiring a clearing of the sitewide cache, such as changing the name
+	 * of a blog or updating a user's display name.
+	 *
+	 * @access private
+	 * @since 0.3
+	 */
+	private function _enable_site_cache_listeners()
+	{
+		foreach ( self::$_CLEAR_SITE_CACHE_ACTIONS as $action ) {
+			add_action( $action, array( $this, '_clear_site_cache_on_action' ) );
+		}
+	}
+
+	/**
+	 * Clears the sitewide cache.
+	 *
+	 * This is registered as the handler for any sitewide-cache-clearing actions.
+	 *
+	 * @access private
+	 * @since 0.3
+	 */
+	public function _clear_site_cache_on_action( $one=null, $two=null, $three=null )
+	{
+		$this->clear_site_cache();
 	}
 
 	/**

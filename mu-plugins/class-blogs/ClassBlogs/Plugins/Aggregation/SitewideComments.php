@@ -108,15 +108,22 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 
 	/**
 	 * Updates the sitewide comments widget.
+	 *
+	 * @uses ClassBlogs_Plugins_Aggregation_SitewideComments to clear the cached widget
 	 */
 	public function update( $new, $old )
 	{
+		// Update the widget options
 		$instance = $old;
 		$instance['max_comments']          = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_comments'] ) );
 		$instance['max_comments_per_blog'] = absint( ClassBlogs_Utils::sanitize_user_input( $new['max_comments_per_blog'] ) );
 		$instance['meta_format']           = ClassBlogs_Utils::sanitize_user_input( $new['meta_format'] );
 		$instance['show_excerpt']          = ClassBlogs_Utils::checkbox_as_bool( $new, 'show_excerpt' );
 		$instance['title']                 = ClassBlogs_Utils::sanitize_user_input( $new['title'] );
+
+		// Clear the cached sidebar widget
+		$plugin = ClassBlogs::get_plugin( 'sitewide_comments' );
+		$plugin->clear_cached_widget();
 		return $instance;
 	}
 
@@ -725,6 +732,16 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 
 		$this->set_site_cache( $cache_key, $comments );
 		return $comments;
+	}
+
+	/**
+	 * Clears the cached contents of the sidebar widget.
+	 *
+	 * @since 0.3
+	 */
+	public function clear_cached_widget()
+	{
+		$this->clear_site_cache( 'widget' );
 	}
 
 	/**
