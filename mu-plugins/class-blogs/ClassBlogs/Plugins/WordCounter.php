@@ -346,8 +346,12 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_BasePlugin
 
 		// Move the start date back until we hit a Monday, and move the end date
 		// forward until we hit another Monday
-		$start_date = new DateTime( min( $oldest_post->post_date, $newest_comment->comment_date ) );
-		$end_date = new DateTime( max( $newest_post->post_date, $newest_comment->comment_date ) );
+		$old_post = ( $oldest_post ) ? $oldest_post->post_date : "";
+		$old_comment = ( $oldest_comment ) ? $oldest_comment->comment_date : "";
+		$start_date = new DateTime( min( $old_post, $old_comment ) );
+		$new_post = ( $newest_post ) ? $newest_post->post_date : "";
+		$new_comment = ( $newest_comment ) ? $newest_comment->comment_date : "";
+		$end_date = new DateTime( max( $new_post, $new_comment ) );
 		$start_date = $this->_find_weekday_near_date( self::_MONDAY, $start_date, '-1 day' );
 		$end_date = $this->_find_weekday_near_date( self::_MONDAY, $end_date, '+1 day' );
 		if ( $start_date > $end_date ) {
