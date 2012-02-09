@@ -114,7 +114,7 @@ class ClassBlogs {
 	 *
 	 * @since 0.3
 	 */
-	private static function load_php_files( $dir )
+	public static function load_php_files( $dir )
 	{
 		if ( $handle = opendir( $dir ) ) {
 			while ( false !== ( $entry = readdir( $handle ) ) ) {
