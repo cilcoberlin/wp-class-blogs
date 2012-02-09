@@ -125,7 +125,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 
 		// Abort early if the post is a revision or an initial default post
 		$post = get_post( $post_id );
-		if ( wp_is_post_revision( $post_id ) || $this->_content_is_initial_for_user( $post->post_date, $post->post_author ) ) {
+		if ( wp_is_post_revision( $post_id ) || $this->_content_is_initial_for_user( $post->post_date_gmt, $post->post_author ) ) {
 			return;
 		}
 
@@ -172,7 +172,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 		// If the comment is an initial comment, don't do anything
 		$comment = get_comment( $comment_id );
 		$for_post = get_post( $comment->comment_post_ID );
-		if ( $this->_content_is_initial_for_user( $comment->comment_date, $for_post->post_author ) ) {
+		if ( $this->_content_is_initial_for_user( $comment->comment_date_gmt, $for_post->post_author ) ) {
 			return;
 		}
 
