@@ -13,8 +13,13 @@
 // understand multisite mode, abort early
 if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
+	// Set the base path to the class blogs directory
+	if ( ! defined( 'CLASS_BLOGS_DIR' ) ) {
+		define( 'CLASS_BLOGS_DIR', dirname( __FILE__ ) );
+	}
+
 	// Require the core class-blogs class and use it to load all required files
-	require_once( dirname( __FILE__ ) . '/ClassBlogs.php' );
+	require_once( CLASS_BLOGS_DIR . '/ClassBlogs.php' );
 	ClassBlogs::initialize();
 	ClassBlogs::maybe_upgrade();
 

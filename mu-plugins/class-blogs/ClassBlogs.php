@@ -134,17 +134,14 @@ class ClassBlogs {
 	 */
 	public static function initialize()
 	{
-		$base_dir = dirname( __FILE__ );
-		self::load_php_files( $base_dir . '/ClassBlogs' );
-		self::load_php_files( $base_dir . '/ClassBlogs/Plugins' );
+		self::load_php_files( CLASS_BLOGS_DIR . '/ClassBlogs' );
+		self::load_php_files( CLASS_BLOGS_DIR . '/ClassBlogs/Plugins' );
 	}
 
 	/**
 	 * Requires a file that is part of the class-blogs suite.
 	 *
-	 * The file path can be either an absolute path, which will be required as-is,
-	 * or a relative path, which will be interpreted asbeing relative to the
-	 * base ClassBlogs directory.
+	 * The file path must be path relative to the base ClassBlogs directory.
 	 *
 	 * @param string $path a relative or absolute path to a class-blogs files
 	 *
@@ -152,10 +149,7 @@ class ClassBlogs {
 	 */
 	public static function require_cb_file( $path )
 	{
-		if ( $path && substr( $path, 0, 1 ) !== "/" ) {
-			$path = dirname( __FILE__ ) . '/ClassBlogs/' . $path;
-		}
-		require_once( $path );
+		require_once( CLASS_BLOGS_DIR . '/ClassBlogs/' . $path );
 	}
 
 	/**
