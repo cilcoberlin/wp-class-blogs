@@ -675,6 +675,16 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 		</div>
 <?php
 	}
+
+	/**
+	 * Update the tables whenever an upgrade is needed.
+	 *
+	 * @since 0.3
+	 */
+	public function upgrade( $old, $new )
+	{
+		$this->_create_tables();
+	}
 }
 
 ClassBlogs::register_plugin(
