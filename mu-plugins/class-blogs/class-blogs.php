@@ -6,7 +6,7 @@
  * associated with each individual plugin in the suite.
  *
  * @package ClassBlogs
- * @version 0.2
+ * @version 0.3
  */
 
 // If we're not running in multisite mode or the version of WordPress does not
