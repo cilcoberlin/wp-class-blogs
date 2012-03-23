@@ -1,199 +1,120 @@
 (function($) {
 
 /**
+ * A manager for delayed YouTube video loaders that initializes a loader for
+ * each properly formatted YouTube video found on a page.
+ *
+ * @constructor
+ */
+var DelayedYouTubeLoaderManager = function() {};
+
+/**
+ * CSS selectors used for managing loaders.
+ *
+ * @type {object}
+ * @private
+ */
+DelayedYouTubeLoaderManager.prototype._CSS = {
+
+	// The thumbnail image of a video
+	'thumbnails': ".cb-youtube-local-playlist-page-video-thumbnail"
+};
+
+/**
+ * Initialize loaders for every thumbnail on the page.
+ *
+ * @return {array} a list of all initialized DelayedYouTubeLoader instances
+ */
+DelayedYouTubeLoaderManager.prototype.initializeLoaders = function() {
+
+	// Initialize a loader for every thumbnail that has not yet been bound to one
+	var loaders = [];
+	$(this._CSS.thumbnails).each(function(i, thumbnail) {
+		loaders.push(new DelayedYouTubeLoader(thumbnail));
+	});
+
+	// Give the user the list of initialized loaders
+	return loaders;
+};
+
+/**
  * A delayed YouTube video loader that is associated with a thumbnail image of
  * a video.  When the thumbnail is clicked on, it is transformed into a playable
  * embedded YouTube video.
  *
- * This takes a DOM element that contains the video's thumbnail as its argument.
- * This thumbnail contains special markup that allows this class to figure out
- * the ID of the YouTube video that should be played.
- *
- * @class DelayedYouTubeLoader
- *
- * @param thumbnail {String|Node} a reference, either via CSS selector or a Node
- *                                instance, to a YouTube video thumbnail
+ * @param thumbnail {object} a reference to a video thumbnail DOM element
+ * @constructor
  */
 var DelayedYouTubeLoader = function(thumbnail) {
 
-	var $thumbnail = $(thumbnail);
-	this.id = $thumbnail.attr('id');
+	this._$thumbnail = $(thumbnail);
+	this._$container = this._$thumbnail.parents(this._CSS.containers);
+	this._youtube_id = this._$thumbnail.attr('data-youtube-id');
 
 	// Cause clicking on the thumbnail to turn it into a playable video
-	$thumbnail.bind('click.playlist', this._enableOnClick);
+	this._$thumbnail.bind('click.playlist', $.proxy(this._enableOnClick, this));
 };
 
 /**
- * CSS selectors used with the loader.
+ * CSS identifiers used with a single delayed loader.
  *
- * @property _CSS
- * @type {Object}
+ * @type {object}
  * @private
- * @static
  */
-DelayedYouTubeLoader._CSS = {
-	'thumbnails': ".cb-youtube-local-playlist-page-video-thumbnail"
+DelayedYouTubeLoader.prototype._CSS = {
+
+	// The wrapper for a YouTube thumbnail / video
+	'containers': ".cb-youtube-local-playlist-page-video-thumbnail-container",
 };
 
 /**
  * The base URL for the embed iframe's source URL.
  *
- * @property _EMBED_URL_BASE
- * @type {String}
+ * @type {string}
  * @private
- * @static
  */
-DelayedYouTubeLoader._EMBED_URL_BASE = "http://www.youtube.com/embed/";
+DelayedYouTubeLoader.prototype._EMBED_URL_BASE = "http://www.youtube.com/embed/";
 
 /**
  * The default height of an embedded iframe.
  *
- * @property _IFRAME_HEIGHT
- * @type {Number}
+ * @type {number}
  * @private
- * @static
  */
-DelayedYouTubeLoader._IFRAME_HEIGHT = 349;
+DelayedYouTubeLoader.prototype._IFRAME_HEIGHT = 349;
 
 /**
  * The default width of an embedded iframe.
  *
- * @property _IFRAME_WIDTH
- * @type {Number}
+ * @type {number}
  * @private
- * @static
  */
-DelayedYouTubeLoader._IFRAME_WIDTH = 560;
-
-/**
- * The prefix of the YouTube video ID contained in the `id` attribute of the
- * video wrapper element.
- *
- * @property _VIDEO_ID_PREFIX
- * @type {String}
- * @private
- * @static
- */
-DelayedYouTubeLoader._VIDEO_ID_PREFIX = "video__";
-
-/**
- * A list of initialized video loaders
- *
- * @property _loaders
- * @type {Array}
- * @default []
- * @private
- * @static
- */
-DelayedYouTubeLoader._loaders = [];
-
-/**
- * Initialize loaders for every thumbnail on the page.
- *
- * @method initializeLoaders
- * @static
- *
- * @return {Array} a list of all initialized DelayedYouTubeLoader instances
- */
-DelayedYouTubeLoader.initializeLoaders = function() {
-
-	var loaded = [];
-	var loader;
-
-	// Initialize a loader for every thumbnail that has not yet been bound to one
-	$(DelayedYouTubeLoader._CSS.thumbnails).each(function(i, thumbnail) {
-		if (!DelayedYouTubeLoader._isThumbnailBound(thumbnail)) {
-			loader = new DelayedYouTubeLoader(thumbnail);
-			DelayedYouTubeLoader._loaders.push(loader);
-			loaded.push(loader);
-		}
-	});
-
-	// Give the user the list of initialized loaders
-	return loaded;
-};
-
-/**
- * Check whether or not the given thumbnail has already been bound to a loader
- *
- * @method _isThumbnailBound
- * @private
- * @static
- *
- * @param  thumbnail {String|Node} a reference to a video thumbnail element
- * @return           {Boolean}     whether the thumbnail for a video already
- *                                 has an initialized loader instance
- */
-DelayedYouTubeLoader._isThumbnailBound = function (thumbnail) {
-	var id = $(thumbnail).attr('id');
-	var loaders = DelayedYouTubeLoader._loaders;
-	for (var i=0; i < loaders.length; i++) {
-		if (loaders[i].id == id) {
-			return true;
-		}
-	}
-	return false;
-};
-
-/**
- * Gets the YouTube ID of a video from the ID of a video wrapper element.
- *
- * The element ID passed in should contain the ID of a YouTube video.  This ID
- * will be present at the end of the ID, and this function finds the video ID
- * simply by removing a pre-determined prefix on the ID.
- *
- * @method _getVideoIDFromElementID
- * @private
- * @static
- *
- * @param  id {String} the full ID of the thumbnail element
- * @return    {String} the YouTube video ID embedded in the full ID
- */
-DelayedYouTubeLoader._getVideoIDFromElementID = function(id) {
-	return id.replace(DelayedYouTubeLoader._VIDEO_ID_PREFIX, "");
-};
-
-/**
- * The ID of the loader, which will be identical to that of the thumbnail's ID
- *
- * @property id
- * @type {String}
- * @default null
- */
-DelayedYouTubeLoader.prototype.id = null;
+DelayedYouTubeLoader.prototype._IFRAME_WIDTH = 560;
 
 /**
  * Transform the thumbnail into an iframe when clicked on.
  *
- * This takes advantage of the fact that the YouTube video's ID is stored in
- * the ID attribute of the DOM element that uses this as a click listener.
- *
- * @method _enableOnClick
+ * @param e {object} the event generated by a user clicking on a video thumbnail
  * @private
- *
- * @param e {Object} the event generated by a user clicking on a video thumbnail
  */
 DelayedYouTubeLoader.prototype._enableOnClick = function(e) {
 
-	e.preventDefault();
-
-	// Inject the iframe
-	var $thumbnail = $(this);
-	iframe = '<iframe width="' + DelayedYouTubeLoader._IFRAME_WIDTH + '" height="';
-	iframe += DelayedYouTubeLoader._IFRAME_HEIGHT + '" src="';
-	iframe += DelayedYouTubeLoader._EMBED_URL_BASE + DelayedYouTubeLoader._getVideoIDFromElementID($thumbnail.attr('id')) + '"';
-	iframe += ' frameborder="0" allowfullscreen></iframe>';
-	$thumbnail.html(iframe);
-
 	// Disable any further click listening on the thumbnail
-	$thumbnail.unbind('click.playlist');
+	e.preventDefault();
+	this._$thumbnail.unbind('click.playlist');
+
+	// Inject the iframe with the actual YouTube video
+	iframe = '<iframe width="' + this._IFRAME_WIDTH + '" height="';
+	iframe += this._IFRAME_HEIGHT + '" src="';
+	iframe += this._EMBED_URL_BASE + this._youtube_id + '"';
+	iframe += ' frameborder="0" allowfullscreen></iframe>';
+	this._$container.html(iframe);
 };
 
-/**
- * Set up event listeners when the page has loaded
- */
+/** Initialize the delayed loaders when the page is ready. */
 $(document).ready(function() {
-	DelayedYouTubeLoader.initializeLoaders();
+	var loaderManager = new DelayedYouTubeLoaderManager();
+	loaderManager.initializeLoaders();
 });
 
 })(jQuery);
