@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/class-blogs\n"
-"POT-Creation-Date: 2012-02-09 18:19:34+00:00\n"
+"POT-Creation-Date: 2012-03-23 17:38:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 #: ClassBlogs/Admin.php:95 ClassBlogs/Admin.php:96 ClassBlogs/Admin.php:188
-#: ClassBlogs.php:367
+#: ClassBlogs.php:361
 msgid "Class Blogs"
 msgstr ""
 
@@ -126,11 +126,11 @@ msgstr ""
 msgid "Update Sitewide Data Options"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:683
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:693
 msgid "Sitewide Aggregator"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/Aggregator.php:684
+#: ClassBlogs/Plugins/Aggregation/Aggregator.php:694
 msgid "Handles post, comment and tag data from all blogs on the site."
 msgstr ""
 
@@ -153,7 +153,7 @@ msgstr ""
 #: ClassBlogs/Plugins/RandomImage.php:115
 #: ClassBlogs/Plugins/StudentBlogLinks.php:336
 #: ClassBlogs/Plugins/StudentBlogList.php:96
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:114
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:111
 msgid "Title"
 msgstr ""
 
@@ -885,8 +885,7 @@ msgid ""
 msgstr ""
 
 #: ClassBlogs/Plugins/YouTubeClassPlaylist.php:41
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1623
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:2009
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1109
 msgid "YouTube Class Playlist"
 msgstr ""
 
@@ -899,112 +898,28 @@ msgstr ""
 msgid "View videos used on blogs"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:87
-msgid "View playlist on YouTube"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:118
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:115
 msgid "Video Limit"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:664
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:475
 msgid "View on YouTube"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:673
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:486
 msgid "Added to the playlist on %s"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:675
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:492
 msgid "Embedded in"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1643
-msgid ""
-"You have successfully linked your YouTube account (%s) with this blog!  You "
-"may now select a playlist to which all posted videos will be added."
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1646
-msgid "Your YouTube account was not able to be linked to this blog!"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1662
-msgid "Your YouTube class playlist settings have been updated."
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1674
-msgid "Your YouTube account has been unlinked from this blog."
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1683
-msgid ""
-"Your playlist has reached the maximum number of entries allowed by YouTube "
-"(%1$d).  No new videos can be added to this playlist."
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1690
-msgid "YouTube Class Playlist Configuration"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1693
-msgid ""
-"This plugin lets you define a YouTube playlist to which any videos posted on "
-"a student's blog will be added.  To use it, you must sign in to your YouTube "
-"account."
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1700
-msgid "YouTube Account"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1708
-msgid "Your YouTube account (%s) has been linked with this blog"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1719
-msgid "You have not associated a YouTube account with this blog."
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1721
-msgid ""
-"Click here to sign in to your YouTube account and link it with this blog."
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1724
-msgid ""
-"The YouTube authorization process cannot be started.  Try refreshing your "
-"browser."
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1737
-msgid "Playlist"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1739
-msgid "The playlist to which videos will be added"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1748
-msgid "%d video"
-msgid_plural "%d videos"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1761
-msgid "Update Options"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1762
-msgid "Unlink YouTube Account"
-msgstr ""
-
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:2010
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1110
 msgid ""
 "Allows you to link a YouTube playlist with this blog that is automatically "
 "updated whenever students embed YouTube videos in a post."
 msgstr ""
 
-#: ClassBlogs.php:368
+#: ClassBlogs.php:362
 msgid "The base class-blogs plugin that is used to manage plugin registration."
 msgstr ""
