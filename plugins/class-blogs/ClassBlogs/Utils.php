@@ -279,7 +279,6 @@ class ClassBlogs_Utils
 		return implode( "/", array(
 			WP_PLUGIN_URL,
 			'class-blogs',
-			'class-blogs',
 			ClassBlogs_Settings::MEDIA_DIR_NAME,
 			( $supports_dev && WP_DEBUG ) ? 'devel' : 'prod',
 			$media_type ) ) . "/";
