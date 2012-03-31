@@ -216,12 +216,35 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	function __construct()
 	{
-
 		parent::__construct();
-
-		add_action( 'init',          array( $this, '_ensure_tag_list_page_is_created' ) );
 		add_action( 'pre_get_posts', array( $this, '_maybe_enable_tag_list_page'  ) );
 		add_action( 'widgets_init',  array( $this, '_enable_widget' ) );
+	}
+
+	/**
+	 * Create a container page for the tag list on activation.
+	 *
+	 * @since 0.4
+	 */
+	public function activate()
+	{
+		$this->_ensure_tag_list_page_is_created();
+	}
+
+	/**
+	 * Remove the container page for the tag list on deactivation.
+	 *
+	 * @since 0.4
+	 */
+	public function deactivate()
+	{
+		$page_id = $this->get_option( 'tag_page_id' );
+		if ( $page_id ) {
+			switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+			wp_delete_post( $page_id, true );
+			$this->update_option( 'tag_page_id', null );
+			restore_current_blog();
+		}
 	}
 
 	/**

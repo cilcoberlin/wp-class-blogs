@@ -43,7 +43,6 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	protected $default_options = array(
 		'aggregation_enabled' => true,
 		'excluded_blogs'      => array(),
-		'tables_created'      => false
 	);
 
 	/**
@@ -71,11 +70,6 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	 */
 	public function _initialize_aggregation_hooks() {
 
-		// If the tables have yet to be created, do so now
-		if ( ! $this->get_option( 'tables_created' ) ) {
-			$this->_create_tables();
-		}
-
 		// Post modification actions that also catch new tags usages
 		add_action( 'save_post', array( $this, '_track_single_post' ) );
 		add_action( 'wp_update_comment_count', array( $this, '_track_single_post' ) );
@@ -83,6 +77,29 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 		// Comment actions
 		add_action( 'comment_post', array( $this, '_track_single_comment' ) );
 		add_action( 'wp_set_comment_status', array( $this, '_track_single_comment' ), 10, 2 );
+	}
+
+	/**
+	 * Creates all required tables on activation
+	 *
+	 * @since 0.4
+	 */
+	public function activate()
+	{
+		$this->_create_tables();
+	}
+
+	/**
+	 * Removes any created tables on deactivation.
+	 *
+	 * @since 0.4
+	 */
+	public function deactivate()
+	{
+		global $wpdb;
+		foreach ( $this->_get_table_specs() as $table => $schema ) {
+			$wpdb->query( "DROP TABLE $table" );
+		}
 	}
 
 	/**
@@ -442,22 +459,36 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 
 		// Create each table from its schema and track whether or not any
 		// modification of the database occurred
-		$table_specs = array(
-			array( $this->sw_tables->comments, ClassBlogs_Plugins_Aggregation_Schemata::get_comments_schema() ),
-			array( $this->sw_tables->posts, ClassBlogs_Plugins_Aggregation_Schemata::get_posts_schema() ),
-			array( $this->sw_tables->tags, ClassBlogs_Plugins_Aggregation_Schemata::get_tags_schema() ),
-			array( $this->sw_tables->tag_usage, ClassBlogs_Plugins_Aggregation_Schemata::get_tag_usage_schema() )
-		);
-		foreach ( $table_specs as $spec ) {
-			$modified |= $spec[1]->apply_to_table( $spec[0] );
+		foreach ( $this->_get_table_specs() as $table => $schema ) {
+			$modified |= $schema->apply_to_table( $table );
 		}
 
-		// If any tables were modified or created, flag this and sync the sitewide data
+		// If any tables were modified or created, sync the sitewide data
 		if ( $modified ) {
-			$this->update_option( 'tables_created', true );
 			$this->_sync_tables();
 		}
 		return $modified;
+	}
+
+	/**
+	 * Returns a mapping of names to schemas used to create the aggregation tables.
+	 *
+	 * Each key in the returned array will be the name of a table, and its value
+	 * will be the schema describing it.
+	 *
+	 * @return array a mapping of table names to schemas
+	 *
+	 * @access private
+	 * @since 0.4
+	 */
+	private function _get_table_specs()
+	{
+		return array(
+			$this->sw_tables->comments  => ClassBlogs_Plugins_Aggregation_Schemata::get_comments_schema(),
+			$this->sw_tables->posts     => ClassBlogs_Plugins_Aggregation_Schemata::get_posts_schema(),
+			$this->sw_tables->tags      => ClassBlogs_Plugins_Aggregation_Schemata::get_tags_schema(),
+			$this->sw_tables->tag_usage => ClassBlogs_Plugins_Aggregation_Schemata::get_tag_usage_schema()
+		);
 	}
 
 	/**
