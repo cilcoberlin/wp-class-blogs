@@ -70,6 +70,16 @@ class ClassBlogs_Settings
 	const TABLE_PREFIX = "cb_";
 
 	/**
+	 * The themes packaged with the class-blogs plugin.
+	 *
+	 * @var array
+	 * @since 0.4
+	 */
+	public static $THEMES = array(
+		'bentham'
+	);
+
+	/**
 	 * Returns the ID of the root blog.
 	 *
 	 * @return int the ID of the root blog

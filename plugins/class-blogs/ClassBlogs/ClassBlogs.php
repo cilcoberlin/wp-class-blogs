@@ -157,6 +157,49 @@ class ClassBlogs {
 			'classblogs',
 			false,
 			basename( dirname( __FILE__ ) ) . '/languages' );
+
+		// If we're running a multisite instance, copy over the plugin's themes
+		if ( self::is_multisite() ) {
+			self::_copy_templates();
+		}
+	}
+
+	/**
+	 * Copy over all templates associated with the plugin to the current
+	 * installation of WordPress's actual templates directory.
+	 *
+	 * @access private
+	 * @since 0.4
+	 */
+	private static function _copy_templates()
+	{
+		self::require_cb_file( 'Settings.php' );
+		self::require_cb_file( 'Utils.php' );
+
+		foreach ( ClassBlogs_Settings::$THEMES as $theme ) {
+			$source = CLASS_BLOGS_DIR_ABS . '/themes/' . $theme;
+			$destination = WP_CONTENT_DIR . '/themes/' . $theme;
+
+			// Only copy the theme over if it does not already exist, or it
+			// already exists and is unambiguously the correct theme
+			$copy = false;
+			if ( ! is_dir( $destination ) ) {
+				$copy = true;
+			} else {
+				$source_info = get_theme_data( $source . '/style.css' );
+				$destination_info = get_theme_data( $destination . '/style.css' );
+				if ( $source_info['URI'] && $destination_info['URI'] ) {
+					if ( $source_info['URI'] === $destination_info['URI'] ) {
+						$copy = true;
+					}
+				}
+			}
+
+			// Copy the theme over if we've been told to do so
+			if ( $copy ) {
+				ClassBlogs_Utils::copy_directory( $source, $destination, true );
+			}
+		}
 	}
 
 	/**
