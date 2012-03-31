@@ -277,8 +277,9 @@ class ClassBlogs_Utils
 	private static function _get_base_media_url( $media_type, $supports_dev=true )
 	{
 		return implode( "/", array(
-			WPMU_PLUGIN_URL,
-			ClassBlogs_Settings::SRC_DIR_NAME,
+			WP_PLUGIN_URL,
+			'class-blogs',
+			'class-blogs',
 			ClassBlogs_Settings::MEDIA_DIR_NAME,
 			( $supports_dev && WP_DEBUG ) ? 'devel' : 'prod',
 			$media_type ) ) . "/";

@@ -30,14 +30,6 @@ class ClassBlogs_Settings
 	const DEFAULT_CACHE_LENGTH = 3600;
 
 	/**
-	 * The name of the directory containing the class blogs source.
-	 *
-	 * @var string
-	 * @since 0.1
-	 */
-	const SRC_DIR_NAME = 'class-blogs';
-
-	/**
 	 * The name of the directory containing static media files.
 	 *
 	 * @var string

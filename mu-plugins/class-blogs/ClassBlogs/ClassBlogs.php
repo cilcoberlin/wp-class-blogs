@@ -28,7 +28,7 @@
  *     assert( $plugin->return_one() === 1 );
  *
  * @package ClassBlogs
- * @since 0.1
+ * @version 0.3
  */
 class ClassBlogs {
 
@@ -130,12 +130,74 @@ class ClassBlogs {
 	 *
 	 * This handles the loading of all files that are part of the suite.
 	 *
-	 * @since 0.3
+	 * @since 0.4
 	 */
 	public static function initialize()
 	{
-		self::load_php_files( CLASS_BLOGS_DIR . '/ClassBlogs' );
-		self::load_php_files( CLASS_BLOGS_DIR . '/ClassBlogs/Plugins' );
+		// Register initialization hooks
+		add_action( 'init', array( 'ClassBlogs', '_initialize' ) );
+
+		// Load the plugin files if we're running a valid multisite instance
+		if ( self::is_multisite() ) {
+			self::load_php_files( CLASS_BLOGS_DIR_ABS . '/ClassBlogs' );
+			self::load_php_files( CLASS_BLOGS_DIR_ABS . '/ClassBlogs/Plugins' );
+		}
+	}
+
+	/**
+	 * Performs WordPress-specific initialization for the class-blogs suite.
+	 *
+	 * @access private
+	 * @since 0.4
+	 */
+	public static function _initialize()
+	{
+		// Loads translations for the current locale
+		load_plugin_textdomain(
+			'classblogs',
+			false,
+			basename( dirname( __FILE__ ) ) . '/languages' );
+	}
+
+	/**
+	 * Toggles the active status of the class blogs suite.
+	 *
+	 * @param bool $activate whether to activate or deactivate the plugin suite
+	 *
+	 * @since 0.4
+	 */
+	public static function _set_activation( $activate )
+	{
+		$method = ( $activate ) ? 'activate' : 'deactivate';
+		if ( self::is_multisite() ) {
+			switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+			foreach ( self::get_all_plugins() as $plugin ) {
+				if ( is_callable( array( $plugin->plugin, $method ) ) ) {
+					call_user_func( array( $plugin->plugin, $method ) );
+				}
+			}
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * Handles activation for the class-blogs suite.
+	 *
+	 * @since 0.4
+	 */
+	public static function activate_suite()
+	{
+		self::_set_activation( true );
+	}
+
+	/**
+	 * Handles deactivation for the class-blogs suite.
+	 *
+	 * @since 0.4
+	 */
+	public static function deactivate_suite()
+	{
+		self::_set_activation( false );
 	}
 
 	/**
@@ -149,7 +211,7 @@ class ClassBlogs {
 	 */
 	public static function require_cb_file( $path )
 	{
-		require_once( CLASS_BLOGS_DIR . '/ClassBlogs/' . $path );
+		require_once( CLASS_BLOGS_DIR_ABS . '/ClassBlogs/' . $path );
 	}
 
 	/**
@@ -333,8 +395,6 @@ class ClassBlogs {
 	public static function maybe_upgrade()
 	{
 
-		ClassBlogs::require_cb_file( 'Settings.php' );
-
 		// Check the version stored on the database, setting it if none is found
 		$db_version = get_site_option( 'cb_version' );
 		if ( empty( $db_version ) ){
@@ -353,6 +413,18 @@ class ClassBlogs {
 			update_site_option( 'cb_version', ClassBlogs_Settings::VERSION );
 		}
 	}
+
+	/**
+	 * Determine whether WordPress is running as a valid multisite instance.
+	 *
+	 * @return bool whether WordPress is running in multisite mode
+	 *
+	 * @since 0.4
+	 */
+	public static function is_multisite()
+	{
+		return function_exists( 'is_multisite' ) and is_multisite();
+	}
 }
 
 ClassBlogs::register_plugin(
@@ -362,5 +434,9 @@ ClassBlogs::register_plugin(
 	__( 'The base class-blogs plugin that is used to manage plugin registration.', 'classblogs' ),
 	false
 );
+
+// Delay including dependencies
+ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
 
 ?>

@@ -774,6 +774,28 @@ abstract class ClassBlogs_BasePlugin
 	 * @since 0.3
 	 */
 	public function upgrade( $old, $new ) {}
+
+	/**
+	 * Allows a child plugin to perform activation actions.
+	 *
+	 * Any child plugin can implement this method if it wishes to perform
+	 * actions when the main class blogs plugin is activated.
+	 *
+	 * @access public
+	 * @since 0.4
+	 */
+	public function activate() {}
+
+	/**
+	 * Allows a child plugin to perform deactivation actions.
+	 *
+	 * Any child plugin can implement this method if it wishes to perform
+	 * actions when the main class blogs plugin is deactivated.
+	 *
+	 * @access public
+	 * @since 0.4
+	 */
+	public function deactivate() {}
 }
 
 ?>
