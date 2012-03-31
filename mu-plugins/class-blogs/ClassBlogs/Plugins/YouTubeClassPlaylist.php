@@ -2,11 +2,13 @@
 
 ClassBlogs::require_cb_file( 'Admin.php' );
 ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'Http.php' );
 ClassBlogs::require_cb_file( 'PluginPage.php' );
 ClassBlogs::require_cb_file( 'Schema.php' );
 ClassBlogs::require_cb_file( 'Settings.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
 ClassBlogs::require_cb_file( 'Widget.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePosts.php' );
 
 /**
  * A widget that displays the most recent additions to the YouTube class playlist.
@@ -180,13 +182,13 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	const _YOUTUBE_VIDEO_ID_LENGTH = 11;
 
 	/**
-	 * The number of seconds that counts as a short timeout.
+	 * The namespace used for YouTube-specific tags in API responses.
 	 *
 	 * @access private
-	 * @var int
-	 * @since 0.1
+	 * @var string
+	 * @since 0.4
 	 */
-	const _SHORT_TIMEOUT = 7;
+	const _YT_NAMESPACE = "http://gdata.youtube.com/schemas/2007";
 
 	/**
 	 * The length in seconds to cache the playlist locally.
@@ -252,8 +254,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	 * @since 0.1
 	 */
 	protected $default_options = array(
-		'playlist_page_id' => null,
-		'tables_created'   => false
+		'info_queue'       => array(),
+		'playlist_page_id' => null
 	);
 
 	/**
@@ -336,16 +338,8 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	 */
 	public function __construct()
 	{
-
 		parent::__construct();
-
-		// Perform initialization and sanity checks
 		$this->tables = $this->_make_table_names();
-		if ( ! $this->get_option( 'tables_created' ) ) {
-			$this->_create_tables();
-		}
-
-		add_action( 'init', array( $this, '_ensure_playlist_page_is_created' ) );
 
 		// Register hooks for finding videos in post content and for showing the
 		// playlist archive page
@@ -353,6 +347,44 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 		add_action( 'pre_get_posts', array( $this, '_maybe_enable_playlist_page' ) );
 		add_action( 'save_post',     array( $this, '_update_videos_on_post_save' ) );
 		add_action( 'widgets_init',  array( $this, '_enable_widget' ) );
+	}
+
+	/**
+	 * Create tables and pages when the plugin is activated.
+	 *
+	 * @since 0.4
+	 */
+	public function activate()
+	{
+		$this->_create_tables();
+		$this->_ensure_playlist_page_is_created();
+		$this->_sync_playlist();
+	}
+
+	/**
+	 * Clean up tables and pages on deactivation.
+	 */
+	public function deactivate()
+	{
+
+		// Remove all created tables
+		global $wpdb;
+		$delete_tables = array(
+			$this->tables->videos,
+			$this->tables->video_usage
+		);
+		foreach ( $delete_tables as $table ) {
+			$wpdb->query( "DROP TABLE $table" );
+		}
+
+		// Delete the local playlist page
+		$page_id = $this->get_option( 'playlist_page_id' );
+		if ( $page_id ) {
+			switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+			wp_delete_post( $page_id, true);
+			$this->update_option( 'playlist_page_id', null );
+			restore_current_blog();
+		}
 	}
 
 	/**
@@ -380,8 +412,6 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	 */
 	private function _create_tables()
 	{
-
-		// Create each table from its schema
 		$table_specs = array(
 			array( $this->tables->videos, $this->_get_videos_schema() ),
 			array( $this->tables->video_usage, $this->_get_video_usage_schema() )
@@ -389,9 +419,6 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 		foreach ( $table_specs as $spec ) {
 			$spec[1]->apply_to_table( $spec[0] );
 		}
-
-		// Flag that the tables have been created
-		$this->update_option( 'tables_created', true );
 	}
 
 	/**
@@ -401,7 +428,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	 * @access private
 	 * @since 0.1
 	 */
-	public function _ensure_playlist_page_is_created()
+	private function _ensure_playlist_page_is_created()
 	{
 		if ( ClassBlogs_Utils::is_root_blog() ) {
 			$current_page = $this->get_option( 'playlist_page_id' );
@@ -409,6 +436,29 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 			if ( $page_id != $current_page ) {
 				$this->update_option( 'playlist_page_id', $page_id );
 			}
+		}
+	}
+
+	/**
+	 * Populates the YouTube playlist from the videos in all posts on the site.
+	 *
+	 * @access private
+	 * @since 0.4
+	 */
+	private function _sync_playlist()
+	{
+		$plugin = ClassBlogs::get_plugin( 'sitewide_posts' );
+		if ( ! empty( $plugin ) ) {
+
+			// Create records of all videos used
+			foreach ( $plugin->get_sitewide_posts() as $post ) {
+				switch_to_blog( $post->cb_sw_blog_id );
+				$this->_update_videos_on_post_save( $post->ID );
+				restore_current_blog();
+			}
+
+			// Request information on all added videos from YouTube
+			$this->_retrieve_queued_video_info();
 		}
 	}
 
@@ -569,6 +619,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 		// Update our local video usage records
 		foreach ( $current_videos as $video ) {
 			$this->_add_video_usage( $video, $post_id, $blog_id );
+			$this->_retrieve_queued_video_info();
 		}
 		foreach ( $unused_videos as $video ) {
 			$this->_remove_video_usage( $video, $post_id, $blog_id );
@@ -624,16 +675,12 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 			WHERE youtube_id = %s",
 			$youtube_id ) );
 		if ( ! $video_id ) {
-			$info = $this->_get_video_info( $youtube_id );
-			if ( empty( $info ) ) {
-				return;
-			}
+			$info = $this->_add_video_to_info_queue( $youtube_id );
 			$wpdb->insert(
 				$this->tables->videos,
 				array(
 					'date_added' => date('Y-m-d G:i:s'),
-					'title'      => $info['title'],
-					'youtube_id' => $youtube_id,
+					'youtube_id' => $youtube_id
 				),
 				array( '%s' ) );
 			$video_id = $wpdb->insert_id;
@@ -662,44 +709,81 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	}
 
 	/**
-	 * Gets information about a YouTube video using its ID.
+	 * Adds a video ID to the queue of videos whose information should be fetched.
 	 *
-	 * If a video with the given YouTube ID exists, this will return a hash
-	 * with the following key / value pairs:
+	 * Once one or more videos are added to the queue, their information can
+	 * be retrieved using the `_retrieve_queued_video_info` method.
 	 *
-	 *     title - the title of the YouTube video as set by its uploader
-	 *
-	 * If no video with that ID is found, an empty hash is returned.
-	 *
-	 * @param  int   $youtube_id the ID of a YouTube video
-	 * @return array             information about the video
+	 * @param int $youtube_id the ID of the YouTube video
 	 *
 	 * @access private
-	 * @since 0.3
+	 * @since 0.4
 	 */
-	private function _get_video_info( $youtube_id )
+	private function _add_video_to_info_queue( $youtube_id )
 	{
-		$video = array();
 
-		// Connect to the YouTube API server
-		$request = sprintf( self::_YOUTUBE_VIDEO_INFO_URL_TEMPLATE, $youtube_id );
-		$parts = parse_url( $request );
-		$conn = $this->_connect_to_server(
-			sprintf( "%s://%s", $parts['scheme'], $parts['host'] ),
-			self::_SHORT_TIMEOUT );
-
-		// Request information on the video
-		fputs( $conn, "GET $request HTTP/1.1\r\n" );
-		$this->_close_connection( $conn );
-		$response = $this->_response_as_xml( $conn );
-		fclose( $conn );
-
-		// Add any found video info to the returned list
-		$title = $this->_get_single_tag_value( $response, 'title' );
-		if ( $title ) {
-			$video['title'] = $title;
+		// Get the existing queue of videos
+		$queue = $this->get_option( 'info_queue' );
+		if ( empty( $queue ) ) {
+			$queue = array();
 		}
-		return $video;
+
+		// Update the queue if the video is not already present in it
+		if ( ! in_array( $youtube_id, $queue ) ) {
+			$queue[] = $youtube_id;
+			$this->update_option( 'info_queue', $queue );
+		}
+	}
+
+	/**
+	 * Gets information about all queued YouTube videos and applies it to the
+	 * stored videos in the local playlist.
+	 *
+	 * After fetching the video info, the queue of videos is cleared.
+	 *
+	 * @access private
+	 * @since 0.4
+	 */
+	private function _retrieve_queued_video_info()
+	{
+
+		// Abort if we have no videos in the queue
+		global $wpdb;
+		$queue = $this->get_option( 'info_queue' );
+		if ( empty( $queue ) ) {
+			return;
+		}
+
+		// Request information on all videos in the queue using a single connection
+		$conn = new ClassBlogs_Http( self::_YOUTUBE_VIDEO_INFO_URL_TEMPLATE );
+		$queue_length = count( $queue ) - 1;
+		for ( $i=0; $i <= $queue_length; $i++ ) {
+			$request = sprintf( self::_YOUTUBE_VIDEO_INFO_URL_TEMPLATE, $queue[$i] );
+			$conn->add_request_line( "GET $request HTTP/1.1\r\n" );
+			if ( $i != $queue_length ) {
+				$conn->add_request_line( "\r\n" );
+			}
+		}
+		$responses = $conn->get_responses();
+		$conn->close_connection();
+
+		// Update each video in the local playlist with the information found
+		// in the YouTube API response
+		foreach ( $responses as $response ) {
+			$xml = ClassBlogs_Utils::xml_from_string( $response->body );
+			$title = ClassBlogs_Utils::get_single_xml_tag_value( $xml, 'title' );
+			$youtube_id = ClassBlogs_Utils::get_single_xml_tag_value( $xml, 'videoid', self::_YT_NAMESPACE );
+			if ( $title && $youtube_id ) {
+				$wpdb->query( $wpdb->prepare( "
+					UPDATE {$this->tables->videos}
+					SET title = %s
+					WHERE youtube_id = %s",
+					$title, $youtube_id ) );
+			}
+		}
+
+		// Clear the queue
+		$this->update_option( 'info_queue', array() );
 	}
 
 	/**
@@ -864,148 +948,6 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 		} else {
 			return "";
 		}
-	}
-
-	/**
-	 * Reads the response made given to an HTTP connection.
-	 *
-	 * The returned response will be an object with the following properties:
-	 *
-	 *     body    - a string of the body content
-	 *     headers - an array of key-value pairs of the headers
-	 *     status  - an int of the returned HTTP status code
-	 *
-	 * @param  object $conn a connection that has received a response
-	 * @return object       an object describing the response
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _read_http_response( &$conn )
-	{
-		$chunk_size  = 0;
-		$eol_size    = strlen( "\r\n" );
-		$is_chunked  = false;
-		$new_chunk   = "";
-		$past_header = false;
-		$response    = "";
-
-		while( !feof( $conn ) ) {
-			$line = fgets( $conn, 4096 );
-			$add = "";
-
-			//  If using a chunked transfer encoding, add each chunk to the response
-			//  as it's read.  Otherwise, just add the body string.
-			if ( $past_header ) {
-				if ( $is_chunked ) {
-					if ( ! $chunk_size || strlen( $new_chunk ) == $chunk_size + $eol_size ) {
-						$chunk_size = hexdec( trim( $line ) );
-						if ( $new_chunk ) { $response .= preg_replace( '/\\r\\n$/', "", $new_chunk ); }
-						$new_chunk = "";
-					} else {
-						$new_chunk .= $line;
-					}
-				} else {
-					$response .= $line;
-				}
-			}
-			else { $response .= $line; }
-
-			//  Detect whether or not we're using chunked encoding
-			if ( ! $past_header && $line == "\r\n" ) {
-				$past_header = true;
-				$is_chunked = preg_match( '/Transfer-Encoding:\s+chunked/', $response );
-			}
-		}
-
-		// Parse the parts of the response
-		$return = array();
-		$parts = explode( "\r\n\r\n", $response, 2 );
-		$headers = explode( "\r\n", $parts[0] );
-		$return['body'] = $parts[1];
-
-		$status = array_shift( $headers );
-		preg_match( '/\s+(\d+)\s+/', $status, $status_matches );
-		$return['status'] = $status_matches[1];
-
-		$return['headers'] = array();
-		foreach ( $headers as $header ) {
-			$header_parts = explode( ':', $header, 2 );
-			$return['headers'][$header_parts[0]] = $header_parts[1];
-		}
-
-		return (object) $return;
-	}
-
-	/**
-	 * A convenience function for making a connection to a remote server.
-	 *
-	 * @param  string $server  the URL of the remote server
-	 * @param  int    $timeout the timeout in seconds to use when connecting
-	 * @return object          the connection object
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _connect_to_server( $server, $timeout )
-	{
-		$port   = preg_match( '/^https:/', $server ) ? 443 : 80;
-		$server = preg_replace( '/^http:\/\//', "", $server );
-		$server = preg_replace( '/^https/', 'ssl', $server );
-
-		return fsockopen( $server, $port, $errno, $errst, $timeout );
-	}
-
-	/**
-	 * Closes a connection to a remote server.
-	 *
-	 * @param object $conn an open connection to a remote server
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _close_connection( &$conn )
-	{
-		fputs( $conn, "Connection: close\r\n\r\n" );
-	}
-
-	/**
-	 * Interprets an HTTP response as an XML document.
-	 *
-	 * @param  object $conn a connection that has received a response
-	 * @return object       a DOMDocument instance of the response
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _response_as_xml( &$conn )
-	{
-
-		$response = $this->_read_http_response( $conn );
-
-		libxml_use_internal_errors( true );
-		$dom = new DOMDocument();
-		if ( $response->body ) {
-			$dom->loadXML( $response->body );
-		}
-		libxml_use_internal_errors( false );
-
-		return $dom;
-	}
-
-	/**
-	 * Returns the value of the requested XML tag name, which must be unique.
-	 *
-	 * @param  object $dom an XML DOM document instance
-	 * @param  string $tag the name of the tag
-	 * @return mixed       the tag's value
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _get_single_tag_value( $dom, $tag )
-	{
-		return $dom->getElementsByTagName( $tag )->item(0)->nodeValue;
 	}
 
 	/**

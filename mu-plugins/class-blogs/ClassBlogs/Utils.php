@@ -412,7 +412,7 @@ class ClassBlogs_Utils
 	 *
 	 * @since 0.3
 	 */
-	public function widget_search( $name, $widgets )
+	public static function widget_search( $name, $widgets )
 	{
 		$search = '/^' . preg_quote( $name ) . '([_-]\d+)?$/';
 		foreach ( $widgets as $index => $widget ) {
@@ -421,6 +421,48 @@ class ClassBlogs_Utils
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Create an XML DOMDocument from a string if the provided markup is valid.
+	 *
+	 * If the markup is invalid, an empty DOMDocument is returned.
+	 *
+	 * @param  string $source possible valid XML markup
+	 * @return objec          a DOMDocument instance
+	 *
+	 * @since 0.4
+	 */
+	public static function xml_from_string( $source )
+	{
+		libxml_use_internal_errors( true );
+		$dom = new DOMDocument();
+		if ( $source ) {
+			$dom->loadXML( $source );
+		}
+		libxml_use_internal_errors( false );
+		return $dom;
+	}
+
+	/**
+	 * Returns the value of the requested XML tag name, which must be unique.
+	 *
+	 * @param  object $dom       an XML DOM document instance
+	 * @param  string $tag       the name of the tag
+	 * @param  string $namespace an optional namespace for the tag
+	 * @return mixed             the tag's value
+	 *
+	 * @access private
+	 * @since 0.4
+	 */
+	public function get_single_xml_tag_value( $dom, $tag, $namespace = "" )
+	{
+		if ( $namespace ) {
+			$tags = $dom->getElementsByTagNameNS( $namespace, $tag );
+		} else {
+			$tags = $dom->getElementsByTagName( $tag );
+		}
+		return $tags->item(0)->nodeValue;
 	}
 }
 
