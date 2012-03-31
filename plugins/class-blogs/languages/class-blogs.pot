@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/class-blogs\n"
-"POT-Creation-Date: 2012-03-23 17:38:36+00:00\n"
+"POT-Creation-Date: 2012-03-26 21:44:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 #: ClassBlogs/Admin.php:95 ClassBlogs/Admin.php:96 ClassBlogs/Admin.php:188
-#: ClassBlogs.php:361
+#: ClassBlogs.php:411
 msgid "Class Blogs"
 msgstr ""
 
@@ -885,7 +885,7 @@ msgid ""
 msgstr ""
 
 #: ClassBlogs/Plugins/YouTubeClassPlaylist.php:41
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1109
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1114
 msgid "YouTube Class Playlist"
 msgstr ""
 
@@ -902,24 +902,24 @@ msgstr ""
 msgid "Video Limit"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:475
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:480
 msgid "View on YouTube"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:486
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:491
 msgid "Added to the playlist on %s"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:492
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:497
 msgid "Embedded in"
 msgstr ""
 
-#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1110
+#: ClassBlogs/Plugins/YouTubeClassPlaylist.php:1115
 msgid ""
 "Allows you to link a YouTube playlist with this blog that is automatically "
 "updated whenever students embed YouTube videos in a post."
 msgstr ""
 
-#: ClassBlogs.php:362
+#: ClassBlogs.php:412
 msgid "The base class-blogs plugin that is used to manage plugin registration."
 msgstr ""
