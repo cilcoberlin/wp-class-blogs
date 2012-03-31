@@ -246,7 +246,9 @@ class ClassBlogs {
 	/**
 	 * Requires a file that is part of the class-blogs suite.
 	 *
-	 * The file path must be path relative to the base ClassBlogs directory.
+	 * The file path must be relative to the base ClassBlogs directory.  The
+	 * required file will be required only once, so multiple imports will not
+	 * occur when using this method.
 	 *
 	 * @param string $path a relative or absolute path to a class-blogs files
 	 *
