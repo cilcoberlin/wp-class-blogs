@@ -48,6 +48,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 define( 'CLASS_BLOGS_FILE_REL', 'class-blogs/class-blogs.php' );
 define( 'CLASS_BLOGS_FILE_ABS', WP_PLUGIN_DIR . '/' . CLASS_BLOGS_FILE_REL );
 define( 'CLASS_BLOGS_DIR_ABS', dirname( CLASS_BLOGS_FILE_ABS ) );
+define( 'CLASS_BLOGS_DIR_REL', dirname( CLASS_BLOGS_FILE_REL ) );
 
 // Require the core class-blogs class and use it to load all required files, if
 // the current WordPress instance is running in multisite mode
