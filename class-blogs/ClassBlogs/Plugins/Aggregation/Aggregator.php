@@ -725,7 +725,8 @@ ClassBlogs::register_plugin(
 	'sitewide_aggregator',
 	'ClassBlogs_Plugins_Aggregation_Aggregator',
 	__( 'Sitewide Aggregator', 'classblogs' ),
-	__( 'Handles post, comment and tag data from all blogs on the site.', 'classblogs' )
+	__( 'Handles post, comment and tag data from all blogs on the site.', 'classblogs' ),
+	false
 );
 
 ?>

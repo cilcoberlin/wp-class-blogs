@@ -842,7 +842,8 @@ ClassBlogs::register_plugin(
 	'sitewide_posts',
 	'ClassBlogs_Plugins_Aggregation_SitewidePosts',
 	__( 'Sitewide Posts', 'classblogs' ),
-	__( 'Provides a main-blog-only widget that shows recent posts made on all student blogs and allows for displaying all recent sitewide posts on the main blog.', 'classblogs' )
+	__( 'Provides a main-blog-only widget that shows recent posts made on all student blogs and allows for displaying all recent sitewide posts on the main blog.', 'classblogs' ),
+	false
 );
 
 ?>

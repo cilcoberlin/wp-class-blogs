@@ -822,7 +822,8 @@ ClassBlogs::register_plugin(
 	'sitewide_comments',
 	'ClassBlogs_Plugins_Aggregation_SitewideComments',
 	__( 'Sitewide Comments', 'classblogs' ),
-	__( 'Provides a main-blog-only widget that shows recent comments left on all student blogs, as well as a professor-only admin page showing a table of all student comments and a student-only admin page showing a table of all comments that they have left.', 'classblogs' )
+	__( 'Provides a main-blog-only widget that shows recent comments left on all student blogs, as well as a professor-only admin page showing a table of all student comments and a student-only admin page showing a table of all comments that they have left.', 'classblogs' ),
+	false
 );
 
 ?>
