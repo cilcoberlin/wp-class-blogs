@@ -156,6 +156,8 @@ class ClassBlogs_Admin
 		// Disable any plugins that are not checked
 		if ( $_POST ) {
 
+			check_admin_referer( 'classblogs_admin' );
+
 			// Get a list of all plugins that are checked to be enabled
 			$enabled = array();
 			foreach ( $_POST as $field => $value ) {
