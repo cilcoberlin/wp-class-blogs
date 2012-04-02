@@ -8,6 +8,7 @@ ClassBlogs::require_cb_file( 'Schema.php' );
 ClassBlogs::require_cb_file( 'Settings.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
 ClassBlogs::require_cb_file( 'Widget.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
 ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePosts.php' );
 
 /**
@@ -380,10 +381,10 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 		// Delete the local playlist page
 		$page_id = $this->get_option( 'playlist_page_id' );
 		if ( $page_id ) {
-			switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+			ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
 			wp_delete_post( $page_id, true);
 			$this->update_option( 'playlist_page_id', null );
-			restore_current_blog();
+			ClassBlogs_WordPress::restore_current_blog();
 		}
 	}
 
@@ -452,9 +453,9 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 
 			// Create records of all videos used
 			foreach ( $plugin->get_sitewide_posts() as $post ) {
-				switch_to_blog( $post->cb_sw_blog_id );
+				ClassBlogs_WordPress::switch_to_blog( $post->cb_sw_blog_id );
 				$this->_update_videos_on_post_save( $post->ID );
-				restore_current_blog();
+				ClassBlogs_WordPress::restore_current_blog();
 			}
 
 			// Request information on all added videos from YouTube
@@ -543,11 +544,11 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 				$links = array();
 				foreach ( $video->used_by as $usage ) {
 					$link = '<a class="cb-youtube-local-playlist-page-usage-post" ';
-					switch_to_blog( $usage->blog_id );
+					ClassBlogs_WordPress::switch_to_blog( $usage->blog_id );
 					$link .= sprintf( ' href="%s">%s</a>',
 						esc_url( get_permalink( $usage->post_id ) ),
 						get_post( $usage->post_id )->post_title );
-					restore_current_blog();
+					ClassBlogs_WordPress::restore_current_blog();
 					$links[] = $link;
 				}
 				$markup .= implode( ', ', $links ) . '</p>';

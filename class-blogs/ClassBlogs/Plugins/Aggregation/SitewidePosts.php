@@ -304,7 +304,10 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$allow_posts = CLASS_BLOGS_SHOW_SITEWIDE_POSTS_ON_FRONT_PAGE;
 		}
 
-		if ( $allow_posts && ClassBlogs_Utils::is_root_blog() && ( is_home() || is_front_page() ) ) {
+		// Feed all sitewide posts to the front page of the parent blog if we
+		// are allowed to do so, are running in multisite mode, are on the root
+		// blog, and are on the home page
+		if ( $allow_posts && ClassBlogs_Utils::is_multisite() && ClassBlogs_Utils::is_root_blog() && ( is_home() || is_front_page() ) ) {
 
 			add_action( 'loop_end',   array( $this, 'reset_blog_on_loop_end' ) );
 			add_action( 'loop_start', array( $this, 'restore_sitewide_post_ids' ) );
@@ -431,7 +434,10 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 */
 	public function _enable_widget()
 	{
-		ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewidePostsWidget' );
+		// Only enable the widget if we're running in multisite mode
+		if ( ClassBlogs_Utils::is_multisite() ) {
+			ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewidePostsWidget' );
+		}
 	}
 
 	/**
@@ -442,7 +448,9 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 */
 	protected function enable_admin_page( $admin )
 	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Post Options', 'classblogs' ), array( $this, '_options_admin_page' ) );
+		if ( ClassBlogs_Utils::is_multisite() ) {
+			$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Post Options', 'classblogs' ), array( $this, '_options_admin_page' ) );
+		}
 		$admin->add_admin_page( $this->get_uid(), __( 'Student Posts', 'classblogs' ), array( $this, '_posts_admin_page' ) );
 	}
 
@@ -523,7 +531,6 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	 */
 	public function _posts_admin_page()
 	{
-
 		// Create a lookup table for student names and blogs keyed by user ID
 		$students = array();
 		$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
@@ -592,7 +599,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 								<strong>
 									<?php
 										printf( '<a href="%s">%s</a>',
-											get_blog_permalink( $post->cb_sw_blog_id, $post->ID ),
+											ClassBlogs_WordPress::get_blog_permalink( $post->cb_sw_blog_id, $post->ID ),
 											$post->post_title );
 									?>
 								</strong>
@@ -757,8 +764,8 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			if ( $meta_format ) {
 				$user_data = get_userdata( $post->post_author );
 				$blog = sprintf( '<a href="%s" class="cb-sitewide-post-blog">%s</a>',
-					get_blogaddress_by_id( $post->cb_sw_blog_id ),
-					get_blog_option( $post->cb_sw_blog_id, 'blogname' ) );
+					ClassBlogs_WordPress::get_blogaddress_by_id( $post->cb_sw_blog_id ),
+					ClassBlogs_WordPress::get_blog_option( $post->cb_sw_blog_id, 'blogname' ) );
 				$meta = ClassBlogs_Utils::format_user_string(
 					$meta_format,
 					array(
@@ -772,7 +779,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$posts[] = (object) array(
 				'content'   => $post->post_content,
 				'meta'      => $meta,
-				'permalink' => get_blog_permalink( $post->cb_sw_blog_id, $post->ID ),
+				'permalink' => ClassBlogs_WordPress::get_blog_permalink( $post->cb_sw_blog_id, $post->ID ),
 				'title'     => $post->post_title );
 		}
 

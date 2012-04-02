@@ -323,6 +323,38 @@ function bentham_close_new_page_comments( $new, $old, $post )
 	}
 }
 
+/**
+ * Switches to a blog with the given ID.
+ *
+ * This switches to the given blog when in multisite mode, or does nothing
+ * when running a normal installation with only a single blog defined.
+ *
+ * @param int $blog_id the ID of a blog
+ *
+ * @since 0.4
+ */
+function bentham_switch_to_blog( $blog_id )
+{
+	if ( function_exists( 'switch_to_blog' ) ) {
+		switch_to_blog( $blog_id );
+	}
+}
+
+/**
+ * Restores the current blog.
+ *
+ * This restores the current blog when in multisite mode, or does nothing
+ * when running a normal installation where the current blog is static.
+ *
+ * @since 0.4
+ */
+function bentham_restore_current_blog()
+{
+	if ( function_exists( 'restore_current_blog' ) ) {
+		restore_current_blog();
+	}
+}
+
 // Register setup functions with WordPress hooks
 add_action( 'after_setup_theme',      'bentham_setup' );
 add_action( 'transition_post_status', 'bentham_close_new_page_comments', 100, 3 );

@@ -4,6 +4,7 @@ ClassBlogs::require_cb_file( 'Admin.php' );
 ClassBlogs::require_cb_file( 'BasePlugin.php' );
 ClassBlogs::require_cb_file( 'Settings.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
 
 /**
  * A plugin that allows a professor to make certain links always appear in
@@ -93,14 +94,14 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	{
 		// Update the default links options to be a single link pointing back
 		// to the main class blog
-		switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
 		$this->default_options['links'] = array(
 			array(
 				'url'   => site_url(),
 				'title' => __( 'Return to Course Blog', 'classblogs' )
 			)
 		);
-		restore_current_blog();
+		ClassBlogs_WordPress::restore_current_blog();
 
 		// If there are any links defined and we're not in the admin side,
 		// inject the professor's links into a widget in the first widgetized

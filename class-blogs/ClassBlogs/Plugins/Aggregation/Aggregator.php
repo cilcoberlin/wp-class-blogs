@@ -1,11 +1,12 @@
 <?php
 
-ClassBlogs::require_cb_file( 'Plugins/Aggregation/Schemata.php' );
-ClassBlogs::require_cb_file( 'Plugins/Aggregation/Settings.php' );
-ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
 ClassBlogs::require_cb_file( 'Admin.php' );
 ClassBlogs::require_cb_file( 'Schema.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/Schemata.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/Settings.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
 
 /**
  * An aggregator that keeps track of any posts, comments and tags used on the site.
@@ -221,7 +222,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	{
 
 		global $wpdb;
-		switch_to_blog( $blog_id );
+		ClassBlogs_WordPress::switch_to_blog( $blog_id );
 
 		// Update the post's record in the sitewide table
 		$this->_copy_sw_object( $blog_id, $post_id, 'ID', $wpdb->posts, $this->sw_tables->posts );
@@ -297,7 +298,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 			$this->_remove_unused_sitewide_tags();
 		}
 
-		restore_current_blog();
+		ClassBlogs_WordPress::restore_current_blog();
 	}
 
 	/**
@@ -345,9 +346,9 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	private function _update_sw_comment( $blog_id, $comment_id )
 	{
 		global $wpdb;
-		switch_to_blog( $blog_id );
+		ClassBlogs_WordPress::switch_to_blog( $blog_id );
 		$this->_copy_sw_object( $blog_id, $comment_id, 'comment_ID', $wpdb->comments, $this->sw_tables->comments );
-		restore_current_blog();
+		ClassBlogs_WordPress::restore_current_blog();
 	}
 
 	/**
@@ -551,14 +552,14 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 		// Export the post and comment data for each blog to our tables, which
 		// will also update the tag-usage data
 		foreach ( $this->_get_usable_blog_ids() as $blog_id ) {
-			switch_to_blog( $blog_id );
+			ClassBlogs_WordPress::switch_to_blog( $blog_id );
 			foreach ( $wpdb->get_results( "SELECT ID FROM $wpdb->posts" ) as $post ) {
 				$this->_track_single_post( $post->ID );
 			}
 			foreach ( $wpdb->get_results( "SELECT comment_ID FROM $wpdb->comments" ) as $comment ) {
 				$this->_track_single_comment( $comment->comment_ID );
 			}
-			restore_current_blog();
+			ClassBlogs_WordPress::restore_current_blog();
 		}
 	}
 
@@ -584,7 +585,9 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	 */
 	protected function enable_admin_page( $admin )
 	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Data Options', 'classblogs' ), array( $this, '_admin_page' ) );
+		if ( ClassBlogs_Utils::is_multisite() ) {
+			$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Data Options', 'classblogs' ), array( $this, '_admin_page' ) );
+		}
 	}
 
 	/**

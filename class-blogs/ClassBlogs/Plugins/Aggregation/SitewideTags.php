@@ -1,10 +1,11 @@
 <?php
 
 ClassBlogs::require_cb_file( 'PluginPage.php' );
-ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
 ClassBlogs::require_cb_file( 'Settings.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
 ClassBlogs::require_cb_file( 'Widget.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
 
 /**
  * A widget that shows a tag cloud built from all of the tags used on the site.
@@ -240,10 +241,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	{
 		$page_id = $this->get_option( 'tag_page_id' );
 		if ( $page_id ) {
-			switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+			ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
 			wp_delete_post( $page_id, true );
 			$this->update_option( 'tag_page_id', null );
-			restore_current_blog();
+			ClassBlogs_WordPress::restore_current_blog();
 		}
 	}
 
@@ -306,7 +307,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function _enable_widget()
 	{
-		ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideTagsWidget' );
+		// Only enable the widget if we're running in multisite mode
+		if ( ClassBlogs_Utils::is_multisite() ) {
+			ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideTagsWidget' );
+		}
 	}
 
 	/**
@@ -319,9 +323,9 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	private function _get_tag_page_url()
 	{
-		switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
 		$url = get_permalink( $this->get_option( 'tag_page_id' ) );
-		restore_current_blog();
+		ClassBlogs_WordPress::restore_current_blog();
 		return $url;
 	}
 

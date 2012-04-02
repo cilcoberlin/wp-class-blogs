@@ -96,7 +96,7 @@
 						if ( $post_count == $total_posts ) {
 							$post_classes[] = 'last';
 						}
-						switch_to_blog( $post->from_blog );
+						bentham_switch_to_blog( $post->from_blog );
 
 						// Store the post's permalink
 						$permalink = get_permalink( $post->ID );
@@ -114,7 +114,7 @@
 						</div>
 					</li>
 				<?php
-						restore_current_blog();
+						bentham_restore_current_blog();
 					}
 				?>
 			</ul>

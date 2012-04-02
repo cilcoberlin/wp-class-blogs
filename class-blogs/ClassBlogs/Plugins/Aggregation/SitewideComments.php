@@ -2,10 +2,11 @@
 
 ClassBlogs::require_cb_file( 'Admin.php' );
 ClassBlogs::require_cb_file( 'Paginator.php' );
-ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
-ClassBlogs::require_cb_file( 'Plugins/StudentBlogList.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
 ClassBlogs::require_cb_file( 'Widget.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
+ClassBlogs::require_cb_file( 'Plugins/StudentBlogList.php' );
 
 /**
  * A widget that displays a list of recent sitewide comments.
@@ -271,7 +272,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 */
 	public function _enable_widget()
 	{
-		ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget' );
+		// Only enable the widget if we're in multisite mode
+		if ( ClassBlogs_Utils::is_multisite() ) {
+			ClassBlogs_Widget::register_root_only_widget( '_ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget' );
+		}
 	}
 
 	/**
@@ -356,7 +360,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				<tbody>
 					<?php
 						foreach ( $paginator->get_items_for_page( $current_page ) as $comment ):
-							switch_to_blog( $comment->cb_sw_blog_id );
+							ClassBlogs_WordPress::switch_to_blog( $comment->cb_sw_blog_id );
 							$status = wp_get_comment_status( $comment->comment_ID );
 					?>
 						<tr class="<?php echo $status; ?>">
@@ -376,7 +380,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 								<strong>
 									<?php
 										printf( '<a href="%s">%s</a>',
-											esc_url( get_blog_permalink( $comment->cb_sw_blog_id, $comment->comment_post_ID ) ),
+											esc_url( ClassBlogs_WordPress::get_blog_permalink( $comment->cb_sw_blog_id, $comment->comment_post_ID ) ),
 											esc_html( $comment->post_title ) );
 									?>
 								</strong>
@@ -448,8 +452,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 		$all_blogs = array();
 		foreach ( ClassBlogs_Utils::get_all_blog_ids() as $blog_id ) {
 			$all_blogs[$blog_id] = array(
-				'name' => get_blog_option( $blog_id, 'blogname' ),
-				'url' => get_blogaddress_by_id( $blog_id ) );
+				'name' => ClassBlogs_WordPress::get_blog_option( $blog_id, 'blogname' ),
+				'url' => ClassBlogs_WordPress::get_blogaddress_by_id( $blog_id ) );
 		}
 
 		// Paginate the data, restricting the data set to only posts that the
@@ -500,7 +504,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				<tbody>
 					<?php
 						foreach ( $paginator->get_items_for_page( $current_page ) as $comment ):
-							switch_to_blog( $comment->cb_sw_blog_id );
+							ClassBlogs_WordPress::switch_to_blog( $comment->cb_sw_blog_id );
 							$status = wp_get_comment_status( $comment->comment_ID );
 					?>
 						<tr class="<?php echo $status; ?>">
@@ -721,7 +725,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 			$current_blog_id = $blog_id;
 			$no_spam = array();
 			foreach ( $comments as $comment ) {
-				switch_to_blog( $comment->cb_sw_blog_id );
+				ClassBlogs_WordPress::switch_to_blog( $comment->cb_sw_blog_id );
 				if ( wp_get_comment_status( $comment->comment_ID ) != 'spam' ) {
 					$no_spam[] = $comment;
 				}
@@ -785,8 +789,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 			$meta = "";
 			if ( $meta_format ) {
 				$blog = sprintf( '<a href="%s">%s</a>',
-					get_blogaddress_by_id( $comment->cb_sw_blog_id ),
-					get_blog_option( $comment->cb_sw_blog_id, 'blogname' ) );
+					ClassBlogs_WordPress::get_blogaddress_by_id( $comment->cb_sw_blog_id ),
+					ClassBlogs_WordPress::get_blog_option( $comment->cb_sw_blog_id, 'blogname' ) );
 				$meta = ClassBlogs_Utils::format_user_string(
 					$meta_format,
 					array(
@@ -798,7 +802,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 
 			// Build the permalink to the comment using the post URL and an anchor
 			$permalink = sprintf( '%s#comment-%d',
-				get_blog_permalink( $comment->cb_sw_blog_id, $comment->comment_post_ID ),
+				ClassBlogs_WordPress::get_blog_permalink( $comment->cb_sw_blog_id, $comment->comment_post_ID ),
 				$comment->comment_ID );
 
 			$comments[] = (object) array(

@@ -3,6 +3,7 @@
 ClassBlogs::require_cb_file( 'BasePlugin.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
 ClassBlogs::require_cb_file( 'Widget.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
 
 /**
  * A widget that displays an chosen randomly from all of the posts on the site.
@@ -60,7 +61,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Widget
 
 		if ( $image ) {
 			$this->start_widget( $args, $instance );
-			switch_to_blog( $image->blog_id );
+			ClassBlogs_WordPress::switch_to_blog( $image->blog_id );
 
 			// If the image is associated with a specific post, provide a link
 			// to the post.  If it has no post linkages, show a link to the blog.
@@ -70,13 +71,13 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Widget
 						esc_url( get_permalink( $image->post_id ) ),
 						esc_html( get_post( $image->post_id )->post_title ) ),
 					sprintf( '<a href="%s">%s</a>',
-						esc_url( get_blogaddress_by_id( $image->blog_id ) ),
-						esc_html( get_blog_option( $image->blog_id, 'blogname' ) ) ) );
+						esc_url( ClassBlogs_WordPress::get_blogaddress_by_id( $image->blog_id ) ),
+						esc_html( ClassBlogs_WordPress::get_blog_option( $image->blog_id, 'blogname' ) ) ) );
 			} else {
 				$caption = sprintf( __( 'From the blog %s', 'classblogs' ),
 					sprintf( '<a href="%s">%s</a>',
-						esc_url( get_blogaddress_by_id( $image->blog_id ) ),
-						esc_html( get_blog_option( $image->blog_id, 'blogname' ) ) ) );
+						esc_url( ClassBlogs_WordPress::get_blogaddress_by_id( $image->blog_id ) ),
+						esc_html( ClassBlogs_WordPress::get_blog_option( $image->blog_id, 'blogname' ) ) ) );
 			}
 
 			printf(
@@ -90,7 +91,7 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Widget
 				esc_url( $image->url ),
 				esc_attr( $image->title ),
 				$caption );
-			restore_current_blog();
+			ClassBlogs_WordPress::restore_current_blog();
 			$this->end_widget( $args );
 		}
 	}
@@ -178,7 +179,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 		$post_id = null;
 
 		// Search for the first post that references the image
-		switch_to_blog( $blog_id );
+		ClassBlogs_WordPress::switch_to_blog( $blog_id );
 		$post_search = $wpdb->prepare( "
 			SELECT ID FROM $wpdb->posts
 			WHERE post_status='publish'
@@ -189,7 +190,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 		if ( ! empty( $post ) ) {
 			$post_id = $post->ID;
 		}
-		restore_current_blog();
+		ClassBlogs_WordPress::restore_current_blog();
 
 		return $post_id;
 	}
@@ -225,7 +226,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 		$blogs = ClassBlogs_Utils::get_all_blog_ids();
 		shuffle( $blogs );
 		foreach ( $blogs as $blog ) {
-			switch_to_blog( $blog );
+			ClassBlogs_WordPress::switch_to_blog( $blog );
 			$images = $wpdb->get_results( "
 				SELECT ID, post_title, GUID FROM $wpdb->posts
 				WHERE post_mime_type LIKE 'image/%%'

@@ -23,7 +23,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
 	 * @since 0.1
 	 */
 	protected $default_options = array(
-		'display' => '%blog%',
+		'display' => '%firstname% %lastname%',
 		'title'   => 'Student Blogs'
 	);
 
@@ -103,8 +103,10 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
 		<p>
 			<strong><?php _e( 'Format variables you can use', 'classblogs' ) ?></strong>
 			<dl>
-				<dt>%blog%</dt>
-				<dd><?php _e( "The name of the student's blog", 'classblogs' ); ?></dd>
+				<?php if ( ClassBlogs_Utils::is_multisite() ): ?>
+					<dt>%blog%</dt>
+					<dd><?php _e( "The name of the student's blog", 'classblogs' ); ?></dd>
+				<?php endif; ?>
 				<dt>%firstname%</dt>
 				<dd><?php _e( "The student's first name", 'classblogs' ); ?></dd>
 				<dt>%lastname%</dt>
@@ -189,7 +191,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 	 */
 	private function _format_blog_display_name( $format, $user_id, $blog_id )
 	{
-		$blog_title = get_blog_option( $blog_id, 'blogname' );
+		$blog_title = ClassBlogs_WordPress::get_blog_option( $blog_id, 'blogname' );
 		$first_name = get_user_meta( $user_id, 'first_name', true );
 		$last_name = get_user_meta( $user_id, 'last_name', true );
 		$blog_name = ClassBlogs_Utils::format_user_string(
@@ -203,7 +205,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 
 		// If the blog name is the same as that of the main blog, use the
 		// student's full name instead
-		$main_blog_title = get_blog_option( ClassBlogs_Settings::get_root_blog_id(), 'blogname' );
+		$main_blog_title = ClassBlogs_WordPress::get_blog_option( ClassBlogs_Settings::get_root_blog_id(), 'blogname' );
 		if ( $blog_title === $main_blog_title ) {
 			$blog_name = $first_name . " " . $last_name;
 		}
@@ -230,7 +232,7 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 	private function _get_blog_list()
 	{
 
-		global $wpdb;
+		global $wpdb, $blog_id;
 		$student_blogs = array();
 
 		// Build a list of the user IDs of all users who are site admins or
@@ -244,19 +246,34 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 		}
 		$admins = array_unique( $admins );
 
-		// Cycle through every blog on the current site, adding any blogs that
-		// have only one admin user that is not a site admin or an admin on the
-		// root blog to the list of student blogs
-		foreach ( ClassBlogs_Utils::get_all_blog_ids() as $blog_id ) {
-			$blog_admins = get_users( 'blog_id=' . $blog_id . '&role=administrator' );
-			if ( count( $blog_admins ) == 1 ) {
-				$blog_admin = $blog_admins[0];
-				if ( array_search( $blog_admin->ID, $admins ) === false ) {
-					$student_blogs[] = array(
-						'user_id' => $blog_admin->ID,
-						'blog_id' => $blog_id );
+		// If running in multisite mode, cycle through every blog on the current
+		// site, adding any blogs that have only one admin user that is not a
+		// site admin or an admin on the root blog to the list of student blogs
+		if ( ClassBlogs_Utils::is_multisite() ) {
+			foreach ( ClassBlogs_Utils::get_all_blog_ids() as $sw_blog_id ) {
+				$blog_admins = get_users( 'blog_id=' . $sw_blog_id . '&role=administrator' );
+				if ( count( $blog_admins ) == 1 ) {
+					$blog_admin = $blog_admins[0];
+					if ( ! in_array( $blog_admin->ID, $admins ) ) {
+						$student_blogs[] = array(
+							'blog_id' => $sw_blog_id,
+							'user_id' => $blog_admin->ID );
+					}
 				}
 			}
+		}
+
+		// If running in single-site mode, count all non-admin users as students
+		else {
+			foreach ( get_users() as $user ) {
+				if ( ! in_array( $user->ID, $admins ) ) {
+					$student_blogs[] = array(
+						'blog_id' => $blog_id,
+						'user_id' => $user->ID
+					);
+				}
+			}
+
 		}
 
 		return $student_blogs;
@@ -309,14 +326,21 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 			return $cached;
 		}
 
-		// Determine the URL and display name for each student blog
+		// Determine the URL and display name for each student blog, using the
+		// address of the student's blog when in multisite mode or the author
+		// archive page when in single-site mode
 		$student_blogs = array();
 		foreach ( $this->_get_blog_list() as $blog ) {
+			if ( ClassBlogs_Utils::is_multisite() ) {
+				$blog_url = ClassBlogs_WordPress::get_blogaddress_by_id( $blog['blog_id'] );
+			} else {
+				$blog_url = get_author_posts_url( $blog['user_id'] );
+			}
 			$student_blogs[$blog['user_id']] = (object) array(
 				'blog_id' => $blog['blog_id'],
 				'name'    => $this->_format_blog_display_name( $title_format, $blog['user_id'], $blog['blog_id'] ),
 				'user_id' => $blog['user_id'],
-				'url'     => get_blogaddress_by_id( $blog['blog_id'] ) );
+				'url'     => $blog_url );
 		}
 
 		// Return the blogs sorted by their computed display name

@@ -3,6 +3,7 @@
 ClassBlogs::require_cb_file( 'Admin.php' );
 ClassBlogs::require_cb_file( 'BasePlugin.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
 
 /**
  * A plugin that allows a student to blog using a pseudonym.
@@ -200,7 +201,9 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 		if ( $valid ) {
 			$site = get_current_site();
 			$new_path = trailingslashit( $site->path . $username );
-			$valid = ! $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->blogs WHERE path=%s", $new_path ) );
+			if ( ClassBlogs_Utils::is_multisite() ) {
+				$valid = ! $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->blogs WHERE path=%s", $new_path ) );
+			}
 		}
 		return $valid;
 	}
@@ -227,7 +230,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 	private function _apply_pseudonym( $user_id, $blog_id, $new_username, $new_first_name, $new_last_name )
 	{
 		global $wpdb;
-		switch_to_blog( $blog_id );
+		ClassBlogs_WordPress::switch_to_blog( $blog_id );
 		$old_url = trailingslashit( home_url() );
 
 		// Update the student's username and their display-name information
@@ -269,7 +272,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 				array( '%d' ) );
 		}
 
-		restore_current_blog();
+		ClassBlogs_WordPress::restore_current_blog();
 	}
 }
 

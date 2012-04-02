@@ -1,6 +1,8 @@
 <?php
 
 ClassBlogs::require_cb_file( 'BasePlugin.php' );
+ClassBlogs::require_cb_file( 'Utils.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
 ClassBlogs::require_cb_file( 'Plugins/Aggregation/Settings.php' );
 
 /**
@@ -172,8 +174,8 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 			}
 
 			// Switch to the post's blog
-			restore_current_blog();
-			switch_to_blog( $post->cb_sw_blog_id );
+			ClassBlogs_WordPress::restore_current_blog();
+			ClassBlogs_WordPress::switch_to_blog( $post->cb_sw_blog_id );
 
 			// Generate new rewrite rules for the blog, which will allow things
 			// like categories and tags to display properly
@@ -193,7 +195,7 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	public function reset_blog_on_loop_end()
 	{
 		global $wp_query, $wp_rewrite;
-		restore_current_blog();
+		ClassBlogs_WordPress::restore_current_blog();
 		if ( isset( $this->root_blog_posts ) ) {
 			$wp_query->posts = $this->root_blog_posts;
 		}
@@ -222,6 +224,13 @@ abstract class ClassBlogs_Plugins_Aggregation_SitewidePlugin extends ClassBlogs_
 	 */
 	protected function prevent_sitewide_post_id_conflicts( $posts )
 	{
+		// Don't do any manipulating if we're not running in multisite mode, as
+		// each post's ID will already have the correct value
+		if ( ! ClassBlogs_Utils::is_multisite() ) {
+			return;
+		}
+
+		// Give each post an invalid ID, but store the correct IDs for later use
 		$this->_sitewide_post_ids = array();
 		for ( $i=0; $i < count( $posts ); $i++ ) {
 			$this->_sitewide_post_ids[$i] = $posts[$i]->ID;

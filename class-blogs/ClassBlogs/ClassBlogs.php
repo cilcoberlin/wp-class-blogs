@@ -137,16 +137,14 @@ class ClassBlogs {
 		// Register initialization hooks
 		add_action( 'init', array( 'ClassBlogs', '_initialize' ) );
 
-		// Load the plugin files if we're running a valid multisite instance
-		if ( self::is_multisite() ) {
-			self::load_php_files( CLASS_BLOGS_DIR_ABS . '/ClassBlogs' );
-			self::load_php_files( CLASS_BLOGS_DIR_ABS . '/ClassBlogs/Plugins' );
+		// Load all plugin files
+		self::load_php_files( CLASS_BLOGS_DIR_ABS . '/ClassBlogs' );
+		self::load_php_files( CLASS_BLOGS_DIR_ABS . '/ClassBlogs/Plugins' );
 
-			// Allow the custom themes to be used
-			$themes_dir = CLASS_BLOGS_DIR_ABS . '/themes/';
-			if ( is_dir( $themes_dir ) ) {
-				register_theme_directory( $themes_dir );
-			}
+		// Allow the custom themes to be used
+		$themes_dir = CLASS_BLOGS_DIR_ABS . '/themes/';
+		if ( is_dir( $themes_dir ) ) {
+			register_theme_directory( $themes_dir );
 		}
 	}
 
@@ -175,15 +173,13 @@ class ClassBlogs {
 	public static function _set_activation( $activate )
 	{
 		$method = ( $activate ) ? 'activate' : 'deactivate';
-		if ( self::is_multisite() ) {
-			switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
-			foreach ( self::get_all_plugins() as $plugin ) {
-				if ( is_callable( array( $plugin->plugin, $method ) ) ) {
-					call_user_func( array( $plugin->plugin, $method ) );
-				}
+		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+		foreach ( self::get_all_plugins() as $plugin ) {
+			if ( is_callable( array( $plugin->plugin, $method ) ) ) {
+				call_user_func( array( $plugin->plugin, $method ) );
 			}
-			restore_current_blog();
 		}
+		ClassBlogs_WordPress::restore_current_blog();
 	}
 
 	/**
@@ -421,18 +417,6 @@ class ClassBlogs {
 			update_site_option( 'cb_version', ClassBlogs_Settings::VERSION );
 		}
 	}
-
-	/**
-	 * Determine whether WordPress is running as a valid multisite instance.
-	 *
-	 * @return bool whether WordPress is running in multisite mode
-	 *
-	 * @since 0.4
-	 */
-	public static function is_multisite()
-	{
-		return function_exists( 'is_multisite' ) and is_multisite();
-	}
 }
 
 ClassBlogs::register_plugin(
@@ -445,5 +429,6 @@ ClassBlogs::register_plugin(
 
 // Delay including dependencies
 ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
 
 ?>

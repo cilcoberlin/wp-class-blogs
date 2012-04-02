@@ -1,6 +1,7 @@
 <?php
 
 ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'WordPress.php' );
 
 /**
  * Utility functions used by the class blogs plugin suite.
@@ -113,7 +114,7 @@ class ClassBlogs_Utils
 	public static function restore_blog( $blog_id )
 	{
 		global $switched_stack, $switched;
-		switch_to_blog( $blog_id );
+		ClassBlogs_WordPress::switch_to_blog( $blog_id );
 		$switched_stack = array();
 		$switched = false;
 	}
@@ -132,13 +133,13 @@ class ClassBlogs_Utils
 		$ids = array();
 
 		// Add any users who are not admins on the root blog to the list
-		switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
 		foreach ( $wpdb->get_results( "SELECT ID FROM $wpdb->users" ) as $user ) {
 			if ( ! user_can( $user->ID, 'administrator' ) ) {
 				$ids[] = $user->ID;
 			}
 		}
-		restore_current_blog();
+		ClassBlogs_WordPress::restore_current_blog();
 
 		return $ids;
 	}
@@ -154,8 +155,14 @@ class ClassBlogs_Utils
 	public static function get_all_blog_ids()
 	{
 		global $wpdb;
-		$blog_ids = array();
 
+		// If running in single-site mode, just return the ID of the only blog
+		if ( ! ClassBlogs_Utils::is_multisite() ) {
+			return array( ClassBlogs_Settings::get_root_blog_id() );
+		}
+
+		// If running in multisite, fetch all blog IDs
+		$blog_ids = array();
 		$blogs = $wpdb->get_results( $wpdb->prepare( "
 			SELECT blog_id FROM $wpdb->blogs
 			WHERE site_id = %d AND archived = '0' AND deleted = '0'",
@@ -512,6 +519,18 @@ class ClassBlogs_Utils
 			$directory->close();
 		}
 		return $success;
+	}
+
+	/**
+	 * Determine whether WordPress is running as a valid multisite instance.
+	 *
+	 * @return bool whether WordPress is running in multisite mode
+	 *
+	 * @since 0.4
+	 */
+	public static function is_multisite()
+	{
+		return function_exists( 'is_multisite' ) and is_multisite();
 	}
 }
 
