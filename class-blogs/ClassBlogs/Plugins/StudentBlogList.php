@@ -24,7 +24,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
 	 */
 	protected $default_options = array(
 		'display' => '%firstname% %lastname%',
-		'title'   => 'Student Blogs'
+		'title'   => 'Students'
 	);
 
 	/**
@@ -32,7 +32,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
 	 */
 	protected function get_name()
 	{
-		return __( 'Student Blog List', 'classblogs' );
+		return __( 'Student List', 'classblogs' );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
 	 */
 	protected function get_description()
 	{
-		return __( 'A list of all student blogs on the site', 'classblogs' );
+		return __( 'A list of all students blogging for this class', 'classblogs' );
 	}
 
 	/**

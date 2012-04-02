@@ -31,7 +31,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Widg
 		'max_font_size' => 22,
 		'min_font_size' => 8,
 		'min_usage'     => 1,
-		'title' 	    => 'Sitewide Tag Cloud'
+		'title' 	    => 'Student Tag Cloud'
 	);
 
 	/**
@@ -39,7 +39,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideTagsWidget extends ClassBlogs_Widg
 	 */
 	protected function get_name()
 	{
-		return __( 'Sitewide Tag Cloud', 'classblogs' );
+		return __( 'Student Tag Cloud', 'classblogs' );
 	}
 
 	/**

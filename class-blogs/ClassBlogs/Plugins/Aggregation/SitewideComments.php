@@ -45,7 +45,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 		'max_comments_per_blog' => 2,
 		'meta_format'           => 'On %date% %time%',
 		'show_excerpt'          => true,
-		'title' 	   		    => 'Recent Comments'
+		'title' 	   		    => 'Recent Student Comments'
 	);
 
 	/**
@@ -53,7 +53,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 	 */
 	protected function get_name()
 	{
-		return __( 'Recent Sitewide Comments', 'classblogs' );
+		return __( 'Recent Student Comments', 'classblogs' );
 	}
 
 	/**

@@ -43,7 +43,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Wid
 		'max_posts_per_blog' => 2,
 		'meta_format'        => 'By %author% on %date%',
 		'show_excerpt'       => false,
-		'title'              => 'Recent Posts'
+		'title'              => 'Recent Student Posts'
 	);
 
 	/**
@@ -51,7 +51,7 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Wid
 	 */
 	protected function get_name()
 	{
-		return __( 'Recent Sitewide Posts', 'classblogs' );
+		return __( 'Recent Student Posts', 'classblogs' );
 	}
 
 	/**
