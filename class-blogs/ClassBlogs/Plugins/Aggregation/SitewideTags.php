@@ -612,8 +612,8 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 ClassBlogs::register_plugin(
 	'sitewide_tags',
 	'ClassBlogs_Plugins_Aggregation_SitewideTags',
-	__( 'Sitewide Tags', 'classblogs' ),
-	__( 'Provides a main-blog-only widget sitewide tag cloud widget, and allows all usages of a single tag on all student blogs to be viewed.', 'classblogs' ),
+	__( 'Student Tags', 'classblogs' ),
+	__( 'Provides a sitewide tag cloud widget, and allows uses of a single tag to be viewed across all student blogs.', 'classblogs' ),
 	false
 );
 

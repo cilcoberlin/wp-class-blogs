@@ -298,7 +298,7 @@ ClassBlogs::register_plugin(
 	'random_image',
 	'ClassBlogs_Plugins_RandomImage',
 	__( 'Random Image', 'classblogs' ),
-	__( 'Provides a main-blog-only widget that displays a randomly selected image chosen from all the images used on all blogs that are part of this class.', 'classblogs' )
+	__( 'Provides a widget that shows a random image.', 'classblogs' )
 );
 
 ?>

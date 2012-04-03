@@ -2,40 +2,30 @@
 WordPress Class Blogs
 =====================
 
-A collection of plugins and themes that can be used, along with WordPress 3's
-multisite functionality, to create a blog for a class in WordPress.  The main
-blog is intended to be controlled by the professor, and each student is then
-given full administrative privileges over a child blog in the network.
+Multiple plugins and a theme wrapped packaged as a single plugin that make it
+easier to manage class blogs created using WordPress.  The plugin can work when
+running WordPress in multisite mode, where the professor controls the main blog
+and each student is given a dedicated blog, or when running normally, where the
+professor is the administrator on the blog and students are reduced-privilege users.
 
 Requirements
 ============
 
 * PHP >= 5.2.0
-* WordPress >= 3.0 running in multisite mode
-
-For this plugin suite to function as intended, you must give the class its
-own WordPress multisite instance, where the professor has admin rights on the
-main blog, and each student in the class has a single child blog created for
-them, on which they are the only user with administrative rights.  A configuration
-that differs from this might function, but it is not supported.
+* WordPress >= 3.0
 
 Installation
 ============
 
-To use the class blogs suite, copy the contents of the `mu-plugins` directory
-to the `mu-plugins` directory in your WordPress multisite installation's content
-directory, which will normally be `wp-content`.  If you do not have an
-`mu-plugins` directory in your content directory, you can create one first or
-simply copy the entire `mu-plugins` directory in this repo to the content directory.
-
-To use the included themes, copy the contents of the `themes` directory to
-the `themes` directory of your WordPress content directory.
+Copy the entire `class-blogs` folder to the `wp-content/plugins` directory of a
+valid WordPress installation, then go to the 'Plugins' administration page to
+activate it.
 
 Plugins
 =======
 
-The class blogs suite consists of many different plugins wrapped in a single
-MU plugin.  The plugins and the functionality that they provide are as follows.
+The class blogs plugin is a wrapper around many different plugins, which are
+as follows:
 
 Classmate Comments
 ------------------
@@ -44,12 +34,12 @@ student's blog.
 
 Disable Comments
 ----------------
-Provides an admin option to disable commenting on all blogs used by this class.
+Provides an admin option to disable commenting on current and future posts.
 
 Gravatar Signup
 ---------------
-Adds a link for the user to sign up for a gravatar to each account activation
- email sent out.
+Adds a link for the student to sign up for a gravatar to each account activation
+email sent out.
 
 New User Configuration
 ----------------------
@@ -57,60 +47,60 @@ Creates a first and last name for a newly added user based on their email addres
 
 Random Image
 ------------
-Provides a main-blog-only widget that displays a randomly selected image chosen
-from all the images used on all blogs that are part of this class.
+Provides a widget that displays a randomly selected image chosen from all the
+images used in all student and professor posts.
 
-Sitewide Comments
------------------
-Provides a main-blog-only widget that shows recent comments left on all student
-blogs, as well as a professor-only admin page showing a table of all student
-comments and a student-only admin page showing a table of all comments that
-they have left.
+Student Comments
+----------------
+Provides a widget that shows recent comments left on all student posts, a
+professor-only admin page showing a table of all student comments, and a
+student-only admin page showing a table of all comments that they have left.
 
-Sitewide Posts
---------------
-Provides a main-blog-only widget that shows recent posts made on all student
- blogs and allows for displaying all recent sitewide posts on the main blog.
-
-Sitewide Tags
+Student Posts
 -------------
-Provides a main-blog-only widget sitewide tag cloud widget, and allows all usages
-of a single tag on all student blogs to be viewed.
+Provides a widget that shows recent student posts, offers the ability to
+override the main blog's posts with all recent student posts when running in
+multisite mode, and a professor-only admin page showing a table of all student
+posts that have been published.
+
+Student Tags
+------------
+Provides a widget showing a tag cloud built from the tags used in all student
+and professor posts, and, when running in multisite mode, allows usage of a tag
+to be viewed across all student blogs.
 
 Student Blog Links
 ------------------
-Provides an admin option that allows you to add links of your choosing as the
-first sidebar widget on all student blogs.
+When running in multisite mode, provides an admin option that allows an
+unlimited number of arbitrary links to be added to the first widgetized area
+on every student blog.
 
-Student Blog List
------------------
-Provides a main-blog-only widget that shows a list of all student blogs that
-are part of this class.
+Student List
+------------
+Provides a widget that shows a list of all students, with each student name
+linking to a page to show all of their posts.
 
 Student Pseudonym
 -----------------
-Adds a page to the Users group on the admin side of any student blog that allows
-them to quickly change their username, blog URL and display name.
+When running in multisite mode, adds a page to the Users group on the admin side
+of any student blog that allows them to quickly change their username, blog URL
+and display name.
 
 Word Counter
 ------------
-Adds a page for the professor on the admin side to view student word counts by
-week, and adds a dashboard widget to each student blog that shows the word counts
-for the current and previous weeks.  Word counts are drawn from any posts or
-comments that students have made.
+Adds a professor-only admin page that allows them to view student word counts by
+week, and adds a dashboard widget to each student blog that shows how may words
+they have written for the current and previous weeks.
 
 YouTube Class Playlist
 ----------------------
-Allows you to link a YouTube playlist with this blog that is automatically
-updated whenever students embed YouTube videos in a post.
+Maintains a list of all embedded YouTube videos, which can be shown via a widget
+or a deciated page.
 
 Themes
 ======
 
-The class blogs suite provides the **Bentham** theme that takes advantage
-of the class blogs plugin suite to display data about all students posts on the
-front page of the blog. As long as the plugins are installed and sitewide
-aggregator is functioning, the front page will show a selection of recent
-student posts grouped by student, with the column of the student who has made
-the most recent post displayed first, with every successive column to the right
-being the column of a student whose posts are older than the one to the left.
+The plugin also provides a custom theme that takes advantage of the student data
+aggregation and displays all recent students posts on the front page of the blog,
+grouped by student.  When the plugin is active, the 'Class Blogging' theme will
+show up in the list of themes that can be activated.

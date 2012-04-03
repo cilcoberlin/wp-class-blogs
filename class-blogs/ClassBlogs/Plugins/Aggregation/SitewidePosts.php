@@ -841,8 +841,8 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 ClassBlogs::register_plugin(
 	'sitewide_posts',
 	'ClassBlogs_Plugins_Aggregation_SitewidePosts',
-	__( 'Sitewide Posts', 'classblogs' ),
-	__( 'Provides a main-blog-only widget that shows recent posts made on all student blogs and allows for displaying all recent sitewide posts on the main blog.', 'classblogs' ),
+	__( 'Student Posts', 'classblogs' ),
+	__( 'Allows you to view data on all posts made by your students.', 'classblogs' ),
 	false
 );
 

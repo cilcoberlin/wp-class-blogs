@@ -121,7 +121,7 @@ ClassBlogs::register_plugin(
 	'gravatar_signup',
 	'ClassBlogs_Plugins_GravatarSignup',
 	__( 'Gravatar Signup', 'classblogs' ),
-	__( 'Adds a link for the user to sign up for a gravatar to each account activation email sent out.', 'classblogs' )
+	__( 'Adds a link allowing your students to sign up for a gravatar to their account activation emails.', 'classblogs' )
 );
 
 ?>

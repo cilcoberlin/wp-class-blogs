@@ -1050,7 +1050,7 @@ ClassBlogs::register_plugin(
 	'youtube_class_playlist',
 	'ClassBlogs_Plugins_YouTubeClassPlaylist',
 	__( 'YouTube Class Playlist', 'classblogs' ),
-	__( 'Allows you to link a YouTube playlist with this blog that is automatically updated whenever students embed YouTube videos in a post.', 'classblogs' )
+	__( 'Maintains a playlist of all YouTube videos embedded in student posts.', 'classblogs' )
 );
 
 ?>

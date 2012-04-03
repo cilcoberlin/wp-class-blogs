@@ -137,7 +137,7 @@ ClassBlogs::register_plugin(
 	'disable_comments',
 	'ClassBlogs_Plugins_DisableComments',
 	__( 'Disable Comments', 'classblogs' ),
-	__( 'Provides an admin option to disable commenting on all blogs used by this class.', 'classblogs' )
+	__( 'Provides you with the option of disabling commenting on all current and future posts published by you and your students.', 'classblogs' )
 );
 
 ?>

@@ -486,7 +486,7 @@ ClassBlogs::register_plugin(
 	'word_counter',
 	'ClassBlogs_Plugins_WordCounter',
 	__( 'Word Counter', 'classblogs' ),
-	__( 'Adds a page for the professor on the admin side to view student word counts by week, and adds a dashboard widget to each student blog that shows the word counts for the current and previous weeks.  Word counts are drawn from any posts or comments that students have made.', 'classblogs' )
+	__( 'Adds an admin page for you to view student word counts by week, taken from their posts and comments.', 'classblogs' )
 );
 
 ?>
