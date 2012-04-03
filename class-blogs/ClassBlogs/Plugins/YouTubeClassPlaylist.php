@@ -84,7 +84,7 @@ class _ClassBlogs_Plugins_YouTubeClassPlaylistWidget extends ClassBlogs_Widget
 			<?php endforeach; ?>
 
 			<li class="cb-youtube-local-playlist-link">
-				<a href="<?php echo esc_url( $plugin->get_local_playlist_page_url() ); ?>"><?php _e( 'View videos used on blogs', 'classblogs' ); ?></a>
+				<a href="<?php echo esc_url( $plugin->get_local_playlist_page_url() ); ?>"><?php _e( 'View all embedded videos', 'classblogs' ); ?></a>
 			</li>
 
 		</ul>
