@@ -134,8 +134,16 @@ abstract class ClassBlogs_Widget extends WP_Widget
 	 */
 	protected function start_widget( $params, $instance )
 	{
+		// Attempt to use the widget's default title if the user-specified
+		// title is an empty string
+		$title = $instance['title'];
+		if ( ! $title && array_key_exists( 'title', $this->default_options ) ) {
+			$title = $this->default_options['title'];
+		}
+
+		// Output the widget header
 		echo $params['before_widget'];
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		$title = apply_filters( 'widget_title', $title );
 		if ( $title ) {
 			echo $params['before_title'] . $title . $params['after_title'];
 		}
