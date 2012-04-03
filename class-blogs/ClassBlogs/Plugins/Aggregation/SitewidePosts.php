@@ -449,7 +449,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	protected function enable_admin_page( $admin )
 	{
 		if ( ClassBlogs_Utils::is_multisite() ) {
-			$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Post Options', 'classblogs' ), array( $this, '_options_admin_page' ) );
+			$admin->add_admin_page( $this->get_uid(), __( 'Student Post Options', 'classblogs' ), array( $this, '_options_admin_page' ) );
 		}
 		$admin->add_admin_page( $this->get_uid(), __( 'Student Posts', 'classblogs' ), array( $this, '_posts_admin_page' ) );
 	}

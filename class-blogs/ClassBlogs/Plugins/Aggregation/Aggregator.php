@@ -586,7 +586,7 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 	protected function enable_admin_page( $admin )
 	{
 		if ( ClassBlogs_Utils::is_multisite() ) {
-			$admin->add_admin_page( $this->get_uid(), __( 'Sitewide Data Options', 'classblogs' ), array( $this, '_admin_page' ) );
+			$admin->add_admin_page( $this->get_uid(), __( 'Student Data Options', 'classblogs' ), array( $this, '_admin_page' ) );
 		}
 	}
 
