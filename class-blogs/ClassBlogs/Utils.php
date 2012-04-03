@@ -53,7 +53,15 @@ class ClassBlogs_Utils
 	 */
 	public static function on_student_blog_admin()
 	{
-		return is_admin() && ! self::is_root_blog();
+		$admin = false;
+		if ( is_admin() ) {
+			if ( self::is_multisite() ) {
+				$admin = ! self::is_root_blog();
+			} else {
+				$admin = ! current_user_can( 'administrator' );
+			}
+		}
+		return $admin;
 	}
 
 	/**
