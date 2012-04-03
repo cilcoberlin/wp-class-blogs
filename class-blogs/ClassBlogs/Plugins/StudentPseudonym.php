@@ -30,12 +30,14 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 	/**
 	 * Register hooks to show the admin page when on a student blog.
 	 *
+	 * The pseudonym page will be only available when running in multisite mode.
+	 *
 	 * @access private
 	 * @since 0.3
 	 */
 	public function _register_hooks()
 	{
-		if ( ClassBlogs_Utils::on_student_blog_admin() ) {
+		if ( ClassBlogs_Utils::is_multisite() && ClassBlogs_Utils::on_student_blog_admin() ) {
 			add_action( 'admin_menu', array( $this, '_add_admin_page' ) );
 		}
 	}
