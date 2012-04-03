@@ -456,11 +456,11 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 				'url' => ClassBlogs_WordPress::get_blogaddress_by_id( $blog_id ) );
 		}
 
-		// Paginate the data, restricting the data set to only posts that the
+		// Paginate the data, restricting the data set to only comments that the
 		// current student wrote
 		$comments = array();
 		foreach ( $this->get_sitewide_comments( false ) as $comment ) {
-			if ( $comment->user_id === $student_id ) {
+			if ( (int) $comment->user_id === $student_id ) {
 				$comments[] = $comment;
 			}
 		}
@@ -581,11 +581,11 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 	 */
 	public function _add_student_comment_list()
 	{
-		if ( is_admin() && ! ClassBlogs_Utils::is_root_blog() ) {
+		if ( ClassBlogs_Utils::on_student_blog_admin() ) {
 			add_comments_page(
 				__('My Comments'),
 				__('My Comments'),
-				'manage_options',
+				'edit_posts',
 				$this->get_uid() . '-my-comments',
 				array( $this, '_student_admin_page' ) );
 		}
@@ -707,6 +707,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 			return $cached;
 		}
 
+		// Filter out any unapproved comments if we're only allowing approved ones
 		$approved_filter = "";
 		if ( $approved_only ) {
 			$approved_filter = "AND c.comment_approved = '1'";
