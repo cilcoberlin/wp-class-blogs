@@ -150,17 +150,17 @@ class _ClassBlogs_Plugins_Aggregation_SitewidePostsWidget extends ClassBlogs_Wid
 			<input class="widefat" id="<?php echo $this->get_field_id( 'meta_format' ); ?>" name="<?php echo $this->get_field_name( 'meta_format' ); ?>" type="text" value="<?php echo $this->safe_instance_attr( $instance, 'meta_format' ); ?>" />
 		</p>
 		<div>
-			<h3><?php _e( 'Format variables you can use', 'classblogs' ) ?></h3>
-			<dl>
-				<dt>%author%</dt>
-				<dd><?php _e( "The author's name", 'classblogs' ); ?></dd>
-				<dt>%blog%</dt>
-				<dd><?php _e( 'The name of the blog on which the post was made', 'classblogs' ); ?></dd>
-				<dt>%date%</dt>
-				<dd><?php _e( 'The creation date of the post', 'classblogs' ); ?></dd>
-				<dt>%time%</dt>
-				<dd><?php _e( 'The creation time of the post', 'classblogs' ); ?></dd>
-			</dl>
+			<h4><?php _e( 'Format variables you can use', 'classblogs' ) ?>:</h4>
+			<p>
+				<strong>%author%</strong><br />
+				<?php _e( "The author's name", 'classblogs' ); ?><br /><br />
+				<strong>%blog%</strong><br />
+				<?php _e( 'The name of the blog on which the post was made', 'classblogs' ); ?><br /><br />
+				<strong>%date%</strong><br />
+				<?php _e( 'The creation date of the post', 'classblogs' ); ?><br /><br />
+				<strong>%time%</strong><br />
+				<?php _e( 'The creation time of the post', 'classblogs' ); ?>
+			</p>
 		</div>
 <?php
 	}

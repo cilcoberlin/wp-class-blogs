@@ -96,12 +96,12 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 					__( 'Blog URL', 'classblogs' ) => sprintf( '<a href="%1$s">%1$s</a>', esc_url( $blog_url ) ) );
 
 				// Display the updated information to the user
-				$message = array( __( 'You are now blogging using a pseudonym.  Your new user information is as follows.', 'classblogs' ), '<dl>' );
+				$message = array( __( 'You are now blogging using a pseudonym.  Your new user information is as follows.', 'classblogs' ), '<p>' );
 				foreach ( $new_info as $key => $value ) {
-					$message[] = sprintf( '<dt><strong>%s</strong></dt><dd>%s</dd>',
+					$message[] = sprintf( '<strong>%s</strong><br />%s<br /><br />',
 						$key, $value );
 				}
-				$message[] = '</dl>';
+				$message[] = '</p>';
 				ClassBlogs_Admin::show_admin_message( implode( "\n", $message ) );
 			}
 

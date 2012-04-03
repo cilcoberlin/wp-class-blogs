@@ -156,15 +156,15 @@ class _ClassBlogs_Plugins_Aggregation_SitewideCommentsWidget extends ClassBlogs_
 			<input class="widefat" id="<?php echo $this->get_field_id( 'meta_format' ); ?>" name="<?php echo $this->get_field_name( 'meta_format' ); ?>" type="text" value="<?php echo $this->safe_instance_attr( $instance, 'meta_format' ); ?>" />
 		</p>
 		<div>
-			<h3><?php _e( 'Format variables you can use:', 'classblogs' ) ?></h3>
-			<dl>
-				<dt>%blog%</dt>
-				<dd><?php _e( 'The name of the blog on which the comment was made', 'classblogs' ); ?></dd>
-				<dt>%date%</dt>
-				<dd><?php _e( 'The date on which the comment was made', 'classblogs' ); ?></dd>
-				<dt>%time%</dt>
-				<dd><?php _e( 'The time at which the comment was made', 'classblogs' ); ?></dd>
-			</dl>
+			<h4><?php _e( 'Format variables you can use', 'classblogs' ) ?>:</h4>
+			<p>
+				<strong>%blog%</strong><br />
+				<?php _e( 'The name of the blog on which the comment was made', 'classblogs' ); ?><br /><br />
+				<strong>%date%</strong><br />
+				<?php _e( 'The date on which the comment was made', 'classblogs' ); ?><br /><br />
+				<strong>%time%</strong><br />
+				<?php _e( 'The time at which the comment was made', 'classblogs' ); ?>
+			</p>
 		</div>
 <?php
 	}

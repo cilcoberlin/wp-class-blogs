@@ -100,20 +100,18 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
 			<label for="<?php echo $this->get_field_id( 'display' ); ?>"><?php _e( 'Display Format', 'classblogs' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'display' ); ?>" name="<?php echo $this->get_field_name( 'display' ); ?>" type="text" value="<?php echo $this->safe_instance_attr( $instance, 'display' ); ?>" />
 		</p>
+		<h4><?php _e( 'Format variables you can use', 'classblogs' ) ?>:</h4>
 		<p>
-			<strong><?php _e( 'Format variables you can use', 'classblogs' ) ?></strong>
-			<dl>
-				<?php if ( ClassBlogs_Utils::is_multisite() ): ?>
-					<dt>%blog%</dt>
-					<dd><?php _e( "The name of the student's blog", 'classblogs' ); ?></dd>
-				<?php endif; ?>
-				<dt>%firstname%</dt>
-				<dd><?php _e( "The student's first name", 'classblogs' ); ?></dd>
-				<dt>%lastname%</dt>
-				<dd><?php _e( "The student's last name", 'classblogs' ); ?></dd>
-				<dt>%nickname%</dt>
-				<dd><?php _e( "The student's nickname", 'classblogs' ); ?></dd>
-			</dl>
+			<?php if ( ClassBlogs_Utils::is_multisite() ): ?>
+				<strong>%blog%</strong><br />
+				<?php _e( "The name of the student's blog", 'classblogs' ); ?><br /><br />
+			<?php endif; ?>
+			<strong>%firstname%</strong><br />
+			<?php _e( "The student's first name", 'classblogs' ); ?><br /><br />
+			<strong>%lastname%</strong><br />
+			<?php _e( "The student's last name", 'classblogs' ); ?><br /><br />
+			<strong>%nickname%</strong><br />
+			<?php _e( "The student's nickname", 'classblogs' ); ?>
 		</p>
 <?php
 	}
