@@ -66,20 +66,43 @@ class _ClassBlogs_Plugins_RandomImageWidget extends ClassBlogs_Widget
 			// If the image is associated with a specific post, provide a link
 			// to the post.  If it has no post linkages, show a link to the blog.
 			if ( $image->post_id ) {
-				$caption = sprintf( __( 'From the post %1$s on %2$s', 'classblogs' ),
-					sprintf( '<a href="%s">%s</a>',
-						esc_url( get_permalink( $image->post_id ) ),
-						esc_html( get_post( $image->post_id )->post_title ) ),
-					sprintf( '<a href="%s">%s</a>',
-						esc_url( ClassBlogs_WordPress::get_blogaddress_by_id( $image->blog_id ) ),
-						esc_html( ClassBlogs_WordPress::get_blog_option( $image->blog_id, 'blogname' ) ) ) );
+				$post_link = sprintf( '<a href="%s">%s</a>',
+							esc_url( get_permalink( $image->post_id ) ),
+							esc_html( get_post( $image->post_id )->post_title ) );
+
+				// Show a link to a post on a blog when running in multisite
+				// mode, or a link to the post by a particular user when not
+				if ( ClassBlogs_Utils::is_multisite() ) {
+					$caption = sprintf( __( 'From the post %1$s on %2$s', 'classblogs' ),
+						$post_link,
+						sprintf( '<a href="%s">%s</a>',
+							esc_url( ClassBlogs_WordPress::get_blogaddress_by_id( $image->blog_id ) ),
+							esc_html( ClassBlogs_WordPress::get_blog_option( $image->blog_id, 'blogname' ) ) ) );
+				} else {
+					$user = get_userdata( $image->user_id );
+					$caption = sprintf( __( 'From the post %1$s by %2$s', 'classblogs' ),
+						 $post_link,
+						sprintf( '<a href="%s">%s</a>',
+							esc_url( get_author_posts_url( $image->user_id ) ),
+							esc_html( $user->display_name ) ) );
+				}
 			} else {
-				$caption = sprintf( __( 'From the blog %s', 'classblogs' ),
-					sprintf( '<a href="%s">%s</a>',
-						esc_url( ClassBlogs_WordPress::get_blogaddress_by_id( $image->blog_id ) ),
-						esc_html( ClassBlogs_WordPress::get_blog_option( $image->blog_id, 'blogname' ) ) ) );
+
+				// Show a link to the source blog when running in multisite mode,
+				// or show the image's title when not
+				if ( ClassBlogs_Utils::is_multisite() ) {
+					$caption = sprintf( __( 'From the blog %s', 'classblogs' ),
+						sprintf( '<a href="%s">%s</a>',
+							esc_url( ClassBlogs_WordPress::get_blogaddress_by_id( $image->blog_id ) ),
+							esc_html( ClassBlogs_WordPress::get_blog_option( $image->blog_id, 'blogname' ) ) ) );
+				} else {
+					$caption = sprintf( '<a href="%s">%s</a>',
+						esc_url( $image->url ),
+						esc_attr( $image->title ) );
+				}
 			}
 
+			// Display the link to the image with an appropriate caption
 			printf(
 				'<ul>
 					<li>
@@ -164,11 +187,11 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 	}
 
 	/**
-	 * Finds the ID of the first post that uses the given image.
+	 * Finds the post object for the first post that uses the given image.
 	 *
 	 * @param  int    $blog_id the ID of the blog on which the image was uploaded
 	 * @param  string $url     the absolute URL of the image
-	 * @return int             the ID of the first post that uses the image
+	 * @return object          a WordPress post instance for the image
 	 *
 	 * @access private
 	 * @since 0.1
@@ -176,23 +199,20 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 	private function _find_first_post_to_use_image( $blog_id, $url )
 	{
 		global $wpdb;
-		$post_id = null;
+		$post = null;
 
 		// Search for the first post that references the image
 		ClassBlogs_WordPress::switch_to_blog( $blog_id );
 		$post_search = $wpdb->prepare( "
-			SELECT ID FROM $wpdb->posts
+			SELECT * FROM $wpdb->posts
 			WHERE post_status='publish'
 			AND post_content LIKE '%%" . like_escape( $url ) . "%%'
 			ORDER BY post_date
 			LIMIT 1" );
 		$post = $wpdb->get_row( $post_search );
-		if ( ! empty( $post ) ) {
-			$post_id = $post->ID;
-		}
 		ClassBlogs_WordPress::restore_current_blog();
 
-		return $post_id;
+		return $post;
 	}
 
 	/**
@@ -208,6 +228,7 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 	 * the following properties on it:
 	 *
 	 *     post_id - the ID of the post that uses the image
+	 *     user_id - the ID of the user who created a post using the image
 	 *
 	 * @return mixed the random image object, or null if none can be found
 	 *
@@ -250,15 +271,22 @@ class ClassBlogs_Plugins_RandomImage extends ClassBlogs_BasePlugin
 		// If we have a valid image, try to find the first post on which it was
 		// used and add its ID to the image data
 		if ( $image ) {
+			$info = array();
 			$post_id = null;
+			$user_id = null;
 			foreach ( $urls as $url ) {
-				$post_id = $this->_find_first_post_to_use_image(
+				$post = $this->_find_first_post_to_use_image(
 					$image['blog_id'], $url );
-				if ( $post_id ) {
+				if ( ! empty( $post ) ) {
 					break;
 				}
 			}
+			if ( ! empty( $post ) ) {
+				$post_id = $post->ID;
+				$user_id = $post->post_author;
+			}
 			$image['post_id'] = $post_id;
+			$image['user_id'] = $user_id;
 			$image = (object) $image;
 		}
 
