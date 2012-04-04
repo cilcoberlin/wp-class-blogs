@@ -142,7 +142,7 @@ class ClassBlogs {
 		self::load_php_files( CLASS_BLOGS_DIR_ABS . '/ClassBlogs/Plugins' );
 
 		// Allow the custom themes to be used
-		$themes_dir = CLASS_BLOGS_DIR_ABS . '/themes/';
+		$themes_dir = CLASS_BLOGS_DIR_ABS . '/themes';
 		if ( is_dir( $themes_dir ) ) {
 			register_theme_directory( $themes_dir );
 		}
