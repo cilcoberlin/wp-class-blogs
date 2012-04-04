@@ -8,6 +8,7 @@
 	<property name="plugin" value="mu-plugins/class-blogs" />
 	<property name="pluginMedia" value="${plugin}/media" />
 	<property name="theme" value="themes/bentham" />
+	<property name="svnPackager" value="package-plugin.rb" />
 
 	<!-- Build the class blogs suite -->
 	<target name="build">
@@ -31,6 +32,14 @@
 	<!-- Minify CSS -->
 	<target name="minify-css" >
 		<minify-extension extension="css"/>
+	</target>
+
+	<!-- Create a WordPress SVN plugin package -->
+	<target name="make-plugin">
+		<echo>Creating a WordPress SVN plugin package...</echo>
+		<exec executable="ruby">
+			<arg value="${svnPackager}"/>
+		</exec>
 	</target>
 
 	<!-- Macro for minimizing media using the YUI compressor -->
