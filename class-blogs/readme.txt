@@ -14,8 +14,7 @@ It accomplishes this by making it easier to find, organize and analyze the
 work created by your students.  The functions available to you to make this
 happen are provided and categorized below.
 
-Widgets
--------
+**Widgets**
 
 If you are running WordPress in multisite mode, these widgets are only available
 on the main blog.  If you are unsure about what this means, you don't need to
@@ -28,8 +27,7 @@ worry about it.  The available widgets allow you to display the following:
 * An image randomly taken from your students' posts.
 * Links to view posts by each of your students.
 
-Teacher Admin Pages
--------------------
+**Teacher Admin Pages**
 
 The Class Blogs plugin adds pages that will be visible only to you whenever you
 log in to the administrative side of the blog.  These pages allow you to perform
@@ -41,8 +39,7 @@ the following actions:
 * Add links to all student blogs if running in multisite mode.
 * Optionally disable comments on all current and future posts.
 
-Student Admin Pages
--------------------
+**Student Admin Pages**
 
 The Class Blogs plugin adds pages that will be visible to each student whenever
 they log in to create content.  These pages allow students to do the following:
@@ -50,8 +47,7 @@ they log in to create content.  These pages allow students to do the following:
 * Create a pseudonym by changing their username and full name.
 * See how many words they have written for the current week.
 
-Other
------
+**Other**
 
 In addition to the above plugins, the Class Blogs plugin provides a few
 additional features that do the following:
@@ -60,8 +56,7 @@ additional features that do the following:
 * Set a student's first and last name based on their email address.
 * Automatically approve all comments left by students on other students' blogs.
 
-Themes
-------
+**Themes**
 
 This plugin also includes a theme that takes advantage of the above features
 to display information on your students' posts in a clear, easy-to-navigate manner.
