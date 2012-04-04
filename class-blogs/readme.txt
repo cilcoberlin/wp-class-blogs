@@ -3,7 +3,7 @@ Contributors: oberlincilc
 Tags: class, blogging, academic, students, professor, teacher, course, education
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 0.3
+Stable tag: 0.4
 
 Makes it easy to use blogs in your teaching.
 
