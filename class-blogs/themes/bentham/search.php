@@ -5,12 +5,12 @@
 <div id="content">
 	<?php
 		if ( have_posts() ) {
-			bentham_show_archive_page_title(
-				_x( 'Search Results', 'search results page title', 'bentham' ),
+			classblogging_show_archive_page_title(
+				_x( 'Search Results', 'search results page title', 'classblogging' ),
 				get_search_query() );
 			get_template_part( 'loop', 'search' );
 		} else {
-			bentham_show_no_posts_message();
+			classblogging_show_no_posts_message();
 		}
 	?>
 </div>

@@ -7,7 +7,7 @@
 		<ul id="colophon">
 			<li class="info">&copy; <?php echo strftime( '%Y' ); ?> <?php bloginfo( 'name' ); ?></li>
 			<li class="info">
-				<?php printf( '<strong>Bentham</strong> %s', _x( 'theme', 'a WordPress theme', 'bentham' ) ); ?>
+				<?php printf( '<strong>Class Blogging</strong> %s', _x( 'theme', 'a WordPress theme', 'classblogging' ) ); ?>
 			</li>
 		</ul>
 

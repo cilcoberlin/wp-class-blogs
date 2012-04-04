@@ -22,7 +22,7 @@
 			// Display a possible page number
 			global $page, $paged;
 			if ( $paged >= 2 || $page >= 2 ) {
-				echo ' | ' . sprintf( __( 'Page %d', 'bentham' ), max( $paged, $page ) );
+				echo ' | ' . sprintf( __( 'Page %d', 'classblogging' ), max( $paged, $page ) );
 			}
 		?>
 	</title>
@@ -47,7 +47,7 @@
 		<?php /* The optional user-specified image header */ ?>
 		<div id="logo">
 			<a href="<?php echo home_url(); ?>">
-				<img src="<?php header_image(); ?>" width="<?php echo HEADER_IMAGE_WIDTH; ?>" height="<?php echo HEADER_IMAGE_HEIGHT; ?>" alt="<?php _e( 'Logo', 'bentham' ); ?>" />
+				<img src="<?php header_image(); ?>" width="<?php echo HEADER_IMAGE_WIDTH; ?>" height="<?php echo HEADER_IMAGE_HEIGHT; ?>" alt="<?php _e( 'Logo', 'classblogging' ); ?>" />
 			</a>
 		</div>
 

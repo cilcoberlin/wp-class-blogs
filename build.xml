@@ -5,9 +5,9 @@
 
 	<property name="compressor" value="assets/yui/yuicompressor-2.4.7.jar" />
 	<property name="makePOT" value="assets/wpi18n/makepot.php" />
-	<property name="plugin" value="mu-plugins/class-blogs" />
+	<property name="plugin" value="class-blogs" />
 	<property name="pluginMedia" value="${plugin}/media" />
-	<property name="theme" value="themes/bentham" />
+	<property name="theme" value="class-blogs/themes/bentham" />
 	<property name="svnPackager" value="package-plugin.rb" />
 
 	<!-- Build the class blogs suite -->

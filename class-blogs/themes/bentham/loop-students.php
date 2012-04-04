@@ -2,14 +2,14 @@
 <?php
 
 	// Request a list of posts grouped by users
-	$posts_by_user = bentham_get_posts_by_user();
+	$posts_by_user = classblogging_get_posts_by_user();
 	$total_users = count( $posts_by_user ) - 1;
 
 	// Let the user know that they can post content to make things show up on the front page
 	if ( empty( $posts_by_user ) ):
 		?>
 			<p id="no-content">
-				<?php _e( 'You have no posts to display yet.  If you create a new post, it will be shown on this page.', 'bentham' ); ?>
+				<?php _e( 'You have no posts to display yet.  If you create a new post, it will be shown on this page.', 'classblogging' ); ?>
 			</p>
 		<?php
 	endif;
@@ -19,7 +19,7 @@
 		// Use the student's blog URL if they appear to be a student with a
 		// single blog, or use the author archives URL if they seem to be the
 		// professor by virtue of being an admin on the parent blog
-		$user_url = bentham_get_blog_url_for_student( $post_info->user_id );
+		$user_url = classblogging_get_blog_url_for_student( $post_info->user_id );
 		if ( ! $user_url ) {
 			$user_url = get_author_posts_url( $post_info->user_id );
 		}
@@ -37,7 +37,7 @@
 					if ( $user_url ) {
 						printf('<a href="%s" title="%s">',
 							$user_url,
-							__( 'View all posts by this user', 'bentham' ) );
+							__( 'View all posts by this user', 'classblogging' ) );
 					}
 					echo get_avatar( $post_info->user_id, 54 );
 					if ( $user_url ) {
@@ -59,7 +59,7 @@
 								$name_parts,
 								sprintf( '<a href="%s" title="%s">',
 									$user_url,
-									__( 'View all posts by this user', 'bentham' ) ) );
+									__( 'View all posts by this user', 'classblogging' ) ) );
 							$name_parts[] = '</a>';
 						}
 						echo implode( "", $name_parts );
@@ -70,13 +70,13 @@
 				<ul class="user-meta">
 					<li class="meta post-count">
 						<?php
-							printf( _n( '%d post', '%d posts', $post_info->total_posts, 'bentham' ), $post_info->total_posts );
+							printf( _n( '%d post', '%d posts', $post_info->total_posts, 'classblogging' ), $post_info->total_posts );
 						?>
 					</li>
 					<li class="meta comment-count">
 						<?php
-							$comment_count = bentham_get_total_comments_for_student( $post_info->user_id );
-							printf( _n( '%d comment', '%d comments', $comment_count, 'bentham' ), $comment_count );
+							$comment_count = classblogging_get_total_comments_for_student( $post_info->user_id );
+							printf( _n( '%d comment', '%d comments', $comment_count, 'classblogging' ), $comment_count );
 						?>
 					</li>
 				</ul>
@@ -96,7 +96,7 @@
 						if ( $post_count == $total_posts ) {
 							$post_classes[] = 'last';
 						}
-						bentham_switch_to_blog( $post->from_blog );
+						classblogging_switch_to_blog( $post->from_blog );
 
 						// Store the post's permalink
 						$permalink = get_permalink( $post->ID );
@@ -106,15 +106,15 @@
 							<a href="<?php echo $permalink; ?>"><?php the_title(); ?></a>
 						</h3>
 						<h4 class="meta">
-							<span class="date value"><?php the_time( _x( 'M j', 'date format', 'bentham' ) ); ?></span>
+							<span class="date value"><?php the_time( _x( 'M j', 'date format', 'classblogging' ) ); ?></span>
 						</h4>
 						<div class="entry">
-							<?php echo bentham_get_post_excerpt( $post->post_content, 25 ); ?>
-							<a href="<?php echo $permalink; ?>" class="read-more"><?php _e( 'Read more', 'bentham' ); ?></a>
+							<?php echo classblogging_get_post_excerpt( $post->post_content, 25 ); ?>
+							<a href="<?php echo $permalink; ?>" class="read-more"><?php _e( 'Read more', 'classblogging' ); ?></a>
 						</div>
 					</li>
 				<?php
-						bentham_restore_current_blog();
+						classblogging_restore_current_blog();
 					}
 				?>
 			</ul>
@@ -122,7 +122,7 @@
 			<?php /* Display a "view all posts" link at the end of the post list */ ?>
 			<?php
 				if ( $user_url ) {
-					printf( '<a class="view-all-link" href="%s">%s</a>', $user_url, __( 'View all posts', 'bentham' ) );
+					printf( '<a class="view-all-link" href="%s">%s</a>', $user_url, __( 'View all posts', 'classblogging' ) );
 				}
 			?>
 

@@ -5,7 +5,7 @@
 
 	<?php /* Prevent unauthorized access to the comments on a protected post */ ?>
 	<?php if ( post_password_required() ) { ?>
-		<p class="protected-warning"><?php _e( 'This post is password protected. Enter the password to view any comments.', 'bentham' ); ?></p>
+		<p class="protected-warning"><?php _e( 'This post is password protected. Enter the password to view any comments.', 'classblogging' ); ?></p>
 		</div>
 	<?php return; } ?>
 
@@ -13,7 +13,7 @@
 	<?php if ( get_comments_number() && comments_open() ): ?>
 	<h3 class="comments-header">
 		<?php
-			printf( _n( 'One Comment', '%1$s Comments', get_comments_number(), 'bentham' ),
+			printf( _n( 'One Comment', '%1$s Comments', get_comments_number(), 'classblogging' ),
 				number_format_i18n( get_comments_number() ) );
 		?>
 	</h3>
@@ -22,17 +22,17 @@
 	<?php /* Show a list of comments if any have been left*/ ?>
 	<?php if ( have_comments() ): ?>
 
-		<?php bentham_show_comment_navigation(); ?>
+		<?php classblogging_show_comment_navigation(); ?>
 
 		<ol class="comment-list">
 			<?php
 				wp_list_comments( array(
 					'avatar_size' => 54,
-					'reply_text'  => _x( 'Reply', 'comment reply link', 'bentham' ) ) );
+					'reply_text'  => _x( 'Reply', 'comment reply link', 'classblogging' ) ) );
 			?>
 		</ol>
 
-		<?php bentham_show_comment_navigation(); ?>
+		<?php classblogging_show_comment_navigation(); ?>
 
 	<?php endif; ?>
 

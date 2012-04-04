@@ -5,7 +5,7 @@
 			if ( is_single() ) {
 				previous_post_link( '%link' );
 			} else {
-				next_posts_link( __( 'Previous Entries', 'bentham' ) );
+				next_posts_link( __( 'Previous Entries', 'classblogging' ) );
 			}
 		?>
 	</span>
@@ -14,7 +14,7 @@
 			if ( is_single() ) {
 				next_post_link( '%link' );
 			} else {
-				previous_posts_link( __( 'Next Entries', 'bentham' ) );
+				previous_posts_link( __( 'Next Entries', 'classblogging' ) );
 			}
 		?>
 	</span>

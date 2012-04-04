@@ -4,8 +4,8 @@
 <div id="content">
 
 	<?php
-		bentham_show_archive_page_title(
-			__( 'Category', 'bentham' ),
+		classblogging_show_archive_page_title(
+			__( 'Category', 'classblogging' ),
 			single_cat_title( '', false ) );
 		get_template_part( 'loop', 'category' );
 	?>

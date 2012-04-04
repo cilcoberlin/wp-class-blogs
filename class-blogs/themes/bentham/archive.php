@@ -12,22 +12,22 @@
 
 		// Display a title based on the archive type
 		if ( is_day() ) {
-			$title = __( 'Day', 'bentham' );
+			$title = __( 'Day', 'classblogging' );
 			$filter = get_the_date();
 		} elseif ( is_month() ) {
-			$title = __( 'Month', 'bentham' );
+			$title = __( 'Month', 'classblogging' );
 			$filter = get_the_date( 'F Y' );
 		} elseif ( is_year() ) {
-			$title = __( 'Year', 'bentham' );
+			$title = __( 'Year', 'classblogging' );
 			$filter = get_the_date( 'Y' );
 		} elseif ( is_author() ) {
-			$title = __( 'Author', 'bentham' );
+			$title = __( 'Author', 'classblogging' );
 			$filter = get_the_author();
 		} else {
-			$title = __( 'Archives', 'bentham' );
+			$title = __( 'Archives', 'classblogging' );
 			$filter = "";
 		}
-		bentham_show_archive_page_title( $title, $filter );
+		classblogging_show_archive_page_title( $title, $filter );
 
 		// Display the loop, rewinding our posts so that it can function properly
 		rewind_posts();

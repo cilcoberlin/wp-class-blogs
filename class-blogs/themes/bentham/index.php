@@ -4,7 +4,7 @@
 	<?php
 		// If we have access to the class-blogs plugin's student post aggregation
 		// functions, use the custom index page, or just show a post list
-		if ( bentham_student_posts_available() ) {
+		if ( classblogging_student_posts_available() ) {
 			$content_class = 'student-posts';
 			$loop_type = 'students';
 		} else {

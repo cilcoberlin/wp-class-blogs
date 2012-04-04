@@ -1,10 +1,10 @@
 
-<?php bentham_show_navigation( 'above' ); ?>
+<?php classblogging_show_navigation( 'above' ); ?>
 
 <?php
 	// Display a page-not-found message if no posts are found
 	if ( ! have_posts() ) {
-		bentham_show_no_posts_message();
+		classblogging_show_no_posts_message();
 	}
 ?>
 
@@ -15,8 +15,8 @@
 
 		<div class="post-info">
 			<?php
-				bentham_show_edit_link();
-				bentham_show_author_and_date();
+				classblogging_show_edit_link();
+				classblogging_show_author_and_date();
 			 ?>
 			<h2 class="title">
 				<a href="<?php the_permalink(); ?>" rel="bookmark">
@@ -25,7 +25,7 @@
 						if ( $post_title ) {
 							echo $post_title;
 						} else {
-							printf( '( %s )', __( 'Unnamed Post', 'bentham' ) );
+							printf( '( %s )', __( 'Unnamed Post', 'classblogging' ) );
 						}
 					?>
 				</a>
@@ -38,14 +38,14 @@
 
 		<div class="interaction">
 			<span class="comments">
-				<?php comments_popup_link( __( 'Leave a comment', 'bentham' ), __( '1 Comment', 'bentham' ), __( '% Comments', 'bentham' ) ); ?>
+				<?php comments_popup_link( __( 'Leave a comment', 'classblogging' ), __( '1 Comment', 'classblogging' ), __( '% Comments', 'classblogging' ) ); ?>
 			</span>
 		</div>
 
-		<?php bentham_show_taxonomy(); ?>
+		<?php classblogging_show_taxonomy(); ?>
 
 	</div>
 
 <?php endwhile; ?>
 
-<?php bentham_show_navigation( 'below' ); ?>
+<?php classblogging_show_navigation( 'below' ); ?>

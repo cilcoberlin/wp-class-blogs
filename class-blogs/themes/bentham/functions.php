@@ -1,6 +1,6 @@
 <?php
 
-// Since Bentham manually gets a list of sitewide posts if any are available,
+// Since this theme manually gets a list of sitewide posts if any are available,
 // we want to prevent the sitewide posts code from executing, as, if sitewide
 // data isn't available, we won't be missing out on its normal overriding of
 // the standard front-page post list
@@ -11,7 +11,7 @@ define( 'CLASS_BLOGS_SHOW_SITEWIDE_POSTS_ON_FRONT_PAGE', false);
  *
  * @since 0.1
  */
-function bentham_setup()
+function classblogging_setup()
 {
 	add_editor_style();
 	add_theme_support( 'automatic-feed-links' );
@@ -22,7 +22,7 @@ function bentham_setup()
 	define( 'HEADER_IMAGE', '%s/images/default-header.png' );
 	define( 'HEADER_IMAGE_WIDTH', 222 );
 	define( 'HEADER_IMAGE_HEIGHT', 108 );
-	add_custom_image_header( '', 'bentham_admin_header_style' );
+	add_custom_image_header( '', 'classblogging_admin_header_style' );
 
 	// Set the content width
 	global $content_width;
@@ -33,12 +33,12 @@ function bentham_setup()
 	// Register navigation menu
 	register_nav_menus(
 		array(
-		  'primary_nav' => __( 'Primary Navigation', 'bentham' ),
+		  'primary_nav' => __( 'Primary Navigation', 'classblogging' ),
 		)
 	);
 
 	// Enable i18n functionality
-	load_theme_textdomain( 'bentham', get_template_directory() . '/languages' );
+	load_theme_textdomain( 'classblogging', get_template_directory() . '/languages' );
 	$locale = get_locale();
 	$locale_file = get_template_directory() . "/languages/$locale.php";
 	if ( is_readable( $locale_file ) ) {
@@ -51,7 +51,7 @@ function bentham_setup()
  *
  * @since 0.1
  */
-function bentham_admin_header_style()
+function classblogging_admin_header_style()
 {
 ?>
 <style type="text/css">
@@ -67,10 +67,10 @@ function bentham_admin_header_style()
  *
  * @since 0.1
  */
-function bentham_widgets_init()
+function classblogging_widgets_init()
 {
 	register_sidebar( array(
-		'name' => __( 'Sidebar', 'bentham' ),
+		'name' => __( 'Sidebar', 'classblogging' ),
 		'id' => 'sidebar',
 		'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
 		'after_widget' => '</li>',
@@ -89,7 +89,7 @@ function bentham_widgets_init()
  *
  * @since 0.1
  */
-function bentham_student_posts_available()
+function classblogging_student_posts_available()
 {
 	$available = false;
 	if ( class_exists( 'ClassBlogs' ) ) {
@@ -105,12 +105,12 @@ function bentham_student_posts_available()
  *
  * @since 0.1
  */
-function bentham_show_no_posts_message()
+function classblogging_show_no_posts_message()
 {
 ?>
-	<h1 id="page-title"><?php _e( 'No Posts Found', 'bentham' ); ?></h1>
+	<h1 id="page-title"><?php _e( 'No Posts Found', 'classblogging' ); ?></h1>
 	<div class="content no-posts">
-		<p><?php _e( 'No posts were found.  You can try searching for posts using the form below.', 'bentham' ); ?></p>
+		<p><?php _e( 'No posts were found.  You can try searching for posts using the form below.', 'classblogging' ); ?></p>
 		<?php get_search_form(); ?>
 	</div>
 <?php
@@ -124,7 +124,7 @@ function bentham_show_no_posts_message()
  *
  * @since 0.1
  */
-function bentham_show_archive_page_title( $title, $filter )
+function classblogging_show_archive_page_title( $title, $filter )
 {
 	global $page, $paged;
 	$current_page = max( $page, $paged );
@@ -134,7 +134,7 @@ function bentham_show_archive_page_title( $title, $filter )
 		$title_parts[] = sprintf( '<strong class="filter">%s</strong>', $filter );
 	}
 	if ( $current_page > 1 ) {
-		$title_parts[] = sprintf( __( 'Page %d', 'bentham' ), $current_page );
+		$title_parts[] = sprintf( __( 'Page %d', 'classblogging' ), $current_page );
 	}
 	printf( '<h1 id="page-title">%s</h1>', implode( ' &ndash; ', $title_parts ) );
 }
@@ -146,14 +146,14 @@ function bentham_show_archive_page_title( $title, $filter )
  *
  * @since 0.1
  */
-function bentham_show_navigation( $class = "" )
+function classblogging_show_navigation( $class = "" )
 {
 	global $wp_query;
 	if (  $wp_query->max_num_pages > 1 ) {
 ?>
 		<div class="navigation <?php echo $class; ?>">
-			<div class="previous"><?php next_posts_link( __( 'Older posts', 'bentham' ) ); ?></div>
-			<div class="next"><?php previous_posts_link( __( 'Newer posts', 'bentham' ) ); ?></div>
+			<div class="previous"><?php next_posts_link( __( 'Older posts', 'classblogging' ) ); ?></div>
+			<div class="next"><?php previous_posts_link( __( 'Newer posts', 'classblogging' ) ); ?></div>
 		</div>
 <?php
 	}
@@ -164,7 +164,7 @@ function bentham_show_navigation( $class = "" )
  *
  *  @since 0.1
  */
-function bentham_show_comment_navigation()
+function classblogging_show_comment_navigation()
 {
 	echo '<div class="comment-navigation">';
 	paginate_comments_links();
@@ -176,13 +176,13 @@ function bentham_show_comment_navigation()
  *
  * @since 0.1
  */
-function bentham_show_author_and_date()
+function classblogging_show_author_and_date()
 {
 ?>
 	<dl class="meta">
-		<dt class="key"><?php echo _x( 'Posted', 'post creation date', 'bentham' ); ?></dt>
+		<dt class="key"><?php echo _x( 'Posted', 'post creation date', 'classblogging' ); ?></dt>
 		<dd class="value"><?php echo get_the_date(); ?></dd>
-		<dt class="key"><?php echo _x( 'Author', 'post author name', 'bentham' ); ?></dt>
+		<dt class="key"><?php echo _x( 'Author', 'post author name', 'classblogging' ); ?></dt>
 		<dd class="value"><?php echo get_the_author(); ?></dd>
 	</dl>
 <?php
@@ -197,7 +197,7 @@ function bentham_show_author_and_date()
  * @access private
  * @since 0.1
  */
-function _bentham_show_taxonomy_group( $name, $markup )
+function _classblogging_show_taxonomy_group( $name, $markup )
 {
 	if ( $markup ) {
 		printf( '<h4 class="type">%s</h4><div class="values">%s</div>',
@@ -210,16 +210,16 @@ function _bentham_show_taxonomy_group( $name, $markup )
  *
  * @since 0.1
  */
-function bentham_show_taxonomy()
+function classblogging_show_taxonomy()
 {
 ?>
 	<div class="taxonomy">
 		<?php
-			_bentham_show_taxonomy_group(
-				__( 'Categories', 'bentham' ),
+			_classblogging_show_taxonomy_group(
+				__( 'Categories', 'classblogging' ),
 				get_the_category_list() );
-			_bentham_show_taxonomy_group(
-				_x( 'Tags', 'plural noun', 'bentham' ),
+			_classblogging_show_taxonomy_group(
+				_x( 'Tags', 'plural noun', 'classblogging' ),
 				get_the_tag_list( '', ' ', '' ) );
 		?>
 	</div>
@@ -231,8 +231,8 @@ function bentham_show_taxonomy()
  *
  * @since 0.1
  */
-function bentham_show_edit_link() {
-	edit_post_link( __( 'Edit Post', 'bentham' ), "", "" );
+function classblogging_show_edit_link() {
+	edit_post_link( __( 'Edit Post', 'classblogging' ), "", "" );
 }
 
 /**
@@ -245,7 +245,7 @@ function bentham_show_edit_link() {
  *
  * @since 0.1
  */
-function bentham_get_posts_by_user()
+function classblogging_get_posts_by_user()
 {
 	$sitewide_posts = ClassBlogs::get_plugin( 'sitewide_posts' );
 	return $sitewide_posts->get_posts_by_user();
@@ -257,7 +257,7 @@ function bentham_get_posts_by_user()
  * @param  int    $user_id the user ID of a student
  * @return string          the number of comments left by the student
  */
-function bentham_get_total_comments_for_student( $user_id )
+function classblogging_get_total_comments_for_student( $user_id )
 {
 	$sitewide_comments = ClassBlogs::get_plugin( 'sitewide_comments' );
 	return $sitewide_comments->get_total_comments_for_student( $user_id );
@@ -271,7 +271,7 @@ function bentham_get_total_comments_for_student( $user_id )
  *
  * @since 0.1
  */
-function bentham_get_blog_url_for_student( $user_id )
+function classblogging_get_blog_url_for_student( $user_id )
 {
 	$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
 	if ( $student_blogs ) {
@@ -290,7 +290,7 @@ function bentham_get_blog_url_for_student( $user_id )
  *
  * @since 0.1
  */
-function bentham_get_post_excerpt( $content, $word_count )
+function classblogging_get_post_excerpt( $content, $word_count )
 {
 	$content = strip_shortcodes( strip_tags( $content ) );
 	$words = preg_split( '/\s+/', $content );
@@ -306,7 +306,7 @@ function bentham_get_post_excerpt( $content, $word_count )
 }
 
 /**
- * Makes any page created on Bentham be closed for commenting by default
+ * Makes any page created on the blog be closed for commenting by default.
  *
  * @param  string $new  the new status of a post or page
  * @param  string $old  the old status of a post or page
@@ -314,7 +314,7 @@ function bentham_get_post_excerpt( $content, $word_count )
  *
  * @since 0.1
  */
-function bentham_close_new_page_comments( $new, $old, $post )
+function classblogging_close_new_page_comments( $new, $old, $post )
 {
 	global $wpdb;
 	if ( $post->post_type == 'page' && $new == 'publish' && $old != $new ) {
@@ -333,7 +333,7 @@ function bentham_close_new_page_comments( $new, $old, $post )
  *
  * @since 0.4
  */
-function bentham_switch_to_blog( $blog_id )
+function classblogging_switch_to_blog( $blog_id )
 {
 	if ( function_exists( 'switch_to_blog' ) ) {
 		switch_to_blog( $blog_id );
@@ -348,7 +348,7 @@ function bentham_switch_to_blog( $blog_id )
  *
  * @since 0.4
  */
-function bentham_restore_current_blog()
+function classblogging_restore_current_blog()
 {
 	if ( function_exists( 'restore_current_blog' ) ) {
 		restore_current_blog();
@@ -356,8 +356,8 @@ function bentham_restore_current_blog()
 }
 
 // Register setup functions with WordPress hooks
-add_action( 'after_setup_theme',      'bentham_setup' );
-add_action( 'transition_post_status', 'bentham_close_new_page_comments', 100, 3 );
-add_action( 'widgets_init',           'bentham_widgets_init' );
+add_action( 'after_setup_theme',      'classblogging_setup' );
+add_action( 'transition_post_status', 'classblogging_close_new_page_comments', 100, 3 );
+add_action( 'widgets_init',           'classblogging_widgets_init' );
 
 ?>
