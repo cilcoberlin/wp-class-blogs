@@ -349,7 +349,7 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 					</table>
 
 				<?php wp_nonce_field( $this->get_uid() ); ?>
-				<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Student Blog Links Options', 'classblogs' ); ?>" /></p>
+				<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Links', 'classblogs' ); ?>" /></p>
 			</form>
 		</div>
 	<?php

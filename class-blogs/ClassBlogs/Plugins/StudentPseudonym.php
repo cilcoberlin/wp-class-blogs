@@ -156,7 +156,7 @@ class ClassBlogs_Plugins_StudentPseudonym extends ClassBlogs_BasePlugin
 			</table>
 
 			<?php wp_nonce_field( $this->get_uid() ); ?>
-			<p class="submit"><input class="button-primary" type="submit" name="Submit" value="<?php _e( 'Change my Username', 'classblogs' ); ?>" /></p>
+			<p class="submit"><input class="button-primary" type="submit" name="Submit" value="<?php _e( 'Change Username', 'classblogs' ); ?>" /></p>
 			<strong style="color: #a00">You will only be able to change your username once</strong>
 
 		</form>

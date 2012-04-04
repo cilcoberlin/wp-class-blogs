@@ -480,17 +480,17 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 		<div class="wrap">
 
 			<?php ClassBlogs_Admin::show_admin_icon();  ?>
-			<h2><?php _e( 'Sitewide Post Options', 'classblogs' ); ?></h2>
+			<h2><?php _e( 'Student Post Options', 'classblogs' ); ?></h2>
 
 			<p>
-				<?php _e( 'This page allows you to control options that will affect the display of sitewide posts on the home page of the root blog.', 'classblogs' ); ?>
+				<?php _e( 'This page allows you to control options that will affect the display of student posts on the home page of the root blog.', 'classblogs' ); ?>
 			</p>
 
 			<form method="post" action="">
 
 					<table class="form-table">
 						<tr valign="top">
-							<th scope="row"><?php _e( 'Show Sitewide Posts On Root Blog', 'classblogs' ); ?></th>
+							<th scope="row"><?php _e( 'Show Student Posts On Root Blog', 'classblogs' ); ?></th>
 							<td>
 								<input type="checkbox" name="root_show_posts" id="root-show-posts" <?php echo $this->option_to_selected_attribute( 'root_show_posts' ); ?> />
 								<label for="root-show-posts"><?php _e( 'Enabled', 'classblogs' ); ?></label>
@@ -515,7 +515,7 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 					</table>
 
 				<?php wp_nonce_field( $this->get_uid() ); ?>
-				<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Sitewide Post Options', 'classblogs' ); ?>" /></p>
+				<p class="submit"><input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Student Post Options', 'classblogs' ); ?>" /></p>
 			</form>
 		</div>
 	<?php

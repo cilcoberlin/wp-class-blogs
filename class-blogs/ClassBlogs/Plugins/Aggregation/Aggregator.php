@@ -646,10 +646,10 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 		<div class="wrap">
 
 			<?php ClassBlogs_Admin::show_admin_icon();  ?>
-			<h2><?php _e( 'Sitewide Data Options', 'classblogs' ); ?></h2>
+			<h2><?php _e( 'Student Data Options', 'classblogs' ); ?></h2>
 
 			<p>
-				<?php _e( 'This page allows you to manage the options for collecting sitewide data on posts, comments and tags from all the blogs on this site.', 'classblogs' ); ?>
+				<?php _e( "This page allows you to manage the options for collecting data on posts, comments and tags from your students' blogs.", 'classblogs' ); ?>
 			</p>
 
 			<form method="post" action="">
@@ -693,16 +693,16 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 
 				</table>
 
-				<h3><?php _e( 'Refresh Sitewide Data', 'classblogs' ); ?></h3>
+				<h3><?php _e( 'Refresh Student Data', 'classblogs' ); ?></h3>
 
 				<p><?php _e(
-					sprintf( 'If you find that the sitewide data does not accurately reflect the data in each blog, you can click the %1$s button below to rebuild the sitewide data tables.',
-						'<strong>' . __( 'Refresh Sitewide Data', 'classblogs' ) . '</strong>' ), 'classblogs' ); ?></p>
+					sprintf( 'If you find that the student data does not accurately reflect the data in each blog, you can click the %1$s button below to rebuild the student data tables.',
+						'<strong>' . __( 'Refresh Student Data', 'classblogs' ) . '</strong>' ), 'classblogs' ); ?></p>
 
 				<?php wp_nonce_field( $this->get_uid() ); ?>
 				<p class="submit">
-					<input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Sitewide Data Options', 'classblogs' ); ?>" />
-					<input type="submit" name="Refresh" value="<?php _e( 'Refresh Sitewide Data', 'classblogs' ); ?>" />
+					<input type="submit" class="button-primary" name="Submit" value="<?php _e( 'Update Sudent Data Options', 'classblogs' ); ?>" />
+					<input type="submit" name="Refresh" value="<?php _e( 'Refresh Student Data', 'classblogs' ); ?>" />
 				</p>
 
 			</form>
