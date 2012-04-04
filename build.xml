@@ -67,7 +67,7 @@
 	<target name="make-languages">
 		<echo>Creating language files...</echo>
 		<make-pot basedir="${plugin}" potname="class-blogs" project="wp-plugin"/>
-		<make-pot basedir="${theme}" potname="bentham" project="wp-theme"/>
+		<make-pot basedir="${theme}" potname="class-blogging" project="wp-theme"/>
 	</target>
 
 	<!-- Macro for making a .POT file for a directory -->

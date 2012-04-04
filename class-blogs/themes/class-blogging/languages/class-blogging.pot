@@ -1,10 +1,10 @@
-# Copyright (C) 2010 Bentham
-# This file is distributed under the same license as the Bentham package.
+# Copyright (C) 2010 Class Blogging
+# This file is distributed under the same license as the Class Blogging package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Bentham 0.1\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/bentham\n"
-"POT-Creation-Date: 2012-02-09 18:19:35+00:00\n"
+"Project-Id-Version: Class Blogging 0.4\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/class-blogging\n"
+"POT-Creation-Date: 2012-04-04 18:23:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -188,7 +188,7 @@ msgid "Tag"
 msgstr ""
 
 #. Theme Name of the plugin/theme
-msgid "Bentham"
+msgid "Class Blogging"
 msgstr ""
 
 #. Theme URI of the plugin/theme
@@ -197,10 +197,10 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Bentham is a theme that is a core part of the class blogs suite.  It shows "
-"all student blogs on the main page in a series of columns, with a variable "
-"number of posts from each blog shown.  The columns containing student posts "
-"are ordered by the date of the most recent post on each blog."
+"A theme that is a core part of the class blogs suite.  It shows all student "
+"blogs on the main page in a series of columns, with a variable number of "
+"posts from each blog shown.  The columns containing student posts are "
+"ordered by the date of the most recent post on each blog."
 msgstr ""
 
 #. Author of the plugin/theme
