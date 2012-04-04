@@ -1,6 +1,6 @@
 === Class Blogs ===
 Contributors: oberlincilc
-Tags: classblogs, class, blogging, academic, students, professor, teacher, course
+Tags: class, blogging, academic, students, professor, teacher, course, education
 Requires at least: 3.0
 Tested up to: 3.3.1
 Stable tag: 0.3
@@ -60,6 +60,14 @@ additional features that do the following:
 * Set a student's first and last name based on their email address.
 * Automatically approve all comments left by students on other students' blogs.
 
+Themes
+------
+
+This plugin also includes a theme that takes advantage of the above features
+to display information on your students' posts in a clear, easy-to-navigate manner.
+Instead of showing posts sorted by date, the main page displays recent student
+posts grouped by student, with students having newer material appearing first.
+
 == Installation ==
 
 1. Place the `class-blogs` folder in your `/wp-content/plugins/` directory.
@@ -76,7 +84,28 @@ While this plugin works best when running WordPress in multisite mode and giving
 each student their own blog, it will run just fine if you have a single blog and
 are adding students as users with limited permissions.
 
+== Upgrade Notice ==
+
+When running a multisite installation, if you upgrade to a new version of this
+plugin or WordPress and find that the student data does not update properly,
+you can fix this by visiting the Class Blogs -> Student Data administration page
+and clicking on the 'Refresh Student Data' button.
+
 == Changelog ==
+
+= 0.4 =
+* Restructed to run as a standard or network-only plugin.
+* Can now run in either multisite or normal mode.
+* Activation framework added for all child plugins.
+* YouTube playlist no longer syncs with YouTube.
+* Themes are now part of the plugin.
+* Cleaned up unused plugins.
+* Added a readme.
+* Sitewide plugins can no longer be disabled.
+* Random image widget caption updates.
+* Admin design changes.
+* Simplified student pseudonym plugin to only change username.
+* Students can only change their username once.
 
 = 0.3 =
 * Cleaned up development / production media structure.
