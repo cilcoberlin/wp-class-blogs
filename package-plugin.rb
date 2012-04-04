@@ -25,7 +25,9 @@ EXCLUDE_TAGS = [
 ]
 
 # Operate out of the SVN directory
-Dir.chdir(File.join(SVN_DIR)) do
+FileUtils.rm_rf(SVN_DIR)
+FileUtils.mkdir(SVN_DIR)
+Dir.chdir(SVN_DIR) do
 
   # Check out a clean version of the remote SVN repository
   puts "Checking out WordPress plugin SVN repo..."
