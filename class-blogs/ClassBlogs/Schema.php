@@ -99,6 +99,8 @@ class ClassBlogs_Schema
 	 */
 	public function apply_to_table( $table )
 	{
+		global $wpdb;
+
 		// Build the column-creation lines from our columns
 		$statements = array();
 		foreach ( $this->_columns as $column ) {
@@ -116,8 +118,21 @@ class ClassBlogs_Schema
 		if ( ! empty( $this->_keys ) ) {
 			foreach ( $this->_keys as $key ) {
 				$columns = is_array( $key[1] ) ? $key[1] : array( $key[1] );
-				$statements[] = sprintf( "KEY %s (%s)",
-					$key[0], implode( ', ', $columns ) );
+
+				// Avoid re-adding composite indices, as WordPress's dbDelta
+				// function doesn't know what to do with them
+				$index = null;
+				if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table ) ) == $table ) {
+					$index = $wpdb->get_row( $wpdb->prepare( "
+						SHOW INDEX FROM $table WHERE key_name=%s",
+						$key[0] ) );
+				}
+				if ( count( $columns ) > 1 && ! empty( $index ) ) {
+					continue;
+				} else {
+					$statements[] = sprintf( "KEY %s (%s)",
+						$key[0], implode( ', ', $columns ) );
+				}
 			}
 		}
 
