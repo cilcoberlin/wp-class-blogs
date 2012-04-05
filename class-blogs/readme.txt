@@ -71,6 +71,10 @@ posts grouped by student, with students having newer material appearing first.
 4. Optionally enable the 'Class Blogging' theme on the 'Appearance -> Themes' page.
 5. Optionally add class-blogging widgets on the 'Appearance -> Widgets' page.
 
+If you are running WordPress in multisite mode, you will need to perform a
+network activation of the plugin.  Furthermore, you will need to make the
+'Class Blogging' theme only available on the main blog.
+
 == Frequently Asked Questions ==
 
 = Can I use this if I'm not running WordPress in multisite mode? =
