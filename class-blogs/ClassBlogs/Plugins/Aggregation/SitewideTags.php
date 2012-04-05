@@ -229,7 +229,7 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function activate()
 	{
-		$this->_ensure_tag_list_page_is_created();
+		$this->_create_tag_list_page();
 	}
 
 	/**
@@ -286,17 +286,17 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 * Creates a page that shows all uses of a given tag across the site.
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 0.4
 	 */
-	public function _ensure_tag_list_page_is_created()
+	public function _create_tag_list_page()
 	{
-		if ( ClassBlogs_Utils::is_root_blog() ) {
-			$current_page = $this->get_option( 'tag_page_id' );
-			$page_id = ClassBlogs_PluginPage::create_plugin_page( self::_TAG_PAGE_DEFAULT_NAME, $current_page );
-			if ( $page_id != $current_page ) {
-				$this->update_option( 'tag_page_id', $page_id );
-			}
+		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+		$current_page = $this->get_option( 'tag_page_id' );
+		$page_id = ClassBlogs_PluginPage::create_plugin_page( self::_TAG_PAGE_DEFAULT_NAME, $current_page );
+		if ( $page_id != $current_page ) {
+			$this->update_option( 'tag_page_id', $page_id );
 		}
+		ClassBlogs_WordPress::restore_current_blog();
 	}
 
 	/**

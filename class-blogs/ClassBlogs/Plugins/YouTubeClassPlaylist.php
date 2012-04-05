@@ -358,7 +358,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	public function activate()
 	{
 		$this->_create_tables();
-		$this->_ensure_playlist_page_is_created();
+		$this->_create_playlist_page();
 		$this->_sync_playlist();
 	}
 
@@ -423,21 +423,20 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	}
 
 	/**
-	 * Ensures that the page used for showing the list of all videos in the
-	 * playlist and their per-blog usage exists.
+	 * Creates the page used for showing all embedded videos.
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 0.4
 	 */
-	private function _ensure_playlist_page_is_created()
+	private function _create_playlist_page()
 	{
-		if ( ClassBlogs_Utils::is_root_blog() ) {
-			$current_page = $this->get_option( 'playlist_page_id' );
-			$page_id = ClassBlogs_PluginPage::create_plugin_page( self::_PLAYLIST_PAGE_DEFAULT_NAME, $current_page );
-			if ( $page_id != $current_page ) {
-				$this->update_option( 'playlist_page_id', $page_id );
-			}
+		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
+		$current_page = $this->get_option( 'playlist_page_id' );
+		$page_id = ClassBlogs_PluginPage::create_plugin_page( self::_PLAYLIST_PAGE_DEFAULT_NAME, $current_page );
+		if ( $page_id != $current_page ) {
+			$this->update_option( 'playlist_page_id', $page_id );
 		}
+		ClassBlogs_WordPress::restore_current_blog();
 	}
 
 	/**
