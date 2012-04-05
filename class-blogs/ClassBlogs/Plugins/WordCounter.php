@@ -82,7 +82,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_BasePlugin
 	 */
 	public function _add_student_dashboard_widget()
 	{
-		if ( is_admin() && ! ClassBlogs_Utils::is_root_blog() ) {
+		if ( is_admin() && ClassBlogs_Utils::on_student_blog_admin() ) {
 			wp_add_dashboard_widget(
 				'dashboard_' . $this->get_uid(),
 				__( 'Word Count', 'classblogs' ),
