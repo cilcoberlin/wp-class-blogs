@@ -54,7 +54,6 @@ define( 'CLASS_BLOGS_DIR_REL', dirname( CLASS_BLOGS_FILE_REL ) );
 // the current WordPress instance is running in multisite mode
 require_once( CLASS_BLOGS_DIR_ABS . '/ClassBlogs/ClassBlogs.php' );
 ClassBlogs::initialize();
-ClassBlogs::maybe_upgrade();
 
 // Handle plugin activation and deactivation
 function _classblogs_activate() { ClassBlogs::activate_suite(); }

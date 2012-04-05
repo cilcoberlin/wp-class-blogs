@@ -161,6 +161,9 @@ class ClassBlogs {
 			'classblogs',
 			false,
 			CLASS_BLOGS_DIR_REL . '/languages' );
+
+		// Possibly upgrade the plugin
+		self::maybe_upgrade();
 	}
 
 	/**
