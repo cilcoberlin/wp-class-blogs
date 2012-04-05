@@ -86,6 +86,15 @@ plugin or WordPress and find that the student data does not update properly,
 you can fix this by visiting the Class Blogs -> Student Data administration page
 and clicking on the 'Refresh Student Data' button.
 
+== Screenshots ==
+
+1. The class blogging theme
+2. The random image and YouTube playlist widgets
+3. The YouTube playlist page
+4. The admin list of student comments
+5. The admin list of student posts
+6. The word-count options and information page
+
 == Changelog ==
 
 = 0.4 =
