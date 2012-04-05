@@ -97,20 +97,21 @@ class ClassBlogs_PluginPage
 	 * of plugin-created pages.
 	 *
 	 * @param  string $name    the name of the page to create
+	 * @param  string $content the desired content of the page
 	 * @param  int    $page_id the optional ID of an already created page
 	 * @return int             the ID of the created page
 	 *
 	 * @access protected
 	 * @since 0.1
 	 */
-	public static function create_plugin_page( $name, $page_id = null )
+	public static function create_plugin_page( $name, $content = '', $page_id = null )
 	{
 		$conflicts = true;
 		$counter = 0;
 		$page_name = $name;
 
 		// If a page with the given ID already exists, abort early
-		if ( get_page( $page_id ) ) {
+		if ( $page_id && get_page( $page_id ) ) {
 			self::_register_plugin_page( $page_id );
 			return $page_id;
 		}
@@ -128,10 +129,11 @@ class ClassBlogs_PluginPage
 
 		// Create the new page and store its ID
 		$new_page = array(
-			'post_author' => ClassBlogs_Settings::get_admin_user_id(),
-			'post_status' => 'publish',
-			'post_title'  => $page_name,
-			'post_type'   => 'page' );
+			'post_author'  => ClassBlogs_Settings::get_admin_user_id(),
+			'post_content' => $content,
+			'post_status'  => 'publish',
+			'post_title'   => $page_name,
+			'post_type'    => 'page' );
 		$page_id = wp_insert_post( $new_page );
 		self::_register_plugin_page( $page_id );
 
