@@ -92,6 +92,13 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	 */
 	public function _register_hooks()
 	{
+
+		// If we're not running multisite, this plugin has no purpose, so we
+		// should abort
+		if ( ! ClassBlogs_Utils::is_multisite() ) {
+			return;
+		}
+
 		// Update the default links options to be a single link pointing back
 		// to the main class blog
 		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
@@ -226,7 +233,9 @@ class ClassBlogs_Plugins_StudentBlogLinks extends ClassBlogs_BasePlugin
 	 */
 	protected function enable_admin_page( $admin )
 	{
-		$admin->add_admin_page( $this->get_uid(), __( 'Student Blog Links', 'classblogs' ), array( $this, '_admin_page' ) );
+		if ( ClassBlogs_Utils::is_multisite() ) {
+			$admin->add_admin_page( $this->get_uid(), __( 'Student Blog Links', 'classblogs' ), array( $this, '_admin_page' ) );
+		}
 	}
 
 	/**
