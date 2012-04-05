@@ -756,8 +756,14 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 			$this->get_sitewide_posts(),
 			$max_posts,
 			$max_posts_per_blog );
+		$student_ids = ClassBlogs_Students::get_student_user_ids();
 
 		foreach ( $raw_posts as $post ) {
+
+			// Ignore the post if it's not by a student
+			if ( ! in_array( $post->post_author, $student_ids ) ) {
+				continue;
+			}
 
 			// Create a string for the post metadata
 			$meta = "";

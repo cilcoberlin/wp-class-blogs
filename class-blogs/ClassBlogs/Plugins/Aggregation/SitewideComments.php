@@ -2,6 +2,7 @@
 
 ClassBlogs::require_cb_file( 'Admin.php' );
 ClassBlogs::require_cb_file( 'Paginator.php' );
+ClassBlogs::require_cb_file( 'Students.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
 ClassBlogs::require_cb_file( 'Widget.php' );
 ClassBlogs::require_cb_file( 'WordPress.php' );
@@ -783,8 +784,14 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 			$this->get_sitewide_comments(),
 			$max_comments,
 			$max_comments_per_blog );
+		$student_ids = ClassBlogs_Students::get_student_user_ids();
 
 		foreach ( $raw_comments as $comment ) {
+
+			// Ignore the comment if it's not by a student
+			if ( ! in_array( $comment->user_id, $student_ids ) ) {
+				continue;
+			}
 
 			// Create a string for the comment metadata
 			$meta = "";
