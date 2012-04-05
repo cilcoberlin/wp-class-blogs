@@ -81,7 +81,7 @@ class ClassBlogs_Utils
 	/**
 	 * Functions identically to WordPress's native `is_page` function, but returns
 	 * false if the current page is in a state where `is_page` could not be
-	 * called without creating an error.
+	 * called without causing an error.
 	 *
 	 * @param  int  $page_id the ID of the page being checked
 	 * @return bool          whether or not the current page matches the page ID
