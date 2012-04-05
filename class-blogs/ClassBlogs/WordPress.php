@@ -110,6 +110,34 @@ class ClassBlogs_WordPress
 			return get_permalink( $post_id );
 		}
 	}
+
+	/**
+	 * Determines whether or not the given user has the given permission.
+	 *
+	 * @param  int    $user_id    the ID of a user
+	 * @param  string $capability a role or capability
+	 * @return bool               whether the user has the permission
+	 *
+	 * @since 0.5
+	 */
+	public static function user_can( $user, $capability )
+	{
+		if ( function_exists( 'user_can' ) ) {
+			return user_can( $user, $capability );
+		} else {
+
+			// Taken from the source of WordPress >= 3.1
+			if ( ! is_object( $user ) ) {
+				$user = new WP_User( $user );
+			}
+			if ( ! $user || ! $user->ID ) {
+				return false;
+			}
+			$args = array_slice( func_get_args(), 2 );
+			$args = array_merge( array( $capability ), $args );
+			return call_user_func_array( array( &$user, 'has_cap' ), $args );
+		}
+	}
 }
 
 ?>
