@@ -2,10 +2,11 @@
 
 ClassBlogs::require_cb_file( 'Admin.php' );
 ClassBlogs::require_cb_file( 'Paginator.php' );
-ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
-ClassBlogs::require_cb_file( 'Plugins/StudentBlogList.php' );
+ClassBlogs::require_cb_file( 'Students.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
 ClassBlogs::require_cb_file( 'Widget.php' );
+ClassBlogs::require_cb_file( 'Plugins/Aggregation/SitewidePlugin.php' );
+ClassBlogs::require_cb_file( 'Plugins/StudentBlogList.php' );
 
 /**
  * A widget that shows a list of recent sitewide posts.
@@ -533,10 +534,9 @@ class ClassBlogs_Plugins_Aggregation_SitewidePosts extends ClassBlogs_Plugins_Ag
 	{
 		// Create a lookup table for student names and blogs keyed by user ID
 		$students = array();
-		$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
-		foreach ( $student_blogs->get_student_blogs() as $blog ) {
-			$user_data = get_userdata( $blog->user_id );
-			$students[$blog->user_id] = array(
+		foreach ( ClassBlogs_Students::get_student_blogs() as $student_id => $blog ) {
+			$user_data = get_userdata( $student_id );
+			$students[$student_id] = array(
 				'blog_url' => $blog->url,
 				'name' => sprintf( '%s %s', $user_data->first_name, $user_data->last_name ) );
 		}

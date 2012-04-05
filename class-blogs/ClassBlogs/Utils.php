@@ -139,31 +139,6 @@ class ClassBlogs_Utils
 	}
 
 	/**
-	 * Gets the user IDs of any student users, which are defined in this sense
-	 * as any user that is not an admin on the root blog.
-	 *
-	 * @return array a list of student user IDs
-	 *
-	 * @since 0.1
-	 */
-	public static function get_student_user_ids()
-	{
-		global $wpdb;
-		$ids = array();
-
-		// Add any users who are not admins on the root blog to the list
-		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
-		foreach ( $wpdb->get_results( "SELECT ID FROM $wpdb->users" ) as $user ) {
-			if ( ! user_can( $user->ID, 'administrator' ) ) {
-				$ids[] = $user->ID;
-			}
-		}
-		ClassBlogs_WordPress::restore_current_blog();
-
-		return $ids;
-	}
-
-	/**
 	 * Returns a list of all blog IDs on the site.
 	 *
 	 * @return array a list of all blog IDs on the site
@@ -505,57 +480,6 @@ class ClassBlogs_Utils
 			$tags = $dom->getElementsByTagName( $tag );
 		}
 		return $tags->item(0)->nodeValue;
-	}
-
-	/**
-	 * Copy the source directory to the destination directory.
-	 *
-	 * If the destination directory does not exist, it will be created.
-	 *
-	 * If either the source or destination directory doesn't exist, or if the
-	 * copy operation could not be completed, no operation is performed.
-	 *
-	 * @param string $source      the full path to a source directory
-	 * @param string $destination the full path to an extant destination directory
-	 * @param bool   $overwrite   whether or not to overwrite an existing directory
-	 *                            sharing source's name in the destination directory
-	 * @param bool                whether the copy operation was successful
-	 *
-	 * @since 0.4
-	 */
-	public function copy_directory( $source, $destination, $overwrite = false )
-	{
-		$success = false;
-		if ( is_dir( $source ) ) {
-
-			// Create the destination directory if it doesn't exists, and abort
-			// if it does and we're not allowed to overwrite it
-			if ( is_dir( $destination ) ) {
-				if ( ! $overwrite ) {
-					return $success;
-				}
-			} else {
-				@mkdir( $destination );
-			}
-
-			// Copy over each entry from the source directory, including other
-			// directories contained in it
-			$directory = dir( $source );
-			while ( false !== ( $dir_read = $directory->read() ) ) {
-				if ( $dir_read == '.' || $dir_read == '..' ) {
-					continue;
-				}
-				$copy_from = $source . '/' . $dir_read;
-				$copy_to = $destination . '/' . $dir_read;
-				if ( is_dir( $copy_from ) ) {
-					$success &= self::copy_directory( $copy_from, $copy_to, true );
-				} else {
-					$success &= copy( $copy_from, $copy_to );
-				}
-			}
-			$directory->close();
-		}
-		return $success;
 	}
 
 	/**

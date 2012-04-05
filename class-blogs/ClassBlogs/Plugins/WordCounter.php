@@ -197,7 +197,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_BasePlugin
 
 		// Show the word-count table if we have word counts
 		$word_counts = $this->_get_weekly_word_counts();
-		$student_ids = ClassBlogs_Utils::get_student_user_ids();
+		$student_ids = ClassBlogs_Students::get_student_user_ids();
 		if ( ! empty( $word_counts ) ):
 
 			// Compute the total word counts for each student
@@ -368,7 +368,7 @@ class ClassBlogs_Plugins_WordCounter extends ClassBlogs_BasePlugin
 		// Calculate the word counts for each user for each week between the
 		// start and end date, with each entry in the array containing information
 		// on the user counts and the date of the Monday that began the week
-		$student_ids = ClassBlogs_Utils::get_student_user_ids();
+		$student_ids = ClassBlogs_Students::get_student_user_ids();
 		$current_date = $start_date;
 		while ( $current_date <= $end_date ) {
 

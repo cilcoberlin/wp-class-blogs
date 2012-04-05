@@ -2,6 +2,7 @@
 
 ClassBlogs::require_cb_file( 'BasePlugin.php' );
 ClassBlogs::require_cb_file( 'Settings.php' );
+ClassBlogs::require_cb_file( 'Students.php' );
 ClassBlogs::require_cb_file( 'Utils.php' );
 ClassBlogs::require_cb_file( 'Widget.php' );
 
@@ -125,19 +126,18 @@ class _ClassBlogs_Plugins_StudentBlogListWidget extends ClassBlogs_Widget
  * This plugin also provides a programmatic interface to information about
  * students and their blogs, which can be seen in the following example:
  *
- *     // A blog with an ID of 2 is created for a student with an ID of 3.  This
- *     // blog is called 'Example' and is located at http://www.example.com.
+ *     // A blog with an ID of 2 is created for a student with an ID of 3 whose
+ *     // nickname is 'Student'.  This blog is called 'Example' and is located
+ *     // at http://www.example.com.
  *     $plugin = ClassBlogs::get_plugin( 'student_blogs' );
  *
- *     $blogs = $plugin->get_student_blogs();
+ *     $blogs = $plugin->get_student_blogs( '%blog% (%nickname%)' );
  *     assert( count( $blogs ) === 1 );
  *     $blog = $blogs[0];
  *     assert( $blog->blog_id === 2 );
  *     assert( $blog->user_id === 3 );
- *     assert( $blog->title === 'Example' );
+ *     assert( $blog->title === 'Example (Student)' );
  *     assert( $blog->url === 'http://www.example.com' );
- *
- *     assert( $plugin->get_blog_url_for_student( 3 ) === $blog->url );
  *
  * @package ClassBlogs_Plugins
  * @subpackage StudentBlogList
@@ -212,72 +212,6 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 	}
 
 	/**
-	 * Gets a list of student blogs on the current site.
-	 *
-	 * A student blog in this sense is defined as any non-root blog that has a
-	 * single admin user on it that does not have admin rights on any other
-	 * blogs on the site.  This user is assumed to be a student.
-	 *
-	 * Each entry in the array will have a 'user_id' key containing the user ID
-	 * of the student owning the blog and a 'blog_id' key containing the ID of
-	 * the blog that they own.
-	 *
-	 * @return array a list of info about the student blogs on the site
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	private function _get_blog_list()
-	{
-
-		global $wpdb, $blog_id;
-		$student_blogs = array();
-
-		// Build a list of the user IDs of all users who are site admins or
-		// admins on the root blog
-		$admins = array();
-		foreach ( get_super_admins() as $admin ) {
-			$admins[] = username_exists( $admin );
-		}
-		foreach ( get_users( 'blog_id=' . ClassBlogs_Settings::get_root_blog_id() . '&role=administrator' ) as $user ) {
-			$admins[] = $user->ID;
-		}
-		$admins = array_unique( $admins );
-
-		// If running in multisite mode, cycle through every blog on the current
-		// site, adding any blogs that have only one admin user that is not a
-		// site admin or an admin on the root blog to the list of student blogs
-		if ( ClassBlogs_Utils::is_multisite() ) {
-			foreach ( ClassBlogs_Utils::get_all_blog_ids() as $sw_blog_id ) {
-				$blog_admins = get_users( 'blog_id=' . $sw_blog_id . '&role=administrator' );
-				if ( count( $blog_admins ) == 1 ) {
-					$blog_admin = $blog_admins[0];
-					if ( ! in_array( $blog_admin->ID, $admins ) ) {
-						$student_blogs[] = array(
-							'blog_id' => $sw_blog_id,
-							'user_id' => $blog_admin->ID );
-					}
-				}
-			}
-		}
-
-		// If running in single-site mode, count all non-admin users as students
-		else {
-			foreach ( get_users() as $user ) {
-				if ( ! in_array( $user->ID, $admins ) ) {
-					$student_blogs[] = array(
-						'blog_id' => $blog_id,
-						'user_id' => $user->ID
-					);
-				}
-			}
-
-		}
-
-		return $student_blogs;
-	}
-
-	/**
 	 * Enables the widget and its controller.
 	 *
 	 * @access private
@@ -324,54 +258,20 @@ class ClassBlogs_Plugins_StudentBlogList extends ClassBlogs_BasePlugin
 			return $cached;
 		}
 
-		// Determine the URL and display name for each student blog, using the
-		// address of the student's blog when in multisite mode or the author
-		// archive page when in single-site mode
+		// Format the display of the
 		$student_blogs = array();
-		foreach ( $this->_get_blog_list() as $blog ) {
-			if ( ClassBlogs_Utils::is_multisite() ) {
-				$blog_url = ClassBlogs_WordPress::get_blogaddress_by_id( $blog['blog_id'] );
-			} else {
-				$blog_url = get_author_posts_url( $blog['user_id'] );
-			}
-			$student_blogs[$blog['user_id']] = (object) array(
-				'blog_id' => $blog['blog_id'],
-				'name'    => $this->_format_blog_display_name( $title_format, $blog['user_id'], $blog['blog_id'] ),
-				'user_id' => $blog['user_id'],
-				'url'     => $blog_url );
+		foreach ( ClassBlogs_Students::get_student_blogs() as $student_id => $blog ) {
+			$student_blogs[$student_id] = (object) array(
+				'blog_id' => $blog->blog_id,
+				'name'    => $this->_format_blog_display_name( $title_format, $student_id, $blog->blog_id ),
+				'user_id' => $student_id,
+				'url'     => $blog->url );
 		}
 
 		// Return the blogs sorted by their computed display name
 		usort( $student_blogs, array( $this, "_sort_blogs_by_name" ) );
 		$this->set_site_cache( 'student_blogs', $student_blogs, 300 );
 		return $student_blogs;
-	}
-
-	/**
-	 * Returns the URL of the given student's blog.
-	 *
-	 * @param  int    $user_id the user ID of the student
-	 * @return string          the address of their blog, or a blank string
-	 *
-	 * @since 0.1
-	 */
-	public function get_blog_url_for_student( $user_id )
-	{
-		// Build a lookup table if one has not been built
-		$lookup = $this->_blog_urls;
-		if ( empty( $lookup ) ) {
-			$lookup = array();
-			foreach ( $this->get_student_blogs() as $blog ) {
-				$lookup[$blog->user_id] = $blog->url;
-			}
-			$this->_blog_urls = $lookup;
-		}
-
-		if ( array_key_exists( $user_id, $lookup ) ) {
-			return $lookup[$user_id];
-		} else {
-			return "";
-		}
 	}
 }
 
