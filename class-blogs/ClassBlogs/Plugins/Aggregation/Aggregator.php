@@ -147,6 +147,12 @@ class ClassBlogs_Plugins_Aggregation_Aggregator extends ClassBlogs_Plugins_Aggre
 			return;
 		}
 
+		// Abort if the post is anything besides a post, such as an attachment
+		// or a page
+		if ( $post->post_type !== 'post' ) {
+			return;
+		}
+
 		// If the post is being published, update its sitewide record, and remove
 		// it from the sitewide table if it is no longer visible to the public,
 		// either due to a change of status or outright deletion
