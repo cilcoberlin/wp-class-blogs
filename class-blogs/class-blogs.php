@@ -8,7 +8,7 @@ Author:      Oberlin College's Cooper International Learning Center
 Author URI:  http://languages.oberlin.edu/
 License:     BSD New
 Network:     true
-Version:     0.4
+Version:     0.5
 Text Domain: classblogs
 Domain Path: /languages/
 */

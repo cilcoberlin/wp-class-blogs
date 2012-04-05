@@ -1,9 +1,9 @@
 === Class Blogs ===
 Contributors: oberlincilc
 Tags: class, blogging, academic, students, professor, teacher, course, education
-Requires at least: 3.0
+Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.4
+Stable tag: 0.5
 
 Makes it easy to use blogs in your teaching.
 
@@ -100,6 +100,17 @@ and clicking on the 'Refresh Student Data' button.
 6. The word-count options and information page
 
 == Changelog ==
+
+= 0.5 =
+* Better detection of the page being viewed.
+* Pages created by plugins are now public but excluded from nav bars.
+* New YouTube class playlist shortcode for showing the playlist on any page.
+* Student blog links widget no longer available when not running multisite.
+* Sitewide post-like data (pages, attachments, etc.) is no longer tracked.
+* Added screenshots.
+* More robust fetching of student information.
+* Student posts and comments widgets now exclude professor-created data.
+* Word counter dashboard widget is now properly shown to non-multisite students.
 
 = 0.4 =
 * Restructed to run as a standard or network-only plugin.

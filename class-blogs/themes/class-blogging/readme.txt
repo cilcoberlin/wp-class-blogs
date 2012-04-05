@@ -1,9 +1,9 @@
 === Class Blogging ===
 Contributors: oberlincilc
 Tags: black, blue, white, gray, threaded-comments, two-columns, translation-ready, custom-header, custom-menu, class, blogs, course, students, professor, teacher, academic, education
-Requires at least: 3.0
+Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.4
+Stable tag: 0.5
 
 == Description ==
 
