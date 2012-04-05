@@ -237,6 +237,15 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	const _PLAYLIST_PAGE_DEFAULT_NAME = 'Our YouTube Class Playlist';
 
 	/**
+	 * The name of the YouTube class playlist shortcode.
+	 *
+	 * @access private
+	 * @var string
+	 * @since 0.4
+	 */
+	const _PLAYLIST_SHORTCODE = 'youtube_class_playlist';
+
+	/**
 	 * A list of functions used to extract YouTube video IDs from post content.
 	 *
 	 * @access private
@@ -344,10 +353,13 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 
 		// Register hooks for finding videos in post content and for showing the
 		// playlist archive page
-		add_action( 'deleted_post',  array( $this, '_update_videos_on_post_delete' ) );
-		add_action( 'pre_get_posts', array( $this, '_maybe_enable_playlist_page' ) );
-		add_action( 'save_post',     array( $this, '_update_videos_on_post_save' ) );
-		add_action( 'widgets_init',  array( $this, '_enable_widget' ) );
+		add_action( 'deleted_post',       array( $this, '_update_videos_on_post_delete' ) );
+		add_action( 'save_post',          array( $this, '_update_videos_on_post_save' ) );
+		add_action( 'widgets_init',       array( $this, '_enable_widget' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, '_add_playlist_page_scripts' ) );
+
+		// Make the playlist shortcode available
+		add_shortcode( self::_PLAYLIST_SHORTCODE, array( $this, '_render_playlist_page' ) );
 	}
 
 	/**
@@ -432,7 +444,10 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	{
 		ClassBlogs_WordPress::switch_to_blog( ClassBlogs_Settings::get_root_blog_id() );
 		$current_page = $this->get_option( 'playlist_page_id' );
-		$page_id = ClassBlogs_PluginPage::create_plugin_page( self::_PLAYLIST_PAGE_DEFAULT_NAME, $current_page );
+		$page_id = ClassBlogs_PluginPage::create_plugin_page(
+			self::_PLAYLIST_PAGE_DEFAULT_NAME,
+			sprintf( '[%s]', self::_PLAYLIST_SHORTCODE ),
+			$current_page );
 		if ( $page_id != $current_page ) {
 			$this->update_option( 'playlist_page_id', $page_id );
 		}
@@ -474,21 +489,6 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	}
 
 	/**
-	 * Enables the display of the video-listing page if the user is on
-	 * the correct page.
-	 *
-	 * @access private
-	 * @since 0.1
-	 */
-	public function _maybe_enable_playlist_page()
-	{
-		if ( ClassBlogs_Utils::is_page( $this->get_option( 'playlist_page_id' ) ) ) {
-			add_action( 'wp_enqueue_scripts', array( $this, '_add_playlist_page_scripts' ) );
-			add_filter( 'the_content', array( $this, '_render_playlist_page' ) );
-		}
-	}
-
-	/**
 	* Enqueues the JavaScript needed for displaying the videos page.
 	*
 	* @access private
@@ -508,13 +508,12 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 	/**
 	 * Returns markup for the local videos page.
 	 *
-	 * @param  string $content the current content of the page
-	 * @return string          markup for the local playlist page
+	 * @return string markup for the local playlist page
 	 *
 	 * @access private
 	 * @since 0.1
 	 */
-	public function _render_playlist_page( $content )
+	public function _render_playlist_page()
 	{
 
 		$markup = "";
@@ -555,7 +554,7 @@ class ClassBlogs_Plugins_YouTubeClassPlaylist extends ClassBlogs_BasePlugin
 			$markup .= '</div>';
 		}
 
-		return $content . $markup;
+		return $markup;
 	}
 
 	/**
