@@ -261,7 +261,6 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 	 */
 	public function _maybe_enable_tag_list_page() {
 
-
 		//  Only register the filters and tags if we're on the sitewide tags page
 		if ( ClassBlogs_Utils::is_page( $this->get_option( 'tag_page_id' ) ) ) {
 
