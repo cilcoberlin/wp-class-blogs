@@ -105,7 +105,18 @@ class ClassBlogs_Utils
 				'post_name' => null );
 		}
 
-		return is_page( $page_id );
+		// If WordPress's core `is_page` returns false, do another check to see
+		// if we're using the default, ID-based permalink structure and if the
+		// requested ID matches the given page number
+		$is_page = is_page( $page_id );
+		if ( ! $is_page ) {
+			if ( property_exists( $wp_query, 'query' ) ) {
+				if ( (int) $wp_query->query['page_id'] === $page_id ) {
+					return true;
+				}
+			}
+		}
+		return $is_page;
 	}
 
 	/**
