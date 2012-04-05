@@ -168,7 +168,6 @@ class ClassBlogs_Utils
 	 *
 	 * @return array a list of all blog IDs on the site
 	 *
-	 * @access protected
 	 * @since 0.2
 	 */
 	public static function get_all_blog_ids()
@@ -190,6 +189,25 @@ class ClassBlogs_Utils
 			$blog_ids[] = $blog->blog_id;
 		}
 		return $blog_ids;
+	}
+
+	/**
+	 * Returns a list of all non-root blog IDs on the site.
+	 *
+	 * When not running in multisite mode, this will always return an empty array.
+	 *
+	 * @return array a list of all non-root blog IDs on the site
+	 *
+	 * @since 0.5
+	 */
+	public static function get_non_root_blog_ids()
+	{
+		$blogs = self::get_all_blog_ids();
+		$root_index = array_search( ClassBlogs_Settings::get_root_blog_id(), $blogs );
+		if ( $root_index !== false ) {
+			unset( $blogs[$root_index] );
+		}
+		return $blogs;
 	}
 
 	/**
