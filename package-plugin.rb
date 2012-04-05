@@ -88,6 +88,7 @@ Dir.chdir(SVN_DIR) do
       wp_tag = tag.sub(/^v/, '')
       puts "Creating SVN clone of tag #{tag}..."
       Dir.chdir(GIT_SRC_DIR) do
+        FileUtils.rm_rf(PLUGIN_SRC_DIR)
         `git checkout tags/#{tag} -- #{PLUGIN_SRC_DIR}`
       end
       git_tag = File.join(GIT_SRC_DIR, PLUGIN_SRC_DIR)
