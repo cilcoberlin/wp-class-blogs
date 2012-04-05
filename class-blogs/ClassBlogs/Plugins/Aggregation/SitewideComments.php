@@ -303,23 +303,19 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 		global $blog_id;
 		$current_blog_id = $blog_id;
 
-		// Create a lookup table of student data keyed by blog ID
+		// Create a lookup table of student data keyed by blog ID for multisite mode
 		$students = array();
-		$student_blogs = ClassBlogs::get_plugin( 'student_blogs' );
-		foreach ( $student_blogs->get_student_blogs() as $blog ) {
-			$user_data = get_userdata( $blog->user_id );
-			$students[$blog->blog_id] = array(
-				'blog_url' => $blog->url,
-				'name' => sprintf( '%s %s', $user_data->first_name, $user_data->last_name ) );
-		}
-
-		// Paginate the data, restricting the data set to student-only posts
-		$comments = array();
-		foreach ( $this->get_sitewide_comments( false ) as $comment ) {
-			if ( array_key_exists( $comment->cb_sw_blog_id, $students ) ) {
-				$comments[] = $comment;
+		if ( ClassBlogs_Utils::is_multisite() ) {
+			foreach ( ClassBlogs_Students::get_student_blogs() as $student_id => $blog ) {
+				$user_data = get_userdata( $student_id );
+				$students[$blog->blog_id] = array(
+					'blog_url' => $blog->url,
+					'name' => sprintf( '%s %s', $user_data->first_name, $user_data->last_name ) );
 			}
 		}
+
+		// Paginate the comment data
+		$comments = $this->get_sitewide_comments( false );
 		$paginator = new ClassBlogs_Paginator( $comments, self::COMMENTS_PER_ADMIN_PAGE );
 		$current_page = ( array_key_exists( 'paged', $_GET ) ) ? absint( $_GET['paged'] ) : 1;
 ?>
@@ -341,7 +337,9 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 						<th class="author"><?php _e( 'Author', 'classblogs' ); ?></th>
 						<th class="content"><?php _e( 'Comment', 'classblogs' ); ?></th>
 						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
-						<th class="student"><?php _e( 'Student Blog', 'classblogs' ); ?></th>
+						<?php if ( ClassBlogs_Utils::is_multisite() ): ?>
+							<th class="student"><?php _e( 'Student Blog', 'classblogs' ); ?></th>
+						<?php endif; ?>
 						<th class="status"><?php _e( 'Status', 'classblogs' ); ?></th>
 						<th class="posted"><?php _e( 'Date', 'classblogs' ); ?></th>
 					</tr>
@@ -352,7 +350,9 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 						<th class="author"><?php _e( 'Author', 'classblogs' ); ?></th>
 						<th class="content"><?php _e( 'Comment', 'classblogs' ); ?></th>
 						<th class="post"><?php _e( 'Post', 'classblogs' ); ?></th>
-						<th class="student"><?php _e( 'Student Blog', 'classblogs' ); ?></th>
+						<?php if ( ClassBlogs_Utils::is_multisite() ): ?>
+							<th class="student"><?php _e( 'Student Blog', 'classblogs' ); ?></th>
+						<?php endif; ?>
 						<th class="status"><?php _e( 'Status', 'classblogs' ); ?></th>
 						<th class="posted"><?php _e( 'Date', 'classblogs' ); ?></th>
 					</tr>
@@ -386,15 +386,20 @@ class ClassBlogs_Plugins_Aggregation_SitewideComments extends ClassBlogs_Plugins
 									?>
 								</strong>
 							</td>
-							<td class="student">
-								<strong>
-									<?php
-										printf( '<a href="%s">%s</a>',
-											esc_url( $students[$comment->cb_sw_blog_id]['blog_url'] ),
-											esc_html( $students[$comment->cb_sw_blog_id]['name'] ) );
-									?>
-								</strong>
-							</td>
+							<?php if ( ClassBlogs_Utils::is_multisite() ): ?>
+								<td class="student">
+									<strong>
+										<?php
+											if ( array_key_exists( $comment->cb_sw_blog_id, $students ) ) {
+												$blog = $students[$comment->cb_sw_blog_id];
+												printf( '<a href="%s">%s</a>',
+													esc_url( $blog['blog_url'] ),
+													esc_html( $blog['name'] ) );
+											}
+										?>
+									</strong>
+								</td>
+							<?php endif; ?>
 							<td class="status">
 								<?php
 									if ( $status == 'approved' ) {
