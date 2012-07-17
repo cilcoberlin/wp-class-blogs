@@ -477,10 +477,22 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 		if ( ! property_exists( $this, '_tag_page_url' ) ) {
 			$this->_tag_page_url = $this->_get_tag_page_url();
 		}
-		return sprintf( '%s?%s=%s',
-			$this->_tag_page_url,
-			self::_TAG_QUERY_VAR_NAME,
-			$slug );
+		if ( ! $this->_tag_page_url ) {
+			return "";
+		}
+
+		// Return the URL with the given tag slug in its GET parameters
+		$parsed = parse_url( $this->_tag_page_url );
+		$query = array();
+		if ( array_key_exists( 'query', $parsed ) ) {
+			parse_str( $parsed['query'], $query );
+		}
+		$query[self::_TAG_QUERY_VAR_NAME] = $slug;
+		return sprintf( '%s://%s%s?%s',
+			$parsed['scheme'],
+			$parsed['host'],
+			$parsed['path'],
+			http_build_query( $query, '', '&amp;' ) );
 	}
 
 	/**
