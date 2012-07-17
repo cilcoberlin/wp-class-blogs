@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Class Blogging 0.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/class-blogs\n"
-"POT-Creation-Date: 2012-04-05 19:45:26+00:00\n"
+"POT-Creation-Date: 2012-07-17 17:26:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 #: ClassBlogs/Admin.php:95 ClassBlogs/Admin.php:96 ClassBlogs/Admin.php:190
-#: ClassBlogs/ClassBlogs.php:425
+#: ClassBlogs/ClassBlogs.php:428
 msgid "Class Blogs"
 msgstr ""
 
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Update Enabled Plugins"
 msgstr ""
 
-#: ClassBlogs/ClassBlogs.php:426
+#: ClassBlogs/ClassBlogs.php:429
 msgid "The base class-blogs plugin that is used to manage plugin registration."
 msgstr ""
 
@@ -426,11 +426,11 @@ msgstr ""
 msgid "Minimum Usage Count"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/SitewideTags.php:614
+#: ClassBlogs/Plugins/Aggregation/SitewideTags.php:627
 msgid "Student Tags"
 msgstr ""
 
-#: ClassBlogs/Plugins/Aggregation/SitewideTags.php:615
+#: ClassBlogs/Plugins/Aggregation/SitewideTags.php:628
 msgid ""
 "Provides a sitewide tag cloud widget, and allows uses of a single tag to be "
 "viewed across all student blogs."
