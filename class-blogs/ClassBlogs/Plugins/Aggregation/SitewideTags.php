@@ -358,9 +358,10 @@ class ClassBlogs_Plugins_Aggregation_SitewideTags extends ClassBlogs_Plugins_Agg
 
 		// Provide values for data expected by a tag page
 		$wp_query->queried_object = (object) array(
-			'name'    => $this->_current_tag['name'],
-			'slug'    => $this->_current_tag['slug'],
-			'term_id' => 0
+			'name'     => $this->_current_tag['name'],
+			'slug'     => $this->_current_tag['slug'],
+			'taxonomy' => array(),
+			'term_id'  => 0
 		);
 
 		// Use the tagged posts and prevent ID conflicts
