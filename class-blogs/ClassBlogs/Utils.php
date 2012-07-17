@@ -110,9 +110,13 @@ class ClassBlogs_Utils
 		// requested ID matches the given page number
 		$is_page = is_page( $page_id );
 		if ( ! $is_page ) {
-			if ( property_exists( $wp_query, 'query' ) && array_key_exists( 'page_id', $wp_query->query ) ) {
-				if ( (int) $wp_query->query['page_id'] === $page_id ) {
-					return true;
+			if ( property_exists( $wp_query, 'query' ) ) {
+				$query_page_id = null;
+				if ( is_array( $wp_query->query ) && array_key_exists( 'page_id', $wp_query->query ) ) {
+					$query_page_id = (int) $wp_query->query['page_id'];
+				}
+				if ( $query_page_id === (int) $page_id ) {
+					$is_page = true;
 				}
 			}
 		}
