@@ -28,7 +28,7 @@
  *     assert( $plugin->return_one() === 1 );
  *
  * @package ClassBlogs
- * @version 0.5
+ * @version 0.5.1
  */
 class ClassBlogs {
 

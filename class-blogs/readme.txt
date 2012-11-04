@@ -3,7 +3,7 @@ Contributors: oberlincilc
 Tags: class, blogging, academic, students, professor, teacher, course, education
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.5
+Stable tag: 0.5.1
 
 Makes it easy to use blogs in your teaching.
 
@@ -100,6 +100,10 @@ and clicking on the 'Refresh Student Data' button.
 6. The word-count options and information page
 
 == Changelog ==
+
+= 0.5.1 =
+* Better handling of pages when using the default permalink structure.
+* Fixed errors with widgets that use categories on the sitewide tags page.
 
 = 0.5 =
 * Better detection of the page being viewed.

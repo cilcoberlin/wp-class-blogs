@@ -19,7 +19,7 @@ class ClassBlogs_Settings
 	 * @var string
 	 * @since 0.1
 	 */
-	const VERSION = "0.5";
+	const VERSION = "0.5.1";
 
 	/**
 	 * The default cache length, in seconds.
